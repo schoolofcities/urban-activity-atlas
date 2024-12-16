@@ -1,0 +1,31 @@
+# Python
+.ipynb_checkpoints
+
+# Data
+data/metro_region_geohash_stops/
+data/metro_region_geohash_stops_pm/
+data/activity_2023-04-01_2024-03-31.csv
+data/metro_region_geohashes.csv
+
+# npm
+node_modules
+
+# Output
+.output
+.vercel
+/.svelte-kit
+/build
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.*
+!.env.example
+!.env.test
+
+# Vite
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*

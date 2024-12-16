@@ -1,0 +1,13 @@
+#!/bin/bash
+
+in_dir="data/metro_region_geohash_stops"
+out_dir="data/metro_region_geohash_stops_pm/"
+
+for file in "$in_dir"/*; do
+  if [ -f "$file" ]; then
+    f_base=$(basename "${file%.*}")
+    echo "Converting $f_base..."
+
+    tippecanoe -zg -o "$out_dir"/"$f_base".pmtiles --drop-densest-as-needed "$in_dir"/"$f_base".geojson
+  fi
+done
