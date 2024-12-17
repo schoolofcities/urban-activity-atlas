@@ -8,9 +8,6 @@
 	import * as pmtiles from "pmtiles";
 	import layers from 'protomaps-themes-base'; // eventually switch this out for our own theme
 
-	import metroCentroids from '../data/metro_regions_centroids.geo.json';
-	import metroSimple from '../data/metro_regions_simple.geo.json';
-
 	let map;
 
 	onMount(() => {
