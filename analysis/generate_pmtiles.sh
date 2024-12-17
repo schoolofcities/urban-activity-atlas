@@ -1,7 +1,7 @@
 #!/bin/bash
 
 in_dir="data/metro_region_geohash_stops"
-out_dir="data/metro_region_geohash_stops_pm/"
+out_dir="static/metro_region_geohash_stops_pm/"
 
 for file in "$in_dir"/*; do
   if [ -f "$file" ]; then
