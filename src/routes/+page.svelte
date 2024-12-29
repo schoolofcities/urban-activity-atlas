@@ -8,9 +8,13 @@
 	import * as pmtiles from "pmtiles";
 	import layers from 'protomaps-themes-base'; // eventually switch this out for our own theme
 
-	let map;
+	// Enter URL below into PMTiles Viewer (https://pmtiles.io) to see map, and layer & property names
+	let pmtilesURL = "http://localhost:5173/metro_region_geohash_stops_pm/Abilene,%20TX.pmtiles"; // (local) development only
+
+	let map = null;
 
 	onMount(() => {
+
 		let protocol = new pmtiles.Protocol();
 		maplibregl.addProtocol("pmtiles", protocol.tile);
 
@@ -31,8 +35,8 @@
 				// @ts-ignore
 				layers: layers("protomaps","dark") // sub out for our own layer styles eventually
 			},
-			center: [-84, 42.],
-			zoom: 6,
+			center: [-99.738, 32.448],
+			zoom: 8,
 			maxZoom:16,
 			minZoom: 2,
 			// @ts-ignore
@@ -40,6 +44,34 @@
 		});
 
 		map.addControl(new maplibregl.NavigationControl(), "top-right");
+		map.addControl(new maplibregl.ScaleControl(), "bottom-right");
+
+		map.on('load', () => {
+
+			map.addSource('abilene-tx', {
+				type: 'vector',
+				url: "pmtiles://" + pmtilesURL,
+			});
+
+			map.addLayer({
+				'id': 'abilene-tx-layer',
+				'type': 'fill',
+				'source': 'abilene-tx',
+				'source-layer': 'AbileneTX',
+				'paint': {
+					'fill-opacity': .8,
+					'fill-color': [
+						'step',
+						['get', 'prop_subset_stops'],
+						'#0b513f',
+						0.00000064, '#397c53',
+						0.00000141, '#70a863',
+						0.00000219, '#b2d372',
+						0.00000296, '#fffb85'
+					]
+				},
+			});
+		});
 	});
 
 </script>
