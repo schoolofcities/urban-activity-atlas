@@ -35,8 +35,8 @@
 				// @ts-ignore
 				layers: layers("protomaps","dark") // sub out for our own layer styles eventually
 			},
-			center: [-99.738, 32.448],
-			zoom: 8,
+			center: [-99.709, 32.526],
+			zoom: 9,
 			maxZoom:16,
 			minZoom: 2,
 			// @ts-ignore
@@ -78,7 +78,13 @@
 
 <div class="container">
 	<div class="panel">
-		hello
+		<ul class="legend">
+			<li><span style="background-color: #0b513f;"></span>Low</li> <!-- &lt; 0.00000064 -->
+			<li><span style="background-color: #397c53;"></span></li> <!-- ≥ 0.00000064 -->
+			<li><span style="background-color: #70a863;"></span></li> <!-- ≥ 0.00000141 -->
+			<li><span style="background-color: #b2d372;"></span></li> <!-- ≥ 0.00000219 -->
+			<li><span style="background-color: #fffb85;"></span>High</li> <!-- ≥ 0.00000296 -->
+		</ul>
 	</div>
 
 	<div id="map">
@@ -87,6 +93,27 @@
 
 
 <style>
+
+	.legend {
+		list-style: none;
+		padding: 0;
+		margin: 30px;		
+	}
+
+	.legend li {
+		display: flex;
+		align-items: center;
+		margin: 8px;
+	}
+	
+	.legend span {
+		display: inline-block;
+		width: 20px; /* Width of color box */
+		height: 20px; /* Height of color box */
+		margin-right: 10px; /* Spacing between box and text */
+		/* border: 1px solid #000; Optional: Add a border for better visibility */
+	}
+
 	.container {
 		display: flex;
 	}
@@ -99,7 +126,7 @@
 		overflow: auto;
 		overflow-x: hidden;
 		background-color: var(--brandWhite); 
-		border-right: solid 2px var(--brandRed);
+		/* border-right: solid 2px var(--brandRed); */
 	}
 
 	#map {
