@@ -64,11 +64,12 @@
 						'step',
 						['get', 'prop_subset_stops'],
 						'#0b513f',
-						0.00000064, '#397c53',
+						0.00000064, '#397c53', // when I add other metros - use quintiles instead of specific cutoffs
 						0.00000141, '#70a863',
 						0.00000219, '#b2d372',
 						0.00000296, '#fffb85'
-					]
+					],
+					'fill-outline-color': 'rgba(0, 0, 0, 0)' // get rid of the outline
 				},
 			});
 		});
