@@ -11,14 +11,10 @@
     let map = null;
     let metroName = "";
 	let pmtilesURL = "";
-    let quintiles = {};
 
     // Load quintiles data from the JSON file
-    onMount(async () => {
-        const response = await fetch('../data/quintile_thresholds.json'); // replace with path to quintiles file
-        quintiles = await response.json();
-        console.log(quintiles);
-    });
+    import quintiles from '../data/quintile_thresholds.json';
+    // console.log(quintiles);
 
     // Sort the features alphabetically by name
     metroRegionCentroids.features.sort((a, b) =>
@@ -36,7 +32,7 @@
             const [lon, lat] = feature.geometry.coordinates;
             map.flyTo({
                 center: [lon, lat],
-                zoom: 10,
+                zoom: 9,
                 essential: true, // Smooth transition
                 duration: 1000, // Transition duration in milliseconds
             });
@@ -76,20 +72,23 @@
                 url: `pmtiles://${pmtilesURL}`,
             });
 
+            const quintiles_metro = quintiles[metroName];
+            console.log('quintiles_metro:', quintiles_metro);
+
             map.addLayer({
                     id: layerId,
                     type: "fill",
                     source: metroName,
                     "source-layer": metroName.replace(/[^\w]/g, ""),
                     paint: {
-                        "fill-opacity": 0.8,
+                        "fill-opacity": 0.65,
                         "fill-color": [
                             "step",
                             ["get", "prop_subset_stops"],
-                            "#0b513f", quintiles[0],
-                            "#397c53", quintiles[1],
-                            "#70a863", quintiles[2],
-                            "#b2d372", quintiles[3],
+                            "#0b513f", quintiles_metro[0],
+                            "#397c53", quintiles_metro[1],
+                            "#70a863", quintiles_metro[2],
+                            "#b2d372", quintiles_metro[3],
                             "#fffb85",
                         ],
                         "fill-outline-color": "rgba(0, 0, 0, 0)",
@@ -117,8 +116,8 @@
                 },
                 layers: layers("protomaps", "dark") 
             },
-            center: [-99.709, 32.526], // Abilene, TX
-            zoom: 9,
+            center: [-96.435, 41.899],
+            zoom: 3.5,
             maxZoom: 16,
             minZoom: 2,
             attributionControl: true
@@ -131,7 +130,7 @@
 
 <div class="container">
     <div class="panel">
-        <label for="locations">Choose a location:</label>
+        <label for="locations" class="location-label">Choose a location:</label>
         <select id="locations" on:change="{(e) => {
             metroName = e.target.value; 
 			// console.log('metroName in on:change handler: ', metroName);
@@ -157,10 +156,20 @@
 </div>
 
 <style>
+    .location-label {
+        display: block;
+        margin: 15px 0 0 15px;
+    }
+
+    #locations {
+        width: 90%;
+        margin: 8px 15px 15px 15px;
+    }
+
     .legend {
         list-style: none;
         padding: 0;
-        margin: 30px;		
+        margin: 15px;		
     }
 
     .legend li {
@@ -181,9 +190,9 @@
     }
 
     .panel {
-        width: 420px;
-        min-width: 420px;
-        height: 420px;
+        width: 350px;
+        min-width: 350px;
+        height: 350px;
         height: 100vh;
         overflow: auto;
         overflow-x: hidden;
@@ -192,8 +201,8 @@
 
     #map {
         height: 100vh;
-        width: calc(100vw - 420px);
-        min-width: 420px;
+        width: calc(100vw - 350px);
+        min-width: 350px;
         background-color: var(--brandLightBlue); 
     }
 
