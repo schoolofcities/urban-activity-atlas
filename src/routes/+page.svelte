@@ -143,11 +143,11 @@
         </select>
 
         <ul class="legend">
-            <li><span style="background-color: #0b513f;"></span>Low</li>
+            <li><span style="background-color: #0b513f;"></span>Low for the region</li>
             <li><span style="background-color: #397c53;"></span></li>
             <li><span style="background-color: #70a863;"></span></li>
             <li><span style="background-color: #b2d372;"></span></li>
-            <li><span style="background-color: #fffb85;"></span>High</li>
+            <li><span style="background-color: #fffb85;"></span>High for the region</li>
         </ul>
     </div>
 
