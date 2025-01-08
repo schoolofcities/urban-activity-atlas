@@ -130,7 +130,7 @@
 
 <div class="container">
     <div class="panel">
-        <label for="locations" class="location-label">Choose a location:</label>
+        <label for="locations" class="location-label">Choose a metropolitan region:</label>
         <select id="locations" on:change="{(e) => {
             metroName = e.target.value; 
 			// console.log('metroName in on:change handler: ', metroName);
