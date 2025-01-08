@@ -2,7 +2,8 @@
 .ipynb_checkpoints
 
 # Data
-data/
+data
+!src/data
 
 # npm
 node_modules
