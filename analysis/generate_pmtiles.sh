@@ -8,6 +8,6 @@ for file in "$in_dir"/*; do
     f_base=$(basename "${file%.*}")
     echo "Converting $f_base..."
 
-    tippecanoe -zg -o "$out_dir"/"$f_base".pmtiles --drop-densest-as-needed "$in_dir"/"$f_base".geojson
+    tippecanoe -zg -o "$out_dir"/"$f_base".pmtiles --coalesce-densest-as-needed --extend-zooms-if-still-dropping "$in_dir"/"$f_base".geojson
   fi
 done

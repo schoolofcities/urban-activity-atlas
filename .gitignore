@@ -2,7 +2,8 @@
 .ipynb_checkpoints
 
 # Data
-data/
+data
+!src/data
 
 # npm
 node_modules
@@ -22,6 +23,7 @@ Thumbs.db
 .env.*
 !.env.example
 !.env.test
+/myenv
 
 # Vite
 vite.config.js.timestamp-*
