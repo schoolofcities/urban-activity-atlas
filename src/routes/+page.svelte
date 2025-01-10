@@ -11,6 +11,8 @@
     let map = null;
     let metroName = "";
 	let pmtilesURL = "";
+    let searchQuery = "";
+    let dropdownOpen = false; // Initially set the dropdown as closed
 
     // Load min/max data from the JSON file
     import minmax from '../data/min_max.json';
@@ -19,6 +21,44 @@
     metroRegionCentroids.features.sort((a, b) =>
         a.properties.name.localeCompare(b.properties.name)
     );
+
+    let filteredOptions = metroRegionCentroids.features;
+
+    // Filter the options based on the search query
+    $: filteredOptions = metroRegionCentroids.features.filter((feature) =>
+        feature.properties.name.toLowerCase().startsWith(searchQuery.toLowerCase())
+    );
+
+    // Close the dropdown when clicking outside of it
+    const handleClickOutside = (event) => {
+        if (!event.target.closest('.dropdown-container')) {
+            dropdownOpen = false;
+        }
+    };
+
+    // Handle click inside the input field to reset the search query
+    const handleSearchInputClick = () => {
+        if (!searchQuery) {
+            dropdownOpen = true;  // Open dropdown if nothing is typed
+        } else {
+            searchQuery = '';  // Clear the text if there is any
+        }
+    };
+
+    // Handle input field updates (keep the dropdown open if text is typed)
+    const handleInputChange = () => {
+        if (searchQuery) {
+            dropdownOpen = true;  // Ensure dropdown stays open when typing
+        }
+    };
+
+    // Function to handle location selection
+    const selectLocation = (location) => {
+        metroName = location;
+        searchQuery = location; // Update the search bar with the selected location
+        zoomToLocation(metroName);
+        dropdownOpen = false; // Close the dropdown after selection
+    };
 
     // Function to zoom to the selected location
     const zoomToLocation = (locationName) => {
@@ -30,7 +70,7 @@
         if (feature) {
             const [lon, lat] = feature.geometry.coordinates;
             map.flyTo({
-                center: [lon, lat],
+                center: [lon - .1, lat], // Small adjustment since map is behind panel
                 zoom: 9,
                 essential: true, // Smooth transition
                 duration: 1000, // Transition duration in milliseconds
@@ -98,6 +138,8 @@
         let protocol = new pmtiles.Protocol();
         maplibregl.addProtocol("pmtiles", protocol.tile);
 
+        document.addEventListener('click', handleClickOutside);
+
         map = new maplibregl.Map({
             container: "map", 
             style: {
@@ -137,16 +179,48 @@
         </p> 
         <hr>
         <label for="locations" class="location-label">Choose a metropolitan region:</label>
-        <select id="locations" on:change="{(e) => {
-            metroName = e.target.value; 
-			// console.log('metroName in on:change handler: ', metroName);
-            zoomToLocation(metroName); // Zoom to selected location
-        }}">
-            <option value="">Select a location</option>
-            {#each metroRegionCentroids.features as feature}
-                <option value="{feature.properties.name}">{feature.properties.name}</option>
-            {/each}
-        </select>
+
+        <div class="dropdown-container">
+            <div class="dropdown-toggle" on:click={() => { if (!searchQuery) dropdownOpen = true; }}>
+                <input
+                    type="text"
+                    class="search-input"
+                    bind:value={searchQuery}
+                    placeholder={searchQuery ? '' : 'Search location...'}
+                    on:input={handleInputChange}
+                    on:click={handleSearchInputClick}
+                />
+            </div>
+        
+            {#if dropdownOpen}
+                <div class="dropdown-list">
+                    {#if searchQuery === ''}
+                        {#each metroRegionCentroids.features as feature}
+                            <div
+                                class="dropdown-item"
+                                on:click={() => selectLocation(feature.properties.name)}
+                            >
+                                {feature.properties.name}
+                            </div>
+                        {/each}
+                    {:else}
+                        {#if filteredOptions.length > 0}
+                            {#each filteredOptions as feature}
+                                <div
+                                    class="dropdown-item"
+                                    on:click={() => selectLocation(feature.properties.name)}
+                                >
+                                    {feature.properties.name}
+                                </div>
+                            {/each}
+                        {:else}
+                            <div class="no-results">No results found</div>
+                        {/if}
+                    {/if}
+                </div>
+            {/if}
+        </div>
+
         <div class="legend">
             <p class="legend-title">Activity level:</p>
             <div class="gradient-bar"></div>  
@@ -229,7 +303,7 @@
     .legend {
         list-style: none;
         padding: 0;
-        margin: 10px 15px 15px 15px;
+        margin: 0 15px 15px 15px;
         font-family: RobotoRegular;
         font-size: .8rem;
         display: flex;
@@ -271,39 +345,51 @@
         flex: 1;
     }
 
-    select {
-        background-color: #1f1f1f;
-        color: white;
-        font-size: .8rem; 
-        padding: 5px 5px;
-        width: 100%;       
-        appearance: none;   
-        -webkit-appearance: none;
-        -moz-appearance: none;
+    .dropdown-container {
+        position: relative;
+        margin: 0 15px 0 15px;
     }
 
-    select option {
-        background-color: #444; 
-        color: white;     
-        padding: 10px;          
+    .dropdown-toggle {
+        width: 100%;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
 
-    select option:hover {
-        background-color: #1f1f1f; 
+    .search-input {
+        width: 100%;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        font-family: RobotoRegular;
     }
 
-    select:focus {
-        background-color: #1f1f1f;
-        color: white;
-        outline: none;       
+    .dropdown-list {
+        position: absolute;
+        top: 40px;
+        left: 0;
+        right: 0;
+        background-color: white;
+        max-height: 200px;
+        overflow-y: auto;
+        z-index: 10;
     }
 
-    select::-ms-expand {
-        display: none;
+    .dropdown-item {
+        padding: 3px;
+        font-family: RobotoRegular;
+        font-size: .8rem;
+        cursor: pointer;
     }
 
-    select::-webkit-dropdown-button {
-        display: none; 
+    .dropdown-item:hover {
+        background-color: #f0f0f0;
+    }
+
+    .no-results {
+        padding: 8px;
+        color: gray;
     }
 
     .container {
