@@ -14,12 +14,16 @@
 
     // Load quintiles data from the JSON file
     import quintiles from '../data/quintile_thresholds.json';
-    // console.log(quintiles);
+    console.log(quintiles);
 
     // Sort the features alphabetically by name
     metroRegionCentroids.features.sort((a, b) =>
         a.properties.name.localeCompare(b.properties.name)
     );
+
+    // metroRegionCentroids.features.forEach((feature) => {
+    //     console.log(feature.properties.name);
+    // });
 
     // Function to zoom to the selected location
     const zoomToLocation = (locationName) => {
@@ -49,7 +53,7 @@
 			// Remove all metro layers
 			map.getStyle().layers.forEach((layer) => {
 				if (layer.id.endsWith('-layer') && map.getLayer(layer.id)) {
-					console.log(`Removing metro layer: ${layer.id}`);
+					// console.log(`Removing metro layer: ${layer.id}`);
 					map.removeLayer(layer.id);
 				}
 			});
@@ -57,14 +61,14 @@
 			// Remove all metro sources
 			Object.keys(map.style.sourceCaches).forEach((sourceId) => {
 				if (sourceId !== 'protomaps' && map.getSource(sourceId)) {
-					console.log(`Removing metro source: ${sourceId}`);
+					// console.log(`Removing metro source: ${sourceId}`);
 					map.removeSource(sourceId);
 				}
 			});
 
-			pmtilesURL = `http://localhost:5173/metro_region_geohash_stops_pm/${metroName.replace(/ /g, '%20')}.pmtiles`;
+            pmtilesURL = `http://localhost:5173/metro_region_geohash_stops_pm/${metroName.replace(/ /g, '%20')}.pmtiles`;
 
-			// console.log('pmtilesURL: ', pmtilesURL);
+			console.log('pmtilesURL: ', pmtilesURL);
 
 			// Add the PMTiles source
 			map.addSource(metroName, {
@@ -73,6 +77,7 @@
             });
 
             const quintiles_metro = quintiles[metroName];
+
             console.log('quintiles_metro:', quintiles_metro);
 
             map.addLayer({
@@ -130,6 +135,9 @@
 
 <div class="container">
     <div class="panel">
+        <h1>Urban Activity Atlas</h1>
+        <h2>Which parts of a metro region have the most activity?</h2>
+        <p id="authors">Created by Julia Greenberg, Jeff Allen, and Aniket Kali</p>
         <label for="locations" class="location-label">Choose a metropolitan region:</label>
         <select id="locations" on:change="{(e) => {
             metroName = e.target.value; 
@@ -149,6 +157,13 @@
             <li><span style="background-color: #b2d372;"></span></li>
             <li><span style="background-color: #fffb85;"></span>High for the region</li>
         </ul>
+
+        <p class="description">
+            Use this tool to explore human activity levels April 1, 2023 to March 31, 2024. cell phone data from <a href="https://spectus.ai/" target="_blank" rel="noopener noreferrer">Spectus</a>.
+        </p>
+        <p class="description">
+            Check out our <a href="https://github.com/schoolofcities/urban-activity-atlas/blob/main/README.md" target="_blank" rel="noopener noreferrer">Github</a> for more information.
+        </p>
     </div>
 
     <div id="map">
@@ -156,9 +171,34 @@
 </div>
 
 <style>
+    h1 {
+        font-size: 1.5rem;
+        text-align: center;
+        margin: 0px 0;
+        font-family: Arial, sans-serif;
+        color: white;
+    }
+
+    h2 {
+        font-size: .75rem;
+        text-align: left;
+        margin: 0px 0;
+        font-family: Arial, sans-serif;
+        color: white;
+    }
+
+    #authors {
+        font-size: .75rem;
+    }
+
+    .description {
+        color: white;
+    }
+
     .location-label {
         display: block;
         margin: 15px 0 0 15px;
+        color: white;
     }
 
     #locations {
@@ -176,6 +216,7 @@
         display: flex;
         align-items: center;
         margin: 3px;
+        color: white;
     }
     
     .legend span {
@@ -196,7 +237,8 @@
         height: 100vh;
         overflow: auto;
         overflow-x: hidden;
-        background-color: var(--brandWhite); 
+        background-color: #1f1f1f;
+        /*background-color: var(--brandWhite); */
     }
 
     #map {
