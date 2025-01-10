@@ -18,7 +18,7 @@
 { "type": "Feature", "properties": { "name": "San Francisco-Oakland-Berkeley, CA Metro Area", "population": 4692242.0 }, "geometry": { "type": "Point", "coordinates": [ -122.167024992492514, 37.781007452303903 ] } },
 { "type": "Feature", "properties": { "name": "Riverside-San Bernardino-Ontario, CA Metro Area", "population": 4610050.0 }, "geometry": { "type": "Point", "coordinates": [ -116.129711522218273, 34.551651740608172 ] } },
 { "type": "Feature", "properties": { "name": "Detroit-Warren-Dearborn, MI Metro Area", "population": 4375604.0 }, "geometry": { "type": "Point", "coordinates": [ -83.232748943659828, 42.719242366958333 ] } },
-{ "type": "Feature", "properties": { "name": "Montréal (B)", "population": 4291732.0 }, "geometry": { "type": "Point", "coordinates": [ -73.705579596184606, 45.577335175101844 ] } },
+{ "type": "Feature", "properties": { "name": "Montreal (B)", "population": 4291732.0 }, "geometry": { "type": "Point", "coordinates": [ -73.705579596184606, 45.577335175101844 ] } },
 { "type": "Feature", "properties": { "name": "Seattle-Tacoma-Bellevue, WA Metro Area", "population": 4001701.0 }, "geometry": { "type": "Point", "coordinates": [ -121.850847758102773, 47.557491891119263 ] } },
 { "type": "Feature", "properties": { "name": "Minneapolis-St. Paul-Bloomington, MN-WI Metro Area", "population": 3678328.0 }, "geometry": { "type": "Point", "coordinates": [ -93.275313638029743, 45.10338104692422 ] } },
 { "type": "Feature", "properties": { "name": "San Diego-Chula Vista-Carlsbad, CA Metro Area", "population": 3289701.0 }, "geometry": { "type": "Point", "coordinates": [ -116.735038986932196, 33.034251312987379 ] } },
@@ -80,7 +80,7 @@
 { "type": "Feature", "properties": { "name": "Allentown-Bethlehem-Easton, PA-NJ Metro Area", "population": 863166.0 }, "geometry": { "type": "Point", "coordinates": [ -75.403836417146138, 40.789365640814658 ] } },
 { "type": "Feature", "properties": { "name": "North Port-Sarasota-Bradenton, FL Metro Area", "population": 844461.0 }, "geometry": { "type": "Point", "coordinates": [ -82.322301543581943, 27.34786245913735 ] } },
 { "type": "Feature", "properties": { "name": "Oxnard-Thousand Oaks-Ventura, CA Metro Area", "population": 842009.0 }, "geometry": { "type": "Point", "coordinates": [ -119.083606507828961, 34.456067799277456 ] } },
-{ "type": "Feature", "properties": { "name": "Québec (B)", "population": 839311.0 }, "geometry": { "type": "Point", "coordinates": [ -71.341253690821588, 46.912563590022685 ] } },
+{ "type": "Feature", "properties": { "name": "Quebec (B)", "population": 839311.0 }, "geometry": { "type": "Point", "coordinates": [ -71.341253690821588, 46.912563590022685 ] } },
 { "type": "Feature", "properties": { "name": "Winnipeg (B)", "population": 834678.0 }, "geometry": { "type": "Point", "coordinates": [ -97.050776364127287, 49.883075134712968 ] } },
 { "type": "Feature", "properties": { "name": "Columbia, SC Metro Area", "population": 831913.0 }, "geometry": { "type": "Point", "coordinates": [ -81.042385614487841, 34.091768180880713 ] } },
 { "type": "Feature", "properties": { "name": "Dayton-Kettering, OH Metro Area", "population": 812506.0 }, "geometry": { "type": "Point", "coordinates": [ -84.141933337766616, 39.829522036322437 ] } },
@@ -296,6 +296,6 @@
 { "type": "Feature", "properties": { "name": "Tupelo, MS Micro Area", "population": 163378.0 }, "geometry": { "type": "Point", "coordinates": [ -88.648513635258027, 34.342275276669653 ] } },
 { "type": "Feature", "properties": { "name": "Odessa, TX Metro Area", "population": 162300.0 }, "geometry": { "type": "Point", "coordinates": [ -102.542882658626311, 31.869195067626226 ] } },
 { "type": "Feature", "properties": { "name": "Saguenay (B)", "population": 161567.0 }, "geometry": { "type": "Point", "coordinates": [ -71.0048234971228, 48.42052185866946 ] } },
-{ "type": "Feature", "properties": { "name": "Trois-Rivières (B)", "population": 161489.0 }, "geometry": { "type": "Point", "coordinates": [ -72.502312504079583, 46.360272638556488 ] } }
+{ "type": "Feature", "properties": { "name": "Trois-Rivieres (B)", "population": 161489.0 }, "geometry": { "type": "Point", "coordinates": [ -72.502312504079583, 46.360272638556488 ] } }
 ]
 }
