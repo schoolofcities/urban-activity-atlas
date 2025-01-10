@@ -12,18 +12,13 @@
     let metroName = "";
 	let pmtilesURL = "";
 
-    // Load quintiles data from the JSON file
-    import quintiles from '../data/quintile_thresholds.json';
-    console.log(quintiles);
+    // Load min/max data from the JSON file
+    import minmax from '../data/min_max.json';
 
     // Sort the features alphabetically by name
     metroRegionCentroids.features.sort((a, b) =>
         a.properties.name.localeCompare(b.properties.name)
     );
-
-    // metroRegionCentroids.features.forEach((feature) => {
-    //     console.log(feature.properties.name);
-    // });
 
     // Function to zoom to the selected location
     const zoomToLocation = (locationName) => {
@@ -76,9 +71,23 @@
                 url: `pmtiles://${pmtilesURL}`,
             });
 
-            const quintiles_metro = quintiles[metroName];
+            // Calculate the min and max values for the selected metro region
+            const metroRegion = metroRegionCentroids.features.find(feature => feature.properties.name === metroName);
+            let minVal = Infinity;
+            let maxVal = -Infinity;
 
-            console.log('quintiles_metro:', quintiles_metro);
+            if (metroRegion) {
+                metroRegion.geometry.coordinates.forEach(coord => {
+                    const value = coord.prop_subset_stops;
+                    if (value < minVal) minVal = value;
+                    if (value > maxVal) maxVal = value;
+                });
+            }
+
+            console.log(`Min value: ${minVal}, Max value: ${maxVal}`);
+
+            const minmax_metro = minmax[metroName];
+            console.log('minmax_metro:', minmax_metro);
 
             map.addLayer({
                     id: layerId,
@@ -88,13 +97,11 @@
                     paint: {
                         "fill-opacity": 0.65,
                         "fill-color": [
-                            "step",
-                            ["get", "prop_subset_stops"],
-                            "#0b513f", quintiles_metro[0],
-                            "#397c53", quintiles_metro[1],
-                            "#70a863", quintiles_metro[2],
-                            "#b2d372", quintiles_metro[3],
-                            "#fffb85",
+                            "interpolate", 
+                            ["linear"], 
+                            ["get", "prop_subset_stops"], 
+                            minmax_metro[0], "#0b513f",    // Lower value - green
+                            minmax_metro[1], "#fffb85"     // Higher value - yellow
                         ],
                         "fill-outline-color": "rgba(0, 0, 0, 0)",
                     },
@@ -135,9 +142,10 @@
 
 <div class="container">
     <div class="panel">
-        <h1>Urban Activity Atlas</h1>
-        <h2>Which parts of a metro region have the most activity?</h2>
+        <h2>Urban Activity Atlas</h2>
+        <!-- <h2>Which parts of a metro region have the most activity?</h2> -->
         <p id="authors">Created by Julia Greenberg, Jeff Allen, and Aniket Kali</p>
+        <hr>
         <label for="locations" class="location-label">Choose a metropolitan region:</label>
         <select id="locations" on:change="{(e) => {
             metroName = e.target.value; 
@@ -157,12 +165,11 @@
             <li><span style="background-color: #b2d372;"></span></li>
             <li><span style="background-color: #fffb85;"></span>High for the region</li>
         </ul>
-
+        <hr>
         <p class="description">
-            Use this tool to explore human activity levels April 1, 2023 to March 31, 2024. cell phone data from <a href="https://spectus.ai/" target="_blank" rel="noopener noreferrer">Spectus</a>.
-        </p>
-        <p class="description">
-            Check out our <a href="https://github.com/schoolofcities/urban-activity-atlas/blob/main/README.md" target="_blank" rel="noopener noreferrer">Github</a> for more information.
+            Use this tool to explore activity levels between April 1, 2023 and March 31, 2024 in the 300 largest metropolitan regions in the US and Canada. Analysis uses cell phone data from <a href="https://spectus.ai/" target="_blank" rel="noopener noreferrer">Spectus</a>.
+            <br><br>
+            Check out our <a href="https://github.com/schoolofcities/urban-activity-atlas/blob/main/README.md" target="_blank" rel="noopener noreferrer">Github</a> for more information about our methodology.
         </p>
     </div>
 
@@ -171,34 +178,68 @@
 </div>
 
 <style>
-    h1 {
-        font-size: 1.5rem;
-        text-align: center;
-        margin: 0px 0;
-        font-family: Arial, sans-serif;
+    h2 {
+        font-size: 2rem;
+        text-align: left;
+        margin: 30px 15px 15px 15px;
+        font-family: RobotoRegular;
         color: white;
     }
 
-    h2 {
+    /* h2 {
         font-size: .75rem;
         text-align: left;
-        margin: 0px 0;
+        margin: 15px;
         font-family: Arial, sans-serif;
         color: white;
-    }
+    } */
 
     #authors {
-        font-size: .75rem;
+        font-size: .8rem;
+        line-height: 1.2;
+        margin: 15px;
+        font-family: RobotoRegular;
     }
 
     .description {
         color: white;
+        margin: 15px;
+        line-height: 1.2;
+        font-size: 1rem;
+        font-family: RobotoRegular;
+    }
+
+    /* Default state (unvisited link) */
+    a {
+        color: #fffb85;
+        text-decoration: none;
+        font-family: RobotoRegular;
+    }
+
+    /* Visited link */
+    a:visited {
+        color: #fffb85;
+        font-family: RobotoRegular;
+    }
+
+    /* Hover state (when the link is hovered over) */
+    a:hover {
+        color: #70a863;
+        text-decoration: underline;
+        font-family: RobotoRegular;
+    }
+
+    /* Active state (when the link is clicked) */
+    a:active {
+        color: #70a863;
+        font-family: RobotoRegular;
     }
 
     .location-label {
         display: block;
         margin: 15px 0 0 15px;
         color: white;
+        font-family: RobotoRegular;
     }
 
     #locations {
@@ -209,21 +250,77 @@
     .legend {
         list-style: none;
         padding: 0;
-        margin: 15px;		
+        margin: 15px;
+        font-family: RobotoRegular;
+        display: flex;
+        align-items: center;
+        width: 100%;
     }
 
     .legend li {
+        flex: 1;
+        margin: 0;
         display: flex;
+        justify-content: center;
         align-items: center;
-        margin: 3px;
         color: white;
+        font-family: RobotoRegular;
+        padding: 10px;
     }
-    
-    .legend span {
-        display: inline-block;
-        width: 20px;
-        height: 20px;
-        margin-right: 10px;
+
+    .legend::before {
+        content: "";
+        display: block;
+        height: 10px;
+        width: 100%;
+        background: linear-gradient(to right, #0b513f, #397c53, #70a863, #b2d372, #fffb85);
+    }
+
+    .legend li span {
+        display: none;  /* Remove the individual color boxes */
+    }
+
+    .legend li:first-child {
+        padding-left: 0;
+    }
+
+    .legend li:last-child {
+        padding-right: 0;
+    }
+
+    select {
+        background-color: #1f1f1f;
+        color: white;
+        font-size: 1rem; 
+        padding: 5px 5px;
+        width: 200px;       
+        appearance: none;   
+        -webkit-appearance: none;
+        -moz-appearance: none;
+    }
+
+    select option {
+        background-color: #444; 
+        color: white;     
+        padding: 10px;          
+    }
+
+    select option:hover {
+        background-color: #1f1f1f; 
+    }
+
+    select:focus {
+        background-color: #1f1f1f;
+        color: white;
+        outline: none;       
+    }
+
+    select::-ms-expand {
+        display: none;
+    }
+
+    select::-webkit-dropdown-button {
+        display: none; 
     }
 
     .container {
