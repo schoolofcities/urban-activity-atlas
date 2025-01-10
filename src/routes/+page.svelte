@@ -71,22 +71,7 @@
                 url: `pmtiles://${pmtilesURL}`,
             });
 
-            // Calculate the min and max values for the selected metro region
-            const metroRegion = metroRegionCentroids.features.find(feature => feature.properties.name === metroName);
-            let minVal = Infinity;
-            let maxVal = -Infinity;
-
-            if (metroRegion) {
-                metroRegion.geometry.coordinates.forEach(coord => {
-                    const value = coord.prop_subset_stops;
-                    if (value < minVal) minVal = value;
-                    if (value > maxVal) maxVal = value;
-                });
-            }
-
-            console.log(`Min value: ${minVal}, Max value: ${maxVal}`);
-
-            const minmax_metro = minmax[metroName];
+            const minmax_metro = minmax[metroName]; // Get min & max values for region
             console.log('minmax_metro:', minmax_metro);
 
             map.addLayer({
@@ -98,8 +83,8 @@
                         "fill-opacity": 0.65,
                         "fill-color": [
                             "interpolate", 
-                            ["linear"], 
-                            ["get", "prop_subset_stops"], 
+                            ["cubic-bezier", 0.1, 0.01, 1.0, 1.0], // ["exponential", 2], // https://maplibre.org/maplibre-style-spec/expressions/#interpolate - NEED TO FIX THIS
+                            ["get", "prop_subset_stops"],
                             minmax_metro[0], "#0b513f",    // Lower value - green
                             minmax_metro[1], "#fffb85"     // Higher value - yellow
                         ],
@@ -128,7 +113,7 @@
                 },
                 layers: layers("protomaps", "dark") 
             },
-            center: [-96.435, 41.899],
+            center: [-104.048, 44.511],
             zoom: 3.5,
             maxZoom: 16,
             minZoom: 2,
@@ -143,8 +128,13 @@
 <div class="container">
     <div class="panel">
         <h2>Urban Activity Atlas</h2>
-        <!-- <h2>Which parts of a metro region have the most activity?</h2> -->
         <p id="authors">Created by Julia Greenberg, Jeff Allen, and Aniket Kali</p>
+        <hr>
+        <p class="description">
+            Use this tool to explore activity levels in the 300 largest metropolitan regions in the US and Canada. This analysis uses cell phone data from <a href="https://spectus.ai/" target="_blank" rel="noopener noreferrer">Spectus</a> for the year-long period between April 1, 2023 and March 31, 2024.
+            <br><br>
+            <i>Check out our <a href="https://github.com/schoolofcities/urban-activity-atlas/blob/main/README.md" target="_blank" rel="noopener noreferrer">Github</a> for more information about our methodology.</i>
+        </p> 
         <hr>
         <label for="locations" class="location-label">Choose a metropolitan region:</label>
         <select id="locations" on:change="{(e) => {
@@ -157,20 +147,14 @@
                 <option value="{feature.properties.name}">{feature.properties.name}</option>
             {/each}
         </select>
-
-        <ul class="legend">
-            <li><span style="background-color: #0b513f;"></span>Low for the region</li>
-            <li><span style="background-color: #397c53;"></span></li>
-            <li><span style="background-color: #70a863;"></span></li>
-            <li><span style="background-color: #b2d372;"></span></li>
-            <li><span style="background-color: #fffb85;"></span>High for the region</li>
-        </ul>
-        <hr>
-        <p class="description">
-            Use this tool to explore activity levels between April 1, 2023 and March 31, 2024 in the 300 largest metropolitan regions in the US and Canada. Analysis uses cell phone data from <a href="https://spectus.ai/" target="_blank" rel="noopener noreferrer">Spectus</a>.
-            <br><br>
-            Check out our <a href="https://github.com/schoolofcities/urban-activity-atlas/blob/main/README.md" target="_blank" rel="noopener noreferrer">Github</a> for more information about our methodology.
-        </p>
+        <div class="legend">
+            <p class="legend-title">Activity level:</p>
+            <div class="gradient-bar"></div>  
+            <ul class="legend-label">
+                <li class="low">Low</li>
+                <li class="high">High</li>
+            </ul>
+        </div>       
     </div>
 
     <div id="map">
@@ -181,31 +165,24 @@
     h2 {
         font-size: 2rem;
         text-align: left;
-        margin: 30px 15px 15px 15px;
+        margin: 15px 15px 15px 15px;
         font-family: RobotoRegular;
         color: white;
     }
 
-    /* h2 {
-        font-size: .75rem;
-        text-align: left;
-        margin: 15px;
-        font-family: Arial, sans-serif;
-        color: white;
-    } */
-
     #authors {
         font-size: .8rem;
         line-height: 1.2;
+        text-align: left;
         margin: 15px;
         font-family: RobotoRegular;
     }
 
     .description {
         color: white;
-        margin: 15px;
+        margin: 15px 15px;
         line-height: 1.2;
-        font-size: 1rem;
+        font-size: .8rem;
         font-family: RobotoRegular;
     }
 
@@ -240,60 +217,66 @@
         margin: 15px 0 0 15px;
         color: white;
         font-family: RobotoRegular;
+        font-size: .8rem;
     }
 
     #locations {
-        width: 90%;
-        margin: 8px 15px 15px 15px;
+        display: block;
+        width: calc(100% - 30px);
+        margin: 8px 0 0  15px;
     }
 
     .legend {
         list-style: none;
         padding: 0;
-        margin: 15px;
+        margin: 10px 15px 15px 15px;
         font-family: RobotoRegular;
+        font-size: .8rem;
         display: flex;
-        align-items: center;
+        flex-direction: column;
+        align-items: left;
+    }
+
+    .legend-title {
+        font-family: RobotoRegular;
+        margin-bottom: 0px;
+        font-size: .8rem;
+    }
+
+    .gradient-bar {
         width: 100%;
-    }
-
-    .legend li {
-        flex: 1;
-        margin: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: white;
-        font-family: RobotoRegular;
-        padding: 10px;
-    }
-
-    .legend::before {
-        content: "";
-        display: block;
         height: 10px;
-        width: 100%;
         background: linear-gradient(to right, #0b513f, #397c53, #70a863, #b2d372, #fffb85);
+        margin-bottom: 5px;
     }
 
-    .legend li span {
-        display: none;  /* Remove the individual color boxes */
+    .legend-label {
+        display: flex; 
+        justify-content: space-between;
+        width: 100%;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        font-family: RobotoRegular;
+        color: white;
     }
 
-    .legend li:first-child {
-        padding-left: 0;
+    .low {
+        text-align: left;
+        flex: 1;
     }
 
-    .legend li:last-child {
-        padding-right: 0;
+    .high {
+        text-align: right;
+        flex: 1;
     }
 
     select {
         background-color: #1f1f1f;
         color: white;
-        font-size: 1rem; 
+        font-size: .8rem; 
         padding: 5px 5px;
-        width: 200px;       
+        width: 100%;       
         appearance: none;   
         -webkit-appearance: none;
         -moz-appearance: none;
@@ -329,37 +312,15 @@
 
     .panel {
         width: 350px;
-        min-width: 350px;
-        height: 350px;
-        height: 100vh;
-        overflow: auto;
-        overflow-x: hidden;
+        position: absolute;
         background-color: #1f1f1f;
-        /*background-color: var(--brandWhite); */
+        z-index: 1;
     }
 
     #map {
-        height: 100vh;
-        width: calc(100vw - 350px);
-        min-width: 350px;
-        background-color: var(--brandLightBlue); 
-    }
-
-    @media screen and (max-width: 820px) {
-        .container {
-            flex-direction: column-reverse;
-        }
-
-        #map {
-            height: 50vh;
-            width: 100vw;
-        }
-
-        .panel {
-            height: calc(50vh - 1px);
-            width: 100vw;
-            border-top: solid 1px var(--brandGray);
-            border-right: none;
-        }
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        z-index: -99;
     }
 </style>
