@@ -18,18 +18,6 @@
     // Load min/max data from the JSON file
     import minmax from '../data/min_max.json';
 
-    // Sort the features alphabetically by name
-    metroRegionCentroids.features.sort((a, b) =>
-        a.properties.name.localeCompare(b.properties.name)
-    );
-
-    let filteredOptions = metroRegionCentroids.features;
-
-    // Filter the options based on the search query
-    $: filteredOptions = metroRegionCentroids.features.filter((feature) =>
-        feature.properties.name.toLowerCase().startsWith(searchQuery.toLowerCase())
-    );    
-
     // Close the dropdown when clicking outside of it
     const handleClickOutside = (event) => {
         if (!event.target.closest('.dropdown-container')) {
@@ -215,7 +203,7 @@
             height: 50vh;
             width: 100vw;
         }
-        
+
         .panel {
             height: calc(50vh - 1px);
             width: 100vw;
