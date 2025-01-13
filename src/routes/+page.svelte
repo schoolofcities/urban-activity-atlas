@@ -1,22 +1,19 @@
 <script>
-    import "../assets/global-styles.css";
-    import { onMount } from "svelte";
-    import * as maplibregl from "maplibre-gl"; 
-    import "maplibre-gl/dist/maplibre-gl.css";
-    import * as pmtiles from "pmtiles";
-    import layers from 'protomaps-themes-base'; 
-
+    import "../assets/global-styles.css"; 
     import metroRegionCentroids from '../assets/metro_regions_centroids.geo.json';
+
+    import MapView from '$lib/MapView.svelte';
     import SelectRegion from '$lib/SelectRegion.svelte';
 
-    let map = null;
+    // Load min/max data from the JSON file
+    import minmax from '../data/min_max.json';
+
+    // Variables
+    let map;
     let metroName = "";
 	let pmtilesURL = "";
     let searchQuery = "";
     let dropdownOpen = false; // Initially set the dropdown as closed
-
-    // Load min/max data from the JSON file
-    import minmax from '../data/min_max.json';
 
     // Close the dropdown when clicking outside of it
     const handleClickOutside = (event) => {
@@ -66,94 +63,6 @@
             });
         }
     };
-
-	// Reactive to dynamically update the map when metroName changes
-	$: {
-        if (map && metroName) {
-
-            // console.log('Adding source and layer for', metroName);
-            const layerId = `${metroName}-layer`;
-
-			// Remove all metro layers
-			map.getStyle().layers.forEach((layer) => {
-				if (layer.id.endsWith('-layer') && map.getLayer(layer.id)) {
-					// console.log(`Removing metro layer: ${layer.id}`);
-					map.removeLayer(layer.id);
-				}
-			});
-
-			// Remove all metro sources
-			Object.keys(map.style.sourceCaches).forEach((sourceId) => {
-				if (sourceId !== 'protomaps' && map.getSource(sourceId)) {
-					// console.log(`Removing metro source: ${sourceId}`);
-					map.removeSource(sourceId);
-				}
-			});
-
-            pmtilesURL = `http://localhost:5173/metro_region_geohash_stops_pm/${metroName.replace(/ /g, '%20')}.pmtiles`;
-
-			console.log('pmtilesURL: ', pmtilesURL);
-
-			// Add the PMTiles source
-			map.addSource(metroName, {
-                type: "vector",
-                url: `pmtiles://${pmtilesURL}`,
-            });
-
-            const minmax_metro = minmax[metroName]; // Get min & max values for region
-            console.log('minmax_metro:', minmax_metro);
-
-            map.addLayer({
-                    id: layerId,
-                    type: "fill",
-                    source: metroName,
-                    "source-layer": metroName.replace(/[^\w]/g, ""),
-                    paint: {
-                        "fill-opacity": 0.65,
-                        "fill-color": [
-                            "interpolate", 
-                            ["cubic-bezier", 0.1, 0.01, 1.0, 1.0], // ["exponential", 2], // https://maplibre.org/maplibre-style-spec/expressions/#interpolate - NEED TO FIX THIS
-                            ["get", "prop_subset_stops"],
-                            minmax_metro[0], "#0b513f",    // Lower value - green
-                            minmax_metro[1], "#fffb85"     // Higher value - yellow
-                        ],
-                        "fill-outline-color": "rgba(0, 0, 0, 0)",
-                    },
-                });
-		}
-    }
-
-    onMount(() => {
-        let protocol = new pmtiles.Protocol();
-        maplibregl.addProtocol("pmtiles", protocol.tile);
-
-        document.addEventListener('click', handleClickOutside);
-
-        map = new maplibregl.Map({
-            container: "map", 
-            style: {
-                version: 8,
-                glyphs: 'https://protomaps.github.io/basemaps-assets/fonts/{fontstack}/{range}.pbf',
-                sprite: "https://protomaps.github.io/basemaps-assets/sprites/v4/dark",
-                sources: {
-                    'protomaps': {
-                        type: 'vector',
-                        url: 'https://api.protomaps.com/tiles/v4.json?key=f1d93c3bd5c79742',
-                        attribution: '<a href="https://protomaps.com">Protomaps</a> © <a href="https://openstreetmap.org">OpenStreetMap</a>'
-                    }
-                },
-                layers: layers("protomaps", "dark") 
-            },
-            center: [-104.048, 44.511],
-            zoom: 3.5,
-            maxZoom: 16,
-            minZoom: 2,
-            attributionControl: true
-        });
-
-        map.addControl(new maplibregl.NavigationControl(), "top-right");
-        map.addControl(new maplibregl.ScaleControl(), "bottom-right");
-    });
 </script>
 
 <div class="container">
@@ -168,7 +77,13 @@
         />
     </div>
 
-    <div id="map">
+    <div class="map-view">
+        <MapView 
+            bind:map={map} 
+            handleClickOutside={handleClickOutside} 
+            metroName={metroName} 
+            minmax={minmax} 
+        />
     </div>
 </div>
 
@@ -187,7 +102,7 @@
         background-color: #1f1f1f;
     }
 
-    #map {
+    .map-view {
         height: 100vh;
         width: calc(100vw - 350px);
         min-width: 350px;
@@ -199,7 +114,7 @@
             flex-direction: column-reverse;
         }
         
-        #map {
+        .map-view {
             height: 50vh;
             width: 100vw;
         }
