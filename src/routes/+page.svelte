@@ -5,15 +5,15 @@
     import MapView from '$lib/MapView.svelte';
     import SelectRegion from '$lib/SelectRegion.svelte';
 
-    // Load min/max data from the JSON file
-    import minmax from '../data/min_max.json';
-
     // Variables
     let map;
     let metroName = "";
 	let pmtilesURL = "";
     let searchQuery = "";
     let dropdownOpen = false; // Initially set the dropdown as closed
+
+    // Load min/max data from the JSON file
+    import minmax from '../data/min_max.json';
 
     // Close the dropdown when clicking outside of it
     const handleClickOutside = (event) => {
