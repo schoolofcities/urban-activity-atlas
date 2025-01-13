@@ -1,29 +1,50 @@
 <script>
-    import "../assets/global-styles.css";
-    import { onMount } from "svelte";
-    import * as maplibregl from "maplibre-gl"; 
-    import "maplibre-gl/dist/maplibre-gl.css";
-    import * as pmtiles from "pmtiles";
-    import layers from 'protomaps-themes-base'; 
+    import "../assets/global-styles.css"; 
+    import metroRegionCentroids from '../data/metro_regions_centroids.geo.json';
 
-    import metroRegionCentroids from '../assets/metro_regions_centroids.geo.json';
+    import MapView from '$lib/MapView.svelte';
+    import SelectRegion from '$lib/SelectRegion.svelte';
 
-    let map = null;
+    // Variables
+    let map;
     let metroName = "";
 	let pmtilesURL = "";
+    let searchQuery = "";
+    let dropdownOpen = false; // Initially set the dropdown as closed
 
-    // Load quintiles data from the JSON file
-    import quintiles from '../data/quintile_thresholds.json';
-    console.log(quintiles);
+    // Load min/max data from the JSON file
+    import minmax from '../data/min_max.json';
 
-    // Sort the features alphabetically by name
-    metroRegionCentroids.features.sort((a, b) =>
-        a.properties.name.localeCompare(b.properties.name)
-    );
+    // Close the dropdown when clicking outside of it
+    const handleClickOutside = (event) => {
+        if (!event.target.closest('.dropdown-container')) {
+            dropdownOpen = false;
+        }
+    };
 
-    // metroRegionCentroids.features.forEach((feature) => {
-    //     console.log(feature.properties.name);
-    // });
+    // Handle click inside the input field to reset the search query
+    const handleSearchInputClick = () => {
+        if (!searchQuery) {
+            dropdownOpen = true;  // Open dropdown if nothing is typed
+        } else {
+            searchQuery = '';  // Clear the text if there is any
+        }
+    };
+
+    // Handle input field updates (keep the dropdown open if text is typed)
+    const handleInputChange = () => {
+        if (searchQuery) {
+            dropdownOpen = true;  // Ensure dropdown stays open when typing
+        }
+    };
+
+    // Function to handle location selection
+    const selectLocation = (location) => {
+        metroName = location;
+        searchQuery = location; // Update the search bar with the selected location
+        zoomToLocation(metroName);
+        dropdownOpen = false; // Close the dropdown after selection
+    };
 
     // Function to zoom to the selected location
     const zoomToLocation = (locationName) => {
@@ -35,197 +56,38 @@
         if (feature) {
             const [lon, lat] = feature.geometry.coordinates;
             map.flyTo({
-                center: [lon, lat],
+                center: [lon - .1, lat], // Small adjustment since map is behind panel
                 zoom: 9,
                 essential: true, // Smooth transition
                 duration: 1000, // Transition duration in milliseconds
             });
         }
     };
-
-	// Reactive to dynamically update the map when metroName changes
-	$: {
-        if (map && metroName) {
-
-            // console.log('Adding source and layer for', metroName);
-            const layerId = `${metroName}-layer`;
-
-			// Remove all metro layers
-			map.getStyle().layers.forEach((layer) => {
-				if (layer.id.endsWith('-layer') && map.getLayer(layer.id)) {
-					// console.log(`Removing metro layer: ${layer.id}`);
-					map.removeLayer(layer.id);
-				}
-			});
-
-			// Remove all metro sources
-			Object.keys(map.style.sourceCaches).forEach((sourceId) => {
-				if (sourceId !== 'protomaps' && map.getSource(sourceId)) {
-					// console.log(`Removing metro source: ${sourceId}`);
-					map.removeSource(sourceId);
-				}
-			});
-
-            pmtilesURL = `http://localhost:5173/metro_region_geohash_stops_pm/${metroName.replace(/ /g, '%20')}.pmtiles`;
-
-			console.log('pmtilesURL: ', pmtilesURL);
-
-			// Add the PMTiles source
-			map.addSource(metroName, {
-                type: "vector",
-                url: `pmtiles://${pmtilesURL}`,
-            });
-
-            const quintiles_metro = quintiles[metroName];
-
-            console.log('quintiles_metro:', quintiles_metro);
-
-            map.addLayer({
-                    id: layerId,
-                    type: "fill",
-                    source: metroName,
-                    "source-layer": metroName.replace(/[^\w]/g, ""),
-                    paint: {
-                        "fill-opacity": 0.65,
-                        "fill-color": [
-                            "step",
-                            ["get", "prop_subset_stops"],
-                            "#0b513f", quintiles_metro[0],
-                            "#397c53", quintiles_metro[1],
-                            "#70a863", quintiles_metro[2],
-                            "#b2d372", quintiles_metro[3],
-                            "#fffb85",
-                        ],
-                        "fill-outline-color": "rgba(0, 0, 0, 0)",
-                    },
-                });
-		}
-    }
-
-    onMount(() => {
-        let protocol = new pmtiles.Protocol();
-        maplibregl.addProtocol("pmtiles", protocol.tile);
-
-        map = new maplibregl.Map({
-            container: "map", 
-            style: {
-                version: 8,
-                glyphs: 'https://protomaps.github.io/basemaps-assets/fonts/{fontstack}/{range}.pbf',
-                sprite: "https://protomaps.github.io/basemaps-assets/sprites/v4/dark",
-                sources: {
-                    'protomaps': {
-                        type: 'vector',
-                        url: 'https://api.protomaps.com/tiles/v4.json?key=f1d93c3bd5c79742',
-                        attribution: '<a href="https://protomaps.com">Protomaps</a> © <a href="https://openstreetmap.org">OpenStreetMap</a>'
-                    }
-                },
-                layers: layers("protomaps", "dark") 
-            },
-            center: [-96.435, 41.899],
-            zoom: 3.5,
-            maxZoom: 16,
-            minZoom: 2,
-            attributionControl: true
-        });
-
-        map.addControl(new maplibregl.NavigationControl(), "top-right");
-        map.addControl(new maplibregl.ScaleControl(), "bottom-right");
-    });
 </script>
 
 <div class="container">
     <div class="panel">
-        <h1>Urban Activity Atlas</h1>
-        <h2>Which parts of a metro region have the most activity?</h2>
-        <p id="authors">Created by Julia Greenberg, Jeff Allen, and Aniket Kali</p>
-        <label for="locations" class="location-label">Choose a metropolitan region:</label>
-        <select id="locations" on:change="{(e) => {
-            metroName = e.target.value; 
-			// console.log('metroName in on:change handler: ', metroName);
-            zoomToLocation(metroName); // Zoom to selected location
-        }}">
-            <option value="">Select a location</option>
-            {#each metroRegionCentroids.features as feature}
-                <option value="{feature.properties.name}">{feature.properties.name}</option>
-            {/each}
-        </select>
-
-        <ul class="legend">
-            <li><span style="background-color: #0b513f;"></span>Low for the region</li>
-            <li><span style="background-color: #397c53;"></span></li>
-            <li><span style="background-color: #70a863;"></span></li>
-            <li><span style="background-color: #b2d372;"></span></li>
-            <li><span style="background-color: #fffb85;"></span>High for the region</li>
-        </ul>
-
-        <p class="description">
-            Use this tool to explore human activity levels April 1, 2023 to March 31, 2024. cell phone data from <a href="https://spectus.ai/" target="_blank" rel="noopener noreferrer">Spectus</a>.
-        </p>
-        <p class="description">
-            Check out our <a href="https://github.com/schoolofcities/urban-activity-atlas/blob/main/README.md" target="_blank" rel="noopener noreferrer">Github</a> for more information.
-        </p>
+        <SelectRegion 
+            metroRegionCentroids={metroRegionCentroids}
+            bind:searchQuery={searchQuery} 
+            bind:dropdownOpen={dropdownOpen} 
+            handleInputChange={handleInputChange} 
+            handleSearchInputClick={handleSearchInputClick} 
+            selectLocation={selectLocation}
+        />
     </div>
 
-    <div id="map">
+    <div class="map-view">
+        <MapView 
+            bind:map={map} 
+            handleClickOutside={handleClickOutside} 
+            metroName={metroName} 
+            minmax={minmax} 
+        />
     </div>
 </div>
 
 <style>
-    h1 {
-        font-size: 1.5rem;
-        text-align: center;
-        margin: 0px 0;
-        font-family: Arial, sans-serif;
-        color: white;
-    }
-
-    h2 {
-        font-size: .75rem;
-        text-align: left;
-        margin: 0px 0;
-        font-family: Arial, sans-serif;
-        color: white;
-    }
-
-    #authors {
-        font-size: .75rem;
-    }
-
-    .description {
-        color: white;
-    }
-
-    .location-label {
-        display: block;
-        margin: 15px 0 0 15px;
-        color: white;
-    }
-
-    #locations {
-        width: 90%;
-        margin: 8px 15px 15px 15px;
-    }
-
-    .legend {
-        list-style: none;
-        padding: 0;
-        margin: 15px;		
-    }
-
-    .legend li {
-        display: flex;
-        align-items: center;
-        margin: 3px;
-        color: white;
-    }
-    
-    .legend span {
-        display: inline-block;
-        width: 20px;
-        height: 20px;
-        margin-right: 10px;
-    }
-
     .container {
         display: flex;
     }
@@ -238,10 +100,9 @@
         overflow: auto;
         overflow-x: hidden;
         background-color: #1f1f1f;
-        /*background-color: var(--brandWhite); */
     }
 
-    #map {
+    .map-view {
         height: 100vh;
         width: calc(100vw - 350px);
         min-width: 350px;
@@ -252,8 +113,8 @@
         .container {
             flex-direction: column-reverse;
         }
-
-        #map {
+        
+        .map-view {
             height: 50vh;
             width: 100vw;
         }
