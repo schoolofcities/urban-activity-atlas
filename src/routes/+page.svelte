@@ -1,6 +1,6 @@
 <script>
     import "../assets/global-styles.css"; 
-    import metroRegionCentroids from '../assets/metro_regions_centroids.geo.json';
+    import metroRegionCentroids from '../data/metro_regions_centroids.geo.json';
 
     import MapView from '$lib/MapView.svelte';
     import SelectRegion from '$lib/SelectRegion.svelte';
