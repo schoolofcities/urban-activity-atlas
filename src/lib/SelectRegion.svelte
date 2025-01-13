@@ -20,7 +20,7 @@
     );
 </script>
 
-<div class="panel">
+<div>
     <h2>Urban Activity Atlas</h2>
     <p id="authors">Created by Julia Greenberg, Jeff Allen, and Aniket Kali</p>
     <hr>
@@ -84,13 +84,6 @@
 </div>
 
 <style>
-    .panel {
-        width: 350px;
-        position: absolute;
-        background-color: #1f1f1f;
-        z-index: 1;
-    }
-
     h2 {
         font-size: 2rem;
         text-align: left;

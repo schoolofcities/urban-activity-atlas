@@ -169,14 +169,16 @@
 </script>
 
 <div class="container">
-    <SelectRegion 
-        metroRegionCentroids={metroRegionCentroids}
-        bind:searchQuery={searchQuery} 
-        bind:dropdownOpen={dropdownOpen} 
-        handleInputChange={handleInputChange} 
-        handleSearchInputClick={handleSearchInputClick} 
-        selectLocation={selectLocation}
-    />
+    <div class="panel">
+        <SelectRegion 
+            metroRegionCentroids={metroRegionCentroids}
+            bind:searchQuery={searchQuery} 
+            bind:dropdownOpen={dropdownOpen} 
+            handleInputChange={handleInputChange} 
+            handleSearchInputClick={handleSearchInputClick} 
+            selectLocation={selectLocation}
+        />
+    </div>
 
     <div id="map">
     </div>
@@ -187,10 +189,38 @@
         display: flex;
     }
 
+    .panel {
+        width: 350px;
+        min-width: 350px;
+        height: 350px;
+        height: 100vh;
+        overflow: auto;
+        overflow-x: hidden;
+        background-color: #1f1f1f;
+    }
+
     #map {
-        height: 100%;
-        width: 100%;
-        position: absolute;
-        z-index: -99;
+        height: 100vh;
+        width: calc(100vw - 350px);
+        min-width: 350px;
+        background-color: var(--brandLightBlue); 
+    }
+
+    @media screen and (max-width: 820px) {
+        .container {
+            flex-direction: column-reverse;
+        }
+        
+        #map {
+            height: 50vh;
+            width: 100vw;
+        }
+        
+        .panel {
+            height: calc(50vh - 1px);
+            width: 100vw;
+            border-top: solid 1px var(--brandGray);
+            border-right: none;
+        }
     }
 </style>
