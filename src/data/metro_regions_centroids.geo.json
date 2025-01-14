@@ -156,7 +156,7 @@
 { "type": "Feature", "properties": { "name": "Peoria, IL", "population": 401702.0 }, "geometry": { "type": "Point", "coordinates": [ -89.694783907107308, 40.707328356415324 ] } },
 { "type": "Feature", "properties": { "name": "Canton-Massillon, OH", "population": 400960.0 }, "geometry": { "type": "Point", "coordinates": [ -81.253465214849285, 40.718652628354661 ] } },
 { "type": "Feature", "properties": { "name": "Anchorage, AK", "population": 399335.0 }, "geometry": { "type": "Point", "coordinates": [ -149.543787272503209, 62.242551268527372 ] } },
-{ "type": "Feature", "properties": { "name": "Victoria, BC", "population": 397237.0 }, "geometry": { "type": "Point", "coordinates": [ -123.551686571047711, 48.465458222389877 ] } },
+{ "type": "Feature", "properties": { "name": "Victoria, BC", "population": 397237.0 }, "geometry": { "type": "Point", "coordinates": [ -123.361709718003937, 48.427716645011209 ] } },
 { "type": "Feature", "properties": { "name": "Beaumont-Port Arthur, TX", "population": 396279.0 }, "geometry": { "type": "Point", "coordinates": [ -94.208149997206149, 30.102096524044718 ] } },
 { "type": "Feature", "properties": { "name": "Shreveport-Bossier City, LA", "population": 391957.0 }, "geometry": { "type": "Point", "coordinates": [ -93.745062468930243, 32.43872327014185 ] } },
 { "type": "Feature", "properties": { "name": "Tallahassee, FL", "population": 386064.0 }, "geometry": { "type": "Point", "coordinates": [ -84.286173635609529, 30.405018509277713 ] } },
