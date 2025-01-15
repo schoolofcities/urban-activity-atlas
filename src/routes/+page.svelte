@@ -81,6 +81,7 @@
         <MapView 
             bind:map={map} 
             handleClickOutside={handleClickOutside} 
+            zoomToLocation={zoomToLocation}
             metroName={metroName} 
             minmax={minmax} 
         />
