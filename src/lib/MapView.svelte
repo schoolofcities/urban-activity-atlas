@@ -9,10 +9,10 @@
 
     // Props
     export let handleClickOutside;
-    export let zoomToLocation;
     export let metroName = "";
     export let minmax;
     export let map;
+    export let selectLocation; // Add this prop
 
     // Internal state
     let pmtilesURL = "";
@@ -20,8 +20,6 @@
     // Reactive statement for map updates
 	$: {
         if (map && metroName) {
-            zoomToLocation(metroName);
-
             // console.log('Adding source and layer for', metroName);
             const layerId = `${metroName}-layer`;
 
@@ -145,16 +143,16 @@
                 minzoom: 5 // Only show regions when zoomed in
             });
 
-            // Add click handlers for both layers
+            // Update click handlers to use selectLocation
             map.on('click', 'metro-points', (e) => {
                 if (e.features.length > 0) {
-                    metroName = e.features[0].properties.name;
+                    selectLocation(e.features[0].properties.name);
                 }
             });
 
             map.on('click', 'metro-areas', (e) => {
                 if (e.features.length > 0) {
-                    metroName = e.features[0].properties.name;
+                    selectLocation(e.features[0].properties.name);
                 }
             });
 
