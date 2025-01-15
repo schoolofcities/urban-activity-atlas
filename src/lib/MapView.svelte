@@ -12,7 +12,7 @@
     export let metroName = "";
     export let minmax;
     export let map;
-    export let selectLocation; // Add this prop
+    export let selectLocation; 
 
     // Internal state
     let pmtilesURL = "";
@@ -143,7 +143,7 @@
                 minzoom: 5 // Only show regions when zoomed in
             });
 
-            // Update click handlers to use selectLocation
+            // Update metro region across the whole application using selectLocation
             map.on('click', 'metro-points', (e) => {
                 if (e.features.length > 0) {
                     selectLocation(e.features[0].properties.name);
