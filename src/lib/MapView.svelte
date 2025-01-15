@@ -4,9 +4,12 @@
     import "maplibre-gl/dist/maplibre-gl.css";
     import * as pmtiles from "pmtiles";
     import layers from 'protomaps-themes-base';
+    import metroRegionCentroids from '../data/metro_regions_centroids.geo.json';
+    import metroRegionsSimple from '../data/metro_regions_simple.geo.json';
 
     // Props
     export let handleClickOutside;
+    export let zoomToLocation;
     export let metroName = "";
     export let minmax;
     export let map;
@@ -17,6 +20,7 @@
     // Reactive statement for map updates
 	$: {
         if (map && metroName) {
+            zoomToLocation(metroName);
 
             // console.log('Adding source and layer for', metroName);
             const layerId = `${metroName}-layer`;
@@ -94,12 +98,76 @@
             center: [-104.048, 44.511],
             zoom: 3.5,
             maxZoom: 16,
-            minZoom: 2,
+            minZoom: 3,
             attributionControl: true
         });
 
         map.addControl(new maplibregl.NavigationControl(), "top-right");
         map.addControl(new maplibregl.ScaleControl(), "bottom-right");
+
+        map.on('load', () => {
+            // Add centroids source
+            map.addSource('centroids', {
+                type: 'geojson',
+                data: metroRegionCentroids
+            });
+
+            // Add metro regions source
+            map.addSource('metro-regions', {
+                type: 'geojson',
+                data: metroRegionsSimple
+            });
+
+            // Add centroids layer (visible at low zoom)
+            map.addLayer({
+                id: 'metro-points',
+                type: 'circle',
+                source: 'centroids',
+                paint: {
+                    'circle-radius': 6,
+                    'circle-color': '#70a863',
+                    'circle-stroke-width': 1,
+                    'circle-stroke-color': '#fff'
+                },
+                maxzoom: 5 // Only show points when zoomed out
+            });
+
+            // Add metro regions layer (visible at high zoom)
+            map.addLayer({
+                id: 'metro-areas',
+                type: 'fill',
+                source: 'metro-regions',
+                paint: {
+                    'fill-color': '#70a863',
+                    'fill-opacity': 0.3,
+                    'fill-outline-color': '#fff'
+                },
+                minzoom: 5 // Only show regions when zoomed in
+            });
+
+            // Add click handlers for both layers
+            map.on('click', 'metro-points', (e) => {
+                if (e.features.length > 0) {
+                    metroName = e.features[0].properties.name;
+                }
+            });
+
+            map.on('click', 'metro-areas', (e) => {
+                if (e.features.length > 0) {
+                    metroName = e.features[0].properties.name;
+                }
+            });
+
+            // Add hover effects
+            ['metro-points', 'metro-areas'].forEach(layer => {
+                map.on('mouseenter', layer, () => {
+                    map.getCanvas().style.cursor = 'pointer';
+                });
+                map.on('mouseleave', layer, () => {
+                    map.getCanvas().style.cursor = '';
+                });
+            });
+        });
     });
 
     onDestroy(() => {
