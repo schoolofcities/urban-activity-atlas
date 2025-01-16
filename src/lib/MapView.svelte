@@ -1,24 +1,27 @@
 <script>
-    import { onMount, onDestroy } from "svelte";
+    import { onMount, onDestroy, createEventDispatcher } from "svelte";
     import * as maplibregl from "maplibre-gl";
     import "maplibre-gl/dist/maplibre-gl.css";
     import * as pmtiles from "pmtiles";
     import layers from 'protomaps-themes-base';
+    import metroRegionCentroids from '../data/metro_regions_centroids.geo.json';
+    import metroRegionsSimple from '../data/metro_regions_simple.geo.json';
 
     // Props
     export let handleClickOutside;
     export let metroName = "";
     export let minmax;
     export let map;
+    export let selectLocation; 
 
     // Internal state
     let pmtilesURL = "";
 
+    const dispatch = createEventDispatcher();
+
     // Reactive statement for map updates
 	$: {
         if (map && metroName) {
-
-            // console.log('Adding source and layer for', metroName);
             const layerId = `${metroName}-layer`;
 
 			// Remove all metro layers
@@ -66,8 +69,17 @@
                         ],
                         "fill-outline-color": "rgba(0, 0, 0, 0)",
                     },
+                    minzoom: 5  // Add this line to match metro-areas visibility
                 });
-		}
+            
+            // Update the filters to show/hide appropriate regions
+            map.setFilter('metro-areas', ['!=', ['get', 'name'], metroName]);  // Show all except selected
+            map.setFilter('selected-metro-outline', ['==', ['get', 'name'], metroName]);  // Show only selected outline
+		} else if (map) {
+            // When no region selected, show all regions and no outline
+            map.setFilter('metro-areas', ['has', 'name']);  // Show all regions
+            map.setFilter('selected-metro-outline', ['==', ['get', 'name'], '']);  // Hide outline
+        }
     }
 
     onMount(() => {
@@ -94,12 +106,93 @@
             center: [-104.048, 44.511],
             zoom: 3.5,
             maxZoom: 16,
-            minZoom: 2,
+            minZoom: 3,
             attributionControl: true
         });
 
         map.addControl(new maplibregl.NavigationControl(), "top-right");
         map.addControl(new maplibregl.ScaleControl(), "bottom-right");
+
+        map.on('load', () => {
+            // Add centroids source
+            map.addSource('centroids', {
+                type: 'geojson',
+                data: metroRegionCentroids
+            });
+
+            // Add metro regions source
+            map.addSource('metro-regions', {
+                type: 'geojson',
+                data: metroRegionsSimple
+            });
+
+            // Add centroids layer (visible at low zoom)
+            map.addLayer({
+                id: 'metro-points',
+                type: 'circle',
+                source: 'centroids',
+                paint: {
+                    'circle-radius': 6,
+                    'circle-color': '#70a863',
+                    'circle-stroke-width': 1,
+                    'circle-stroke-color': '#fff'
+                },
+                maxzoom: 5 // Only show points when zoomed out
+            });
+
+            // Regular metro areas layer (for non-selected regions)
+            map.addLayer({
+                id: 'metro-areas',
+                type: 'fill',
+                source: 'metro-regions',
+                paint: {
+                    'fill-color': '#70a863',
+                    'fill-opacity': 0.3,
+                    'fill-outline-color': '#fff'
+                },
+                filter: ['has', 'name'],  // Show all by default
+                minzoom: 5
+            });
+
+            // Add a new layer for the selected region's outline
+            map.addLayer({
+                id: 'selected-metro-outline',
+                type: 'line',
+                source: 'metro-regions',
+                paint: {
+                    'line-color': '#fff',
+                    'line-width': 3
+                },
+                filter: ['==', ['get', 'name'], ''],  // Start with empty filter
+                minzoom: 5
+            });
+
+            // Update metro region across the whole application using selectLocation
+            map.on('click', 'metro-points', (e) => {
+                if (e.features.length > 0) {
+                    selectLocation(e.features[0].properties.name);
+                }
+            });
+
+            map.on('click', 'metro-areas', (e) => {
+                if (e.features.length > 0) {
+                    selectLocation(e.features[0].properties.name);
+                }
+            });
+
+            // Add hover effects
+            ['metro-points', 'metro-areas'].forEach(layer => {
+                map.on('mouseenter', layer, () => {
+                    map.getCanvas().style.cursor = 'pointer';
+                });
+                map.on('mouseleave', layer, () => {
+                    map.getCanvas().style.cursor = '';
+                });
+            });
+
+            // Dispatch event when map and layers are fully loaded
+            dispatch('mapInit');
+        });
     });
 
     onDestroy(() => {
