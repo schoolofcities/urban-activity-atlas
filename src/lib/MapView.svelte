@@ -22,7 +22,6 @@
     // Reactive statement for map updates
 	$: {
         if (map && metroName) {
-            // console.log('Adding source and layer for', metroName);
             const layerId = `${metroName}-layer`;
 
 			// Remove all metro layers
@@ -71,7 +70,15 @@
                         "fill-outline-color": "rgba(0, 0, 0, 0)",
                     },
                 });
-		}
+            
+            // Update the filters to show/hide appropriate regions
+            map.setFilter('metro-areas', ['!=', ['get', 'name'], metroName]);  // Show all except selected
+            map.setFilter('selected-metro-outline', ['==', ['get', 'name'], metroName]);  // Show only selected outline
+		} else if (map) {
+            // When no region selected, show all regions and no outline
+            map.setFilter('metro-areas', ['has', 'name']);  // Show all regions
+            map.setFilter('selected-metro-outline', ['==', ['get', 'name'], '']);  // Hide outline
+        }
     }
 
     onMount(() => {
@@ -132,7 +139,7 @@
                 maxzoom: 5 // Only show points when zoomed out
             });
 
-            // Add metro regions layer (visible at high zoom)
+            // Regular metro areas layer (for non-selected regions)
             map.addLayer({
                 id: 'metro-areas',
                 type: 'fill',
@@ -142,7 +149,21 @@
                     'fill-opacity': 0.3,
                     'fill-outline-color': '#fff'
                 },
-                minzoom: 5 // Only show regions when zoomed in
+                filter: ['has', 'name'],  // Show all by default
+                minzoom: 5
+            });
+
+            // Add a new layer for the selected region's outline
+            map.addLayer({
+                id: 'selected-metro-outline',
+                type: 'line',
+                source: 'metro-regions',
+                paint: {
+                    'line-color': '#fff',
+                    'line-width': 3
+                },
+                filter: ['==', ['get', 'name'], ''],  // Start with empty filter
+                minzoom: 5
             });
 
             // Update metro region across the whole application using selectLocation
