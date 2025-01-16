@@ -1,16 +1,20 @@
 <script>
     import "../assets/global-styles.css"; 
-    import metroRegionCentroids from '../data/metro_regions_centroids.geo.json';
-
+    import { onMount } from 'svelte';
+    import { page } from '$app/stores';
+    
     import MapView from '$lib/MapView.svelte';
     import SelectRegion from '$lib/SelectRegion.svelte';
-
+    
+    import metroRegionCentroids from '../data/metro_regions_centroids.geo.json';
+    
     // Variables
     let map;
     let metroName = "";
 	let pmtilesURL = "";
     let searchQuery = "";
     let dropdownOpen = false; // Initially set the dropdown as closed
+    let mapInitialized = false;
 
     // Load min/max data from the JSON file
     import minmax from '../data/min_max.json';
@@ -38,12 +42,41 @@
         }
     };
 
+    // Convert a Metro region name to a URL friendly format, eg. "New York-Newark-Jersey City, NY-NJ-PA" --> "new-york--newark--jersey-city_ny--nj--pa"
+    function getURLFormat(s) {
+        return s.toLowerCase().replaceAll(", ", "_").replaceAll("-", "--").replaceAll(" -- ", "---").replaceAll(" ", "-")
+    } 
+
+    // Convert a URL friendly format back to Metro region name
+    function getMetroFormat(s) {
+        // Split cities and states, handle each part independently
+        let [citiesPart, statesPart] = s.split('_');
+        
+        // Format cities: split by dash, capitalize, join, then handle special cases
+        citiesPart = citiesPart.split('-')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ')
+            .replaceAll('   ', ' - ')
+            .replaceAll('  ', '-');
+        
+        // Format states: just handle dashes and uppercase if exists
+        return statesPart ? 
+            `${citiesPart}, ${statesPart.replaceAll('--', '-').toUpperCase()}` : 
+            citiesPart;
+    }
+
     // Function to handle location selection
     const selectLocation = (location) => {
+        if (!mapInitialized) return; // Don't proceed if map isn't ready
         metroName = location;
         searchQuery = location; // Update the search bar with the selected location
         zoomToLocation(metroName);
-        dropdownOpen = false; // Close the dropdown after selection
+        dropdownOpen = false; // Close the dropdown after selection, as applicable
+        
+        // Update URL without triggering a page reload
+        const url = new URL(window.location);
+        url.searchParams.set('metro', getURLFormat(location));
+        history.replaceState({}, '', url);
     };
 
     // Function to zoom to the selected location
@@ -61,6 +94,27 @@
                 essential: true, // Smooth transition
                 duration: 1000, // Transition duration in milliseconds
             });
+        }
+    };
+
+    // Handle map initialization
+    const handleMapInit = () => {
+        mapInitialized = true;
+        // Check URL params only once after map is ready
+        const urlMetro = $page.url.searchParams.get('metro');
+        if (urlMetro) {
+            // Decode the URL parameter to get the full metro name
+            const decodedMetro = decodeURIComponent(urlMetro);
+            const fullMetro = getMetroFormat(decodedMetro);
+            // console.log('URL Metro:', urlMetro);
+            // console.log('Decoded Metro:', decodedMetro);
+            // console.log('Full Metro:', fullMetro);
+            const exists = metroRegionCentroids.features.some(
+                feature => feature.properties.name === fullMetro
+            );
+            if (exists) {
+                selectLocation(fullMetro);
+            }
         }
     };
 </script>
@@ -84,6 +138,7 @@
             metroName={metroName} 
             minmax={minmax}
             selectLocation={selectLocation}
+            on:mapInit={handleMapInit}
         />
     </div>
 </div>
