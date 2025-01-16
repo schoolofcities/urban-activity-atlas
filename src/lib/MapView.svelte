@@ -69,6 +69,7 @@
                         ],
                         "fill-outline-color": "rgba(0, 0, 0, 0)",
                     },
+                    minzoom: 5  // Add this line to match metro-areas visibility
                 });
             
             // Update the filters to show/hide appropriate regions
