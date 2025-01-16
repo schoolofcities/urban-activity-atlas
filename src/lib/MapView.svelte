@@ -1,5 +1,5 @@
 <script>
-    import { onMount, onDestroy } from "svelte";
+    import { onMount, onDestroy, createEventDispatcher } from "svelte";
     import * as maplibregl from "maplibre-gl";
     import "maplibre-gl/dist/maplibre-gl.css";
     import * as pmtiles from "pmtiles";
@@ -16,6 +16,8 @@
 
     // Internal state
     let pmtilesURL = "";
+
+    const dispatch = createEventDispatcher();
 
     // Reactive statement for map updates
 	$: {
@@ -165,6 +167,9 @@
                     map.getCanvas().style.cursor = '';
                 });
             });
+
+            // Dispatch event when map and layers are fully loaded
+            dispatch('mapInit');
         });
     });
 
