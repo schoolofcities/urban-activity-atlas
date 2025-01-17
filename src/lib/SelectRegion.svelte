@@ -25,7 +25,7 @@
     <p id="authors">Created by Julia Greenberg, Jeff Allen, and Aniket Kali</p>
     <hr>
     <p class="description">
-        Use this tool to explore activity levels in the 300 largest metropolitan regions in the US and Canada. This analysis uses cell phone data from <a href="https://spectus.ai/" target="_blank" rel="noopener noreferrer">Spectus</a> for the year-long period between April 1, 2023 and March 31, 2024.
+        Use this tool to explore human activity levels in the 300 largest metropolitan regions in the US and Canada. This analysis uses cell phone data from <a href="https://spectus.ai/" target="_blank" rel="noopener noreferrer">Spectus</a> for the year-long period between April 1, 2023 and March 31, 2024.
         <br><br>
         <i>Check out our <a href="https://github.com/schoolofcities/urban-activity-atlas/blob/main/README.md" target="_blank" rel="noopener noreferrer">Github</a> for more information about our methodology.</i>
     </p> 
