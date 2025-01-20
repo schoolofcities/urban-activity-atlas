@@ -146,7 +146,7 @@
             minZoom: 3,
             bearing: 0, // make 0 if 2d, 40 if 3d
             pitch: 0, // make 0 if 2d, 50 if 3d
-            attributionControl: true
+            attributionControl: false
         });
 
         console.log(layers("protomaps", "dark"));
