@@ -156,7 +156,7 @@
         height: 100vh;
         overflow: auto;
         overflow-x: hidden;
-        background-color: #151f1f;
+        background-color: #111a1a;
     }
 
     .map-view {

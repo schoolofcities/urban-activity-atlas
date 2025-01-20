@@ -26,29 +26,16 @@
     <hr>
     <p class="description">
         Use this tool to explore human activity levels in the 300 largest metropolitan regions in the US and Canada. 
-        <br><br>
-        The colour of the grid pertains to how many people stopped or visited for the year-long period between April 1, 2023 and March 31, 2024. Data presented are normalized by the total activity in each metropolitan region.
-        <br>
     </p> 
-    
 
-    <div class="legend">
-        <p class="legend-title">Activity level:</p>
-        <div class="gradient-bar"></div>  
-        <ul class="legend-label">
-            <li class="low">Low</li>
-            <li class="high">High</li>
-        </ul>
-    </div>    
-
-    <p class="location-label">Select a metropolitan region:</p>
+    <!-- <p class="location-label">Select a metropolitan region:</p> -->
     <div class="dropdown-container">
         <div class="dropdown-toggle" on:click={() => { if (!searchQuery) dropdownOpen = true; }}>
             <input
                 type="text"
                 class="search-input"
                 bind:value={searchQuery}
-                placeholder={searchQuery ? '' : 'Search location...'}
+                placeholder={searchQuery ? '' : 'Search metropolitan region...'}
                 on:input={handleInputChange}
                 on:click={handleSearchInputClick}
             />
@@ -84,6 +71,21 @@
     </div>
 
     <p class="description">
+        The colour of the grid pertains to how many people stopped or visited for the year-long period between April 1, 2023 and March 31, 2024. Data presented are normalized by the total activity in each metropolitan region.
+        <br>
+    </p> 
+    
+
+    <div class="legend">
+        <p class="legend-title">Activity level:</p>
+        <div class="gradient-bar"></div>  
+        <ul class="legend-label">
+            <li class="low">Low</li>
+            <li class="high">High</li>
+        </ul>
+    </div>    
+
+    <p class="description">
         <i>The activity data on the map is derived from mobile phone data via <a href="https://spectus.ai/" target="_blank" rel="noopener noreferrer">Spectus</a>. Check out our <a href="https://github.com/schoolofcities/urban-activity-atlas/blob/main/README.md" target="_blank" rel="noopener noreferrer">Github</a> for more information about the data and methods.</i>
     </p>
 </div>
@@ -113,7 +115,7 @@
     .description {
         color: white;
         margin: 15px 15px;
-        line-height: 1.2;
+        line-height: 1.3;
         font-size: .9rem;
     }
 
@@ -163,7 +165,13 @@
         width: 100%;
         margin-top: 5px;
         margin-bottom: 5px;
+        height: 25px;
+        border: solid 1px var(--brandGray);
+        border-radius: 4px;
         font-family: RobotoRegular;
+        background-color: black;
+        color: white;
+        padding-left: 5px;
     }
 
     .dropdown-list {
@@ -171,7 +179,7 @@
         top: 40px;
         left: 0;
         right: 0;
-        background-color: white;
+        background-color: black;
         max-height: 200px;
         overflow-y: auto;
         z-index: 10;
@@ -182,10 +190,11 @@
         font-family: RobotoRegular;
         font-size: .8rem;
         cursor: pointer;
+        color: white;
     }
 
     .dropdown-item:hover {
-        background-color: #f0f0f0;
+        background-color: var(--brandMedBlue);
     }
 
     .no-results {
