@@ -1,4 +1,7 @@
 <script>
+
+    import logo from '../assets/top-logo-full.svg';
+
     // Props
     export let metroRegionCentroids;
     export let searchQuery;
@@ -21,6 +24,9 @@
 </script>
 
 <div>
+
+   
+
     <h1>Urban Activity Atlas</h1>
     <p id="authors"><a>Julia Greenberg</a>, <a>Aniket Kali</a>, <a>Jeff Allen</a>, <a>Karen Chapple</a></p>
     <hr>
@@ -77,7 +83,7 @@
     
 
     <div class="legend">
-        <p class="legend-title">Activity level:</p>
+        <p class="legend-title">Activity Level:</p>
         <div class="gradient-bar"></div>  
         <ul class="legend-label">
             <li class="low">Low</li>
@@ -85,17 +91,40 @@
         </ul>
     </div>    
 
+    <hr>
+
     <p class="description">
         <i>The activity data on the map is derived from mobile phone data via <a href="https://spectus.ai/" target="_blank" rel="noopener noreferrer">Spectus</a>. Check out our <a href="https://github.com/schoolofcities/urban-activity-atlas/blob/main/README.md" target="_blank" rel="noopener noreferrer">Github</a> for more information about the data and methods.</i>
     </p>
+
+    <div id="logo">
+		<a href="https://www.schoolofcities.utoronto.ca/"><img src={logo} alt="School of Cities"></a>
+	</div>
+    
 </div>
 
 <style>
 
+    #logo {
+        width: 100%;
+        max-width: 399px;
+        height: auto;
+        opacity: 0.90;
+    }
+
+    #logo img {
+        width: 100%;
+        height: auto; 
+        max-height: 60px;
+        display: block;
+    }
+
+
     h1 {
         font-family: TradeGothicBold;
         color: var(--brandWhite);
-        font-size: 36px;
+        font-size: 40px;
+        text-decoration: underline;
         margin: 15px 15px;
     }
 
@@ -167,7 +196,7 @@
         margin-bottom: 5px;
         height: 25px;
         border: solid 1px var(--brandGray);
-        border-radius: 4px;
+        border-radius: 5px;
         font-family: RobotoRegular;
         background-color: black;
         color: white;
@@ -214,7 +243,7 @@
     }
 
     .legend-title {
-        font-family: RobotoRegular;
+        font-family: RobotoBold;
         margin-bottom: 5px;
         font-size: 1rem;
     }
@@ -223,6 +252,7 @@
         width: 100%;
         height: 20px;
         border: solid 1px var(--brandGray);
+        border-radius: 5px;
         background: linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(30,55,101,1) 20%, rgba(0,127,163,1) 40%, rgba(101,177,199,1) 60%, rgba(111,199,234,1) 80%, rgba(255,255,255,1) 100%);
         margin-bottom: 5px;
     }
@@ -234,7 +264,7 @@
         list-style: none;
         padding: 0;
         margin: 0;
-        font-family: RobotoRegular;
+        font-family: RobotoBold;
         font-size: 1rem;
         color: white;
     }
