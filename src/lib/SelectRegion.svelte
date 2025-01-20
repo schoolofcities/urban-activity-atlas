@@ -21,17 +21,27 @@
 </script>
 
 <div>
-    <h2>Urban Activity Atlas</h2>
-    <p id="authors">Created by Julia Greenberg, Jeff Allen, and Aniket Kali</p>
+    <h1>Urban Activity Atlas</h1>
+    <p id="authors"><a>Julia Greenberg</a>, <a>Aniket Kali</a>, <a>Jeff Allen</a>, <a>Karen Chapple</a></p>
     <hr>
     <p class="description">
-        Use this tool to explore human activity levels in the 300 largest metropolitan regions in the US and Canada. This analysis uses cell phone data from <a href="https://spectus.ai/" target="_blank" rel="noopener noreferrer">Spectus</a> for the year-long period between April 1, 2023 and March 31, 2024.
+        Use this tool to explore human activity levels in the 300 largest metropolitan regions in the US and Canada. 
         <br><br>
-        <i>Check out our <a href="https://github.com/schoolofcities/urban-activity-atlas/blob/main/README.md" target="_blank" rel="noopener noreferrer">Github</a> for more information about our methodology.</i>
+        The colour of the grid pertains to how many people stopped or visited for the year-long period between April 1, 2023 and March 31, 2024. Data presented are normalized by the total activity in each metropolitan region.
+        <br>
     </p> 
-    <hr>
-    <label for="locations" class="location-label">Choose a metropolitan region:</label>
+    
 
+    <div class="legend">
+        <p class="legend-title">Activity level:</p>
+        <div class="gradient-bar"></div>  
+        <ul class="legend-label">
+            <li class="low">Low</li>
+            <li class="high">High</li>
+        </ul>
+    </div>    
+
+    <p class="location-label">Select a metropolitan region:</p>
     <div class="dropdown-container">
         <div class="dropdown-toggle" on:click={() => { if (!searchQuery) dropdownOpen = true; }}>
             <input
@@ -73,61 +83,59 @@
         {/if}
     </div>
 
-    <div class="legend">
-        <p class="legend-title">Activity level:</p>
-        <div class="gradient-bar"></div>  
-        <ul class="legend-label">
-            <li class="low">Low</li>
-            <li class="high">High</li>
-        </ul>
-    </div>    
+    <p class="description">
+        <i>The activity data on the map is derived from mobile phone data via <a href="https://spectus.ai/" target="_blank" rel="noopener noreferrer">Spectus</a>. Check out our <a href="https://github.com/schoolofcities/urban-activity-atlas/blob/main/README.md" target="_blank" rel="noopener noreferrer">Github</a> for more information about the data and methods.</i>
+    </p>
 </div>
 
 <style>
-    h2 {
-        font-size: 2rem;
-        text-align: left;
-        margin: 15px 15px 15px 15px;
+
+    h1 {
+        font-family: TradeGothicBold;
+        color: var(--brandWhite);
+        font-size: 36px;
+        margin: 15px 15px;
+    }
+
+
+    p {
         font-family: RobotoRegular;
-        color: white;
+        color: var(--brandWhite);
     }
 
     #authors {
-        font-size: .8rem;
+        font-size: .9rem;
         line-height: 1.2;
         text-align: left;
         margin: 15px;
-        font-family: RobotoRegular;
     }
 
     .description {
         color: white;
         margin: 15px 15px;
         line-height: 1.2;
-        font-size: .8rem;
-        font-family: RobotoRegular;
+        font-size: .9rem;
     }
 
     a {
-        color: #fffb85;
+        color: var(--brandLightBlue);
         text-decoration: none;
         font-family: RobotoRegular;
     }
 
     a:visited {
-        color: #fffb85;
-        font-family: RobotoRegular;
+        color: var(--brandLightBlue);
     }
 
     a:hover {
-        color: #70a863;
+        color: var(--brandMedGreen);
         text-decoration: underline;
-        font-family: RobotoRegular;
+        cursor: pointer;
     }
 
     a:active {
-        color: #70a863;
-        font-family: RobotoRegular;
+        color: var(--brandMedGreen);
+        
     }
 
     .location-label {
@@ -135,7 +143,7 @@
         margin: 15px 0 0 15px;
         color: white;
         font-family: RobotoRegular;
-        font-size: .8rem;
+        font-size: 1rem;
     }
 
     .dropdown-container {
@@ -198,14 +206,15 @@
 
     .legend-title {
         font-family: RobotoRegular;
-        margin-bottom: 0px;
-        font-size: .8rem;
+        margin-bottom: 5px;
+        font-size: 1rem;
     }
 
     .gradient-bar {
         width: 100%;
-        height: 10px;
-        background: linear-gradient(to right, #0b513f, #397c53, #70a863, #b2d372, #fffb85);
+        height: 20px;
+        border: solid 1px var(--brandGray);
+        background: linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(30,55,101,1) 20%, rgba(0,127,163,1) 40%, rgba(101,177,199,1) 60%, rgba(111,199,234,1) 80%, rgba(255,255,255,1) 100%);
         margin-bottom: 5px;
     }
 
@@ -217,6 +226,7 @@
         padding: 0;
         margin: 0;
         font-family: RobotoRegular;
+        font-size: 1rem;
         color: white;
     }
 </style>

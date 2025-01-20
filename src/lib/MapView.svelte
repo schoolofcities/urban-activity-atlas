@@ -24,8 +24,6 @@
 	$: {
         if (map && metroName) {
 
-
-
             const layerId = `${metroName}-layer`;
 
 			// Remove all metro layers
