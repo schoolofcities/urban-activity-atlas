@@ -149,18 +149,19 @@
     }
 
     .panel {
-        width: 350px;
-        min-width: 350px;
+        width: 399px;
+        min-width: 399px;
+        border-right: solid 1px var(--brandGray);
         height: 350px;
         height: 100vh;
         overflow: auto;
         overflow-x: hidden;
-        background-color: #1f1f1f;
+        background-color: #151f1f;
     }
 
     .map-view {
         height: 100vh;
-        width: calc(100vw - 350px);
+        width: calc(100vw - 400px);
         min-width: 350px;
         background-color: var(--brandLightBlue); 
     }
