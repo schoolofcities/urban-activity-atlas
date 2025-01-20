@@ -63,51 +63,51 @@
 
             const extrusionMultiplier = 10000 / minmax_metro[1] 
 
-            // // 2D view
-            // map.addLayer({
-            //         "id": layerId,
-            //         "type": "fill",
-            //         "source": metroName,
-            //         "source-layer": metroName.replace(/[^\w]/g, ""),
-            //         'paint': {
-            //             'fill-color': [
-            //                 'interpolate',
-            //                 ['linear'], // Use linear interpolation
-            //                 ['get', 'prop_subset_stops'], // Replace with your numeric property
-            //                 breakpoints[0] * minmax_metro_diff + minmax_metro[0], colors[0],
-            //                 breakpoints[1] * minmax_metro_diff + minmax_metro[0], colors[1],
-            //                 breakpoints[2] * minmax_metro_diff + minmax_metro[0], colors[2],
-            //                 breakpoints[3] * minmax_metro_diff + minmax_metro[0], colors[3],
-            //                 breakpoints[4] * minmax_metro_diff + minmax_metro[0], colors[4]
-            //             ],
-            //             'fill-opacity': 1 // Adjust opacity as needed
-            //         },
-            //         "minzoom": 5  // Add this line to match metro-areas visibility
-            //     }, "water_outline");
+            // 2D view
+            map.addLayer({
+                    "id": layerId,
+                    "type": "fill",
+                    "source": metroName,
+                    "source-layer": metroName.replace(/[^\w]/g, ""),
+                    'paint': {
+                        'fill-color': [
+                            'interpolate',
+                            ['linear'], // Use linear interpolation
+                            ['get', 'prop_subset_stops'], // Replace with your numeric property
+                            breakpoints[0] * minmax_metro_diff + minmax_metro[0], colors[0],
+                            breakpoints[1] * minmax_metro_diff + minmax_metro[0], colors[1],
+                            breakpoints[2] * minmax_metro_diff + minmax_metro[0], colors[2],
+                            breakpoints[3] * minmax_metro_diff + minmax_metro[0], colors[3],
+                            breakpoints[4] * minmax_metro_diff + minmax_metro[0], colors[4]
+                        ],
+                        'fill-opacity': 1 // Adjust opacity as needed
+                    },
+                    "minzoom": 5  // Add this line to match metro-areas visibility
+                }, "water_outline");
 
             // // 3D view
-            map.addLayer({
-                "id": layerId,
-                "type": "fill-extrusion",
-                "source": metroName,
-                "source-layer": metroName.replace(/[^\w]/g, ""),
-                'paint': {
-                    'fill-extrusion-color': [
-                        'interpolate',
-                        ['linear'], // Use linear interpolation
-                        ['get', 'prop_subset_stops'], // Replace with your numeric property
-                        breakpoints[0] * minmax_metro_diff + minmax_metro[0], colors[0],
-                        breakpoints[1] * minmax_metro_diff + minmax_metro[0], colors[1],
-                        breakpoints[2] * minmax_metro_diff + minmax_metro[0], colors[2],
-                        breakpoints[3] * minmax_metro_diff + minmax_metro[0], colors[3],
-                        breakpoints[4] * minmax_metro_diff + minmax_metro[0], colors[4]
-                    ],
-                    'fill-extrusion-height': ['*', ['get', 'prop_subset_stops'], extrusionMultiplier],
-                    // 'fill-extrusion-height': 10000,
-                    'fill-extrusion-opacity': 1 // Adjust opacity as needed
-                },
-                "minzoom": 5  // Add this line to match metro-areas visibility
-            }, "water_outline");
+            // map.addLayer({
+            //     "id": layerId,
+            //     "type": "fill-extrusion",
+            //     "source": metroName,
+            //     "source-layer": metroName.replace(/[^\w]/g, ""),
+            //     'paint': {
+            //         'fill-extrusion-color': [
+            //             'interpolate',
+            //             ['linear'], // Use linear interpolation
+            //             ['get', 'prop_subset_stops'], // Replace with your numeric property
+            //             breakpoints[0] * minmax_metro_diff + minmax_metro[0], colors[0],
+            //             breakpoints[1] * minmax_metro_diff + minmax_metro[0], colors[1],
+            //             breakpoints[2] * minmax_metro_diff + minmax_metro[0], colors[2],
+            //             breakpoints[3] * minmax_metro_diff + minmax_metro[0], colors[3],
+            //             breakpoints[4] * minmax_metro_diff + minmax_metro[0], colors[4]
+            //         ],
+            //         'fill-extrusion-height': ['*', ['get', 'prop_subset_stops'], extrusionMultiplier],
+            //         // 'fill-extrusion-height': 10000,
+            //         'fill-extrusion-opacity': 1 // Adjust opacity as needed
+            //     },
+            //     "minzoom": 5  // Add this line to match metro-areas visibility
+            // }, "water_outline");
             
             // Update the filters to show/hide appropriate regions
             map.setFilter('metro-areas', ['!=', ['get', 'name'], metroName]);  // Show all except selected
