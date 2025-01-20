@@ -130,7 +130,8 @@
             container: "map", 
             style: {
                 version: 8,
-                glyphs: 'https://protomaps.github.io/basemaps-assets/fonts/{fontstack}/{range}.pbf',
+                // glyphs: 'https://protomaps.github.io/basemaps-assets/fonts/{fontstack}/{range}.pbf',
+                glyphs: "https://schoolofcities.github.io/fonts/fonts/{fontstack}/{range}.pbf",
                 sprite: "https://protomaps.github.io/basemaps-assets/sprites/v4/dark",
                 sources: {
                     'protomaps': {
@@ -141,12 +142,12 @@
                 },
                 layers: baseMap
             },
-            center: [-104.048, 44.511],
+            center: [-98, 45],
             zoom: 3.5,
             maxZoom: 13,
             minZoom: 3,
-            bearing: 40, // make 0 if 2d
-            pitch: 50, // make 0 if 2d
+            bearing: 0, // make 0 if 2d, 40 if 3d
+            pitch: 0, // make 0 if 2d, 50 if 3d
             attributionControl: true
         });
 
