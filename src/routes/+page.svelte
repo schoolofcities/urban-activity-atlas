@@ -76,7 +76,7 @@
         // Update URL without triggering a page reload
         const url = new URL(window.location);
         url.searchParams.set('metro', getURLFormat(location));
-        history.replaceState({}, '', url);
+        history.replaceState({}, '', url); // Ignore the suggestion to use the SvelteKit imported version of replaceState - it leads to a complicated situation of trying to update the URL that doesn't seem to work
     };
 
     // Function to zoom to the selected location
