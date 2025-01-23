@@ -25,7 +25,11 @@
 
 <div>
     <h1>Urban Activity Atlas</h1>
-    <p id="authors"><a>Julia Greenberg</a>, <a>Aniket Kali</a>, <a>Jeff Allen</a>, <a>Karen Chapple</a></p>
+    <p id="authors">
+        <a href='https://www.urbandisplacement.org/team/julia-greenberg/'>Julia Greenberg</a>, 
+        <a href='https://www.linkedin.com/in/aniket-k-8a8b9921b/'>Aniket Kali</a>, 
+        <a href='https://jamaps.github.io/'>Jeff Allen</a>, 
+        <a href='https://karenchapple.com/'>Karen Chapple</a></p>
     <hr>
     <p class="description">
         Use this tool to explore human activity levels in the 300 largest metropolitan regions in the US and Canada. 
