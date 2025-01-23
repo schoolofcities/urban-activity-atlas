@@ -100,21 +100,16 @@
     // Handle map initialization
     const handleMapInit = () => {
         mapInitialized = true;
-        // Check URL params only once after map is ready
         const urlMetro = $page.url.searchParams.get('metro');
-        if (urlMetro) {
-            // Decode the URL parameter to get the full metro name
-            const decodedMetro = decodeURIComponent(urlMetro);
-            const fullMetro = getMetroFormat(decodedMetro);
-            // console.log('URL Metro:', urlMetro);
-            // console.log('Decoded Metro:', decodedMetro);
-            // console.log('Full Metro:', fullMetro);
-            const exists = metroRegionCentroids.features.some(
-                feature => feature.properties.name === fullMetro
-            );
-            if (exists) {
-                selectLocation(fullMetro);
-            }
+        if (!urlMetro) return;
+
+        const fullMetro = getMetroFormat(decodeURIComponent(urlMetro));
+        const exists = metroRegionCentroids.features.some(
+            feature => feature.properties.name === fullMetro
+        );
+        
+        if (exists) {
+            selectLocation(fullMetro);
         }
     };
 </script>
