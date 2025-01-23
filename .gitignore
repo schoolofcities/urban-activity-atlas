@@ -2,8 +2,8 @@
 .ipynb_checkpoints
 
 # Data
-data
-!src/data
+data/activity_2023-04-01_2024-03-31.csv
+data/metro_region_geohashes.csv
 
 # npm
 node_modules
