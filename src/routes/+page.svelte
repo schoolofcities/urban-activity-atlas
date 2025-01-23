@@ -4,7 +4,7 @@
     import { page } from '$app/stores';
     
     import MapView from '$lib/MapView.svelte';
-    import SelectRegion from '$lib/SelectRegion.svelte';
+    import SidePanel from '$lib/SidePanel.svelte';
     
     import metroRegionCentroids from '../data/metro_regions_centroids.geo.json';
     
@@ -121,7 +121,7 @@
 
 <div class="container">
     <div class="panel">
-        <SelectRegion 
+        <SidePanel 
             metroRegionCentroids={metroRegionCentroids}
             bind:searchQuery={searchQuery} 
             bind:dropdownOpen={dropdownOpen} 

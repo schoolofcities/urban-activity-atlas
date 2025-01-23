@@ -24,9 +24,6 @@
 </script>
 
 <div>
-
-   
-
     <h1>Urban Activity Atlas</h1>
     <p id="authors"><a>Julia Greenberg</a>, <a>Aniket Kali</a>, <a>Jeff Allen</a>, <a>Karen Chapple</a></p>
     <hr>
