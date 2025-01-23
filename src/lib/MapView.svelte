@@ -48,7 +48,7 @@
 
             pmtilesURL = `http://localhost:5173/metro_region_geohash_stops_pm/${metroName.replace(/ /g, '%20')}.pmtiles`;
 
-			console.log('pmtilesURL: ', pmtilesURL);
+			// console.log('pmtilesURL: ', pmtilesURL);
 
 			// Add the PMTiles source
 			map.addSource(metroName, {
@@ -57,7 +57,7 @@
             });
 
             const minmax_metro = minmax[metroName]; // Get min & max values for region
-            console.log('minmax_metro:', minmax_metro);
+            // console.log('minmax_metro:', minmax_metro);
             const minmax_metro_diff = minmax_metro[1] - minmax_metro[0]
 
             const breakpoints = [0, 0.05, 0.2, 0.35, 0.5];
@@ -153,7 +153,7 @@
             attributionControl: false
         });
 
-        console.log(layers("protomaps", "dark"));
+        // console.log(layers("protomaps", "dark"));
 
         map.addControl(new maplibregl.NavigationControl(), "top-right");
         map.addControl(new maplibregl.ScaleControl(), "bottom-right");
