@@ -26,21 +26,25 @@
 
             const layerId = `${metroName}-layer`;
 
-			// Remove all metro layers
-			map.getStyle().layers.forEach((layer) => {
-				if (layer.id.endsWith('-layer') && map.getLayer(layer.id)) {
-					// console.log(`Removing metro layer: ${layer.id}`);
-					map.removeLayer(layer.id);
-				}
-			});
+            // First remove all metro layers
+            const layers = map.getStyle().layers;
+            layers.forEach((layer) => {
+                // Remove metro-specific layers
+                if (layer.id.endsWith('-layer') && map.getLayer(layer.id)) {
+                    map.removeLayer(layer.id);
+                }
+            });
 
-			// Remove all metro sources
-			Object.keys(map.style.sourceCaches).forEach((sourceId) => {
-				if (sourceId !== 'protomaps' && map.getSource(sourceId)) {
-					// console.log(`Removing metro source: ${sourceId}`);
-					map.removeSource(sourceId);
-				}
-			});
+            // Then remove corresponding sources, excluding essential ones
+            Object.keys(map.style.sourceCaches).forEach((sourceId) => {
+                if (sourceId !== 'protomaps' && 
+                    sourceId !== 'centroids' && 
+                    sourceId !== 'metro-regions' && 
+                    sourceId !== 'esri-hillshade' && 
+                    map.getSource(sourceId)) {
+                    map.removeSource(sourceId);
+                }
+            });
 
             pmtilesURL = `http://localhost:5173/metro_region_geohash_stops_pm/${metroName.replace(/ /g, '%20')}.pmtiles`;
 
