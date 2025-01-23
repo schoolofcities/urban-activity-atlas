@@ -94,7 +94,7 @@
 
     <hr>
     <p class="description">
-        <i>The activity data on the map is derived from mobile phone data via <a href="https://spectus.ai/" target="_blank" rel="noopener noreferrer">Spectus</a>. Other reference data on the map are from <a href="https://www.openstreetmap.org/" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> via <a href="https://protomaps.com/" target="_blank" rel="noopener noreferrer">Protomaps</a>. Check out our <a href="https://github.com/schoolofcities/urban-activity-atlas/blob/main/README.md" target="_blank" rel="noopener noreferrer">Github</a> for more information about the data and methods.</i>
+        <i>The activity data on the map is derived from mobile phone data via <a href="https://spectus.ai/" target="_blank" rel="noopener noreferrer">Spectus</a>. Other reference data on the map are from <a href="https://www.openstreetmap.org/" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> via <a href="https://protomaps.com/" target="_blank" rel="noopener noreferrer">Protomaps</a>. You can <a href="https://download-directory.github.io/?url=https%3A%2F%2Fgithub.com%2Fschoolofcities%2Furban-activity-atlas%2Ftree%2Fadd-map-features%2Fdata%2Fmetro_region_geohash_stops">download the data</a> or check out our <a href="https://github.com/schoolofcities/urban-activity-atlas/blob/main/README.md" target="_blank" rel="noopener noreferrer">Github</a> for more information.</i>
     </p>
 
     <div id="logo">
