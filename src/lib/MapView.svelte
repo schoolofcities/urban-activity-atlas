@@ -5,7 +5,7 @@
     import * as pmtiles from "pmtiles";
     import layers from 'protomaps-themes-base';
     import metroRegionCentroids from '../data/metro_regions_centroids.geo.json';
-    import metroRegionsSimple from '../data/metro_regions_simple.geo.json';
+    import metroRegions from '../data/metro_regions_full.geo.json';
     import baseMap from "../data/base_map_style.json";
 
     // Props
@@ -187,7 +187,7 @@
             // Add metro regions source
             map.addSource('metro-regions', {
                 type: 'geojson',
-                data: metroRegionsSimple
+                data: metroRegions
             });
 
             // Add centroids layer (visible at low zoom)
