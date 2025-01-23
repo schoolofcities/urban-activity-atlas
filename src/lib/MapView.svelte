@@ -26,25 +26,29 @@
 
             const layerId = `${metroName}-layer`;
 
-			// Remove all metro layers
-			map.getStyle().layers.forEach((layer) => {
-				if (layer.id.endsWith('-layer') && map.getLayer(layer.id)) {
-					// console.log(`Removing metro layer: ${layer.id}`);
-					map.removeLayer(layer.id);
-				}
-			});
+            // First remove all metro layers
+            const layers = map.getStyle().layers;
+            layers.forEach((layer) => {
+                // Remove metro-specific layers
+                if (layer.id.endsWith('-layer') && map.getLayer(layer.id)) {
+                    map.removeLayer(layer.id);
+                }
+            });
 
-			// Remove all metro sources
-			Object.keys(map.style.sourceCaches).forEach((sourceId) => {
-				if (sourceId !== 'protomaps' && map.getSource(sourceId)) {
-					// console.log(`Removing metro source: ${sourceId}`);
-					map.removeSource(sourceId);
-				}
-			});
+            // Then remove corresponding sources, excluding essential ones
+            Object.keys(map.style.sourceCaches).forEach((sourceId) => {
+                if (sourceId !== 'protomaps' && 
+                    sourceId !== 'centroids' && 
+                    sourceId !== 'metro-regions' && 
+                    sourceId !== 'esri-hillshade' && 
+                    map.getSource(sourceId)) {
+                    map.removeSource(sourceId);
+                }
+            });
 
             pmtilesURL = `http://localhost:5173/metro_region_geohash_stops_pm/${metroName.replace(/ /g, '%20')}.pmtiles`;
 
-			console.log('pmtilesURL: ', pmtilesURL);
+			// console.log('pmtilesURL: ', pmtilesURL);
 
 			// Add the PMTiles source
 			map.addSource(metroName, {
@@ -53,7 +57,7 @@
             });
 
             const minmax_metro = minmax[metroName]; // Get min & max values for region
-            console.log('minmax_metro:', minmax_metro);
+            // console.log('minmax_metro:', minmax_metro);
             const minmax_metro_diff = minmax_metro[1] - minmax_metro[0]
 
             const breakpoints = [0, 0.05, 0.2, 0.35, 0.5];
@@ -149,7 +153,7 @@
             attributionControl: false
         });
 
-        console.log(layers("protomaps", "dark"));
+        // console.log(layers("protomaps", "dark"));
 
         map.addControl(new maplibregl.NavigationControl(), "top-right");
         map.addControl(new maplibregl.ScaleControl(), "bottom-right");
