@@ -4,7 +4,7 @@
     import { page } from '$app/stores';
     
     import MapView from '$lib/MapView.svelte';
-    import SelectRegion from '$lib/SelectRegion.svelte';
+    import SidePanel from '$lib/SidePanel.svelte';
     
     import metroRegionCentroids from '../data/metro_regions_centroids.geo.json';
     
@@ -76,7 +76,7 @@
         // Update URL without triggering a page reload
         const url = new URL(window.location);
         url.searchParams.set('metro', getURLFormat(location));
-        history.replaceState({}, '', url);
+        history.replaceState({}, '', url); // Ignore the suggestion to use the SvelteKit imported version of replaceState - it leads to a complicated situation of trying to update the URL that doesn't seem to work
     };
 
     // Function to zoom to the selected location
@@ -100,28 +100,23 @@
     // Handle map initialization
     const handleMapInit = () => {
         mapInitialized = true;
-        // Check URL params only once after map is ready
         const urlMetro = $page.url.searchParams.get('metro');
-        if (urlMetro) {
-            // Decode the URL parameter to get the full metro name
-            const decodedMetro = decodeURIComponent(urlMetro);
-            const fullMetro = getMetroFormat(decodedMetro);
-            // console.log('URL Metro:', urlMetro);
-            // console.log('Decoded Metro:', decodedMetro);
-            // console.log('Full Metro:', fullMetro);
-            const exists = metroRegionCentroids.features.some(
-                feature => feature.properties.name === fullMetro
-            );
-            if (exists) {
-                selectLocation(fullMetro);
-            }
+        if (!urlMetro) return;
+
+        const fullMetro = getMetroFormat(decodeURIComponent(urlMetro));
+        const exists = metroRegionCentroids.features.some(
+            feature => feature.properties.name === fullMetro
+        );
+        
+        if (exists) {
+            selectLocation(fullMetro);
         }
     };
 </script>
 
 <div class="container">
     <div class="panel">
-        <SelectRegion 
+        <SidePanel 
             metroRegionCentroids={metroRegionCentroids}
             bind:searchQuery={searchQuery} 
             bind:dropdownOpen={dropdownOpen} 
