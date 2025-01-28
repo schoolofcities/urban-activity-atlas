@@ -1,5 +1,4 @@
 <script>
-
     import logo from '../assets/top-logo-full.svg';
 
     // Props
@@ -21,14 +20,23 @@
     $: filteredOptions = metroRegionCentroids.features.filter((feature) =>
         feature.properties.name.toLowerCase().startsWith(searchQuery.toLowerCase())
     );
+
+    function handleKeydown(e) {
+        if (e.key === 'Enter' && filteredOptions.length > 0) {
+            e.preventDefault();
+            selectLocation(filteredOptions[0].properties.name);
+            dropdownOpen = false;
+        }
+    }
 </script>
 
 <div>
-
-   
-
     <h1>Urban Activity Atlas</h1>
-    <p id="authors"><a>Julia Greenberg</a>, <a>Aniket Kali</a>, <a>Jeff Allen</a>, <a>Karen Chapple</a></p>
+    <p id="authors">
+        <a href='https://www.urbandisplacement.org/team/julia-greenberg/'>Julia Greenberg</a>, 
+        <a href='https://www.linkedin.com/in/aniket-k-8a8b9921b/'>Aniket Kali</a>, 
+        <a href='https://jamaps.github.io/'>Jeff Allen</a>, 
+        <a href='https://karenchapple.com/'>Karen Chapple</a></p>
     <hr>
     <p class="description">
         Use this tool to explore human activity levels in the 300 largest metropolitan regions in the US and Canada. 
@@ -36,7 +44,15 @@
 
     <!-- <p class="location-label">Select a metropolitan region:</p> -->
     <div class="dropdown-container">
-        <div class="dropdown-toggle" on:click={() => { if (!searchQuery) dropdownOpen = true; }}>
+        <!-- svelte-ignore a11y_click_events_have_key_events -->
+        <div
+            class="dropdown-toggle"
+            role="button"
+            tabindex="0"
+            aria-haspopup="listbox"
+            aria-expanded={dropdownOpen}
+            on:click={() => { if (!searchQuery) dropdownOpen = true; }}
+        >
             <input
                 type="text"
                 class="search-input"
@@ -44,34 +60,26 @@
                 placeholder={searchQuery ? '' : 'Search metropolitan region...'}
                 on:input={handleInputChange}
                 on:click={handleSearchInputClick}
+                on:keydown={handleKeydown}
             />
         </div>
     
         {#if dropdownOpen}
-            <div class="dropdown-list">
-                {#if searchQuery === ''}
-                    {#each metroRegionCentroids.features as feature}
-                        <div
-                            class="dropdown-item"
-                            on:click={() => selectLocation(feature.properties.name)}
-                        >
-                            {feature.properties.name}
-                        </div>
-                    {/each}
+            <div class="dropdown-list" role="listbox">
+                {#each searchQuery === '' ? metroRegionCentroids.features : filteredOptions as feature}
+                    <!-- svelte-ignore a11y_click_events_have_key_events -->
+                    <div
+                        class="dropdown-item"
+                        role="option"
+                        aria-selected="false"
+                        tabindex="0"
+                        on:click={() => selectLocation(feature.properties.name)}
+                    >
+                        {feature.properties.name}
+                    </div>
                 {:else}
-                    {#if filteredOptions.length > 0}
-                        {#each filteredOptions as feature}
-                            <div
-                                class="dropdown-item"
-                                on:click={() => selectLocation(feature.properties.name)}
-                            >
-                                {feature.properties.name}
-                            </div>
-                        {/each}
-                    {:else}
-                        <div class="no-results">No results found</div>
-                    {/if}
-                {/if}
+                    <div class="no-results">No results found</div>
+                {/each}
             </div>
         {/if}
     </div>
