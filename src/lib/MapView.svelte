@@ -5,7 +5,6 @@
     import * as pmtiles from "pmtiles";
     import layers from 'protomaps-themes-base';
     import metroRegionCentroids from '../data/metro_regions_centroids.geo.json';
-    import metroRegions from '../data/metro_regions_full.geo.json';
     import baseMap from "../data/base_map_style.json";
 
     // Props
@@ -165,7 +164,6 @@
         });
 
         map.on('load', () => {
-
             map.addSource('esri-hillshade', {
                 'type': 'raster',
                 'tiles': [
@@ -188,10 +186,10 @@
                 data: metroRegionCentroids
             });
 
-            // Add metro regions source
+            // Add PMTiles source for metro regions boundaries
             map.addSource('metro-regions', {
-                type: 'geojson',
-                data: metroRegions
+                type: 'vector',
+                url: 'pmtiles://http://localhost:5173/metro_regions_full.pmtiles'
             });
 
             // Add centroids layer (visible at low zoom)
@@ -213,6 +211,7 @@
                 id: 'metro-areas',
                 type: 'fill',
                 source: 'metro-regions',
+                'source-layer': 'metro_region_full',  // Updated layer name
                 paint: {
                     'fill-color': '#000000',
                     'fill-opacity': 0.9
@@ -224,6 +223,7 @@
                 id: 'metro-area-outlines',
                 type: 'line',
                 source: 'metro-regions',
+                'source-layer': 'metro_region_full',  // Updated layer name
                 paint: {
                     'line-color': '#fff',
                     'line-opacity': 0.4,
@@ -239,6 +239,7 @@
                 id: 'selected-metro-outline',
                 type: 'line',
                 source: 'metro-regions',
+                'source-layer': 'metro_region_full',  // Updated layer name
                 paint: {
                     'line-color': '#94928a',
                     'line-width': 2,
