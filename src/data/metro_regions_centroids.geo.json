@@ -296,6 +296,12 @@
 { "type": "Feature", "properties": { "name": "Tupelo, MS Micro Area", "population": 163378.0 }, "geometry": { "type": "Point", "coordinates": [ -88.710489045199907, 34.257409556146548 ] } },
 { "type": "Feature", "properties": { "name": "Odessa, TX", "population": 162300.0 }, "geometry": { "type": "Point", "coordinates": [ -102.360598613466166, 31.846516294552668 ] } },
 { "type": "Feature", "properties": { "name": "Saguenay, QC", "population": 161567.0 }, "geometry": { "type": "Point", "coordinates": [ -71.066109503125972, 48.428696615050299 ] } },
-{ "type": "Feature", "properties": { "name": "Trois-Rivieres, QC", "population": 161489.0 }, "geometry": { "type": "Point", "coordinates": [ -72.543212736479319, 46.342746830416722 ] } }
+{ "type": "Feature", "properties": { "name": "Trois-Rivieres, QC", "population": 161489.0 }, "geometry": { "type": "Point", "coordinates": [ -72.543212736479319, 46.342746830416722 ] } },
+{ "type": "Feature", "properties": { "name": "Bloomington, IN", "population": 161426.0 }, "geometry": { "type": "Point", "coordinates": [ -86.534123243782659, 39.165574067245288 ] } },
+{ "type": "Feature", "properties": { "name": "Sebastian-Vero Beach, FL", "population": 160986.0 }, "geometry": { "type": "Point", "coordinates": [ -80.397013756467942, 27.638733629700226 ] } },
+{ "type": "Feature", "properties": { "name": "Jackson, MI", "population": 160637.0 }, "geometry": { "type": "Point", "coordinates": [ -84.403041552944515, 42.246273295478836 ] } },
+{ "type": "Feature", "properties": { "name": "State College, PA", "population": 158665.0 }, "geometry": { "type": "Point", "coordinates": [ -77.856149910646948, 40.802557837870054 ] } },
+{ "type": "Feature", "properties": { "name": "Idaho Falls, ID", "population": 158478.0 }, "geometry": { "type": "Point", "coordinates": [ -112.037337962547255, 43.489242451955157 ] } },
+{ "type": "Feature", "properties": { "name": "Moncton, NB", "population": 157717.0 }, "geometry": { "type": "Point", "coordinates": [ -64.7859889528536, 46.083292763640806 ] } }
 ]
 }
