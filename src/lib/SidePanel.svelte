@@ -8,6 +8,8 @@
     export let handleInputChange;
     export let handleSearchInputClick;
     export let selectLocation;
+    export let mapDimensionView;
+
     
     // Sort the features alphabetically by name
     metroRegionCentroids.features.sort((a, b) =>
@@ -28,6 +30,11 @@
             dropdownOpen = false;
         }
     }
+
+    function setMapDimensionView(dimension) {
+        mapDimensionView = dimension;
+    }
+
 </script>
 
 <div>
@@ -97,11 +104,16 @@
             <li class="low">Low</li>
             <li class="high">High</li>
         </ul>
-    </div>    
+    </div>
+
+    <div class="button-container">
+        <div id="2D" class={`button ${mapDimensionView === "2D" ? "selected" : "not-selected"}`} on:click={() => setMapDimensionView("2D")}>2D View</div>
+        <div id="3D" class={`button ${mapDimensionView === "3D" ? "selected" : "not-selected"}`} on:click={() => setMapDimensionView("3D")}>3D View</div>
+    </div>
 
     <hr>
     <p class="description">
-        <i>The activity data on the map is derived from a sample of mobile phone data via <a href="https://spectus.ai/" target="_blank" rel="noopener noreferrer">Spectus</a>. Other reference data on the map are from <a href="https://www.openstreetmap.org/" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> via <a href="https://protomaps.com/" target="_blank" rel="noopener noreferrer">Protomaps</a>. Check out our <a href="https://github.com/schoolofcities/urban-activity-atlas/blob/main/README.md" target="_blank" rel="noopener noreferrer">Github</a> for more information about the data and methods.</i>
+        <i>The activity data on the map is derived from a sample of mobile phone data via <a href="https://spectus.ai/" target="_blank" rel="noopener noreferrer">Spectus</a>. Other reference data on the map are from <a href="https://www.openstreetmap.org/" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> via <a href="https://protomaps.com/" target="_blank" rel="noopener noreferrer">Protomaps</a>. Check out our <a href="hhttps://github.com/schoolofcities/urban-activity-atlas/" target="_blank" rel="noopener noreferrer">Github</a> for more information about the data and methods.</i>
     </p>
 
     <div id="logo">
@@ -275,4 +287,47 @@
         font-size: 1rem;
         color: white;
     }
+
+
+
+    .button-container {
+        display: flex; 
+        width: calc(100% - 20px);
+        height: 100%; 
+        margin: 5px;
+    }
+
+    .button {
+        flex: 1; 
+        display: flex; 
+        justify-content: center;
+        align-items: center;
+        font-size: 16px;
+        font-weight: bold;
+        color: white;
+        background-color: var(--brandDarkBlue); 
+        border: 1px solid var(--brandGray); 
+        border-radius: 5px;
+        cursor: pointer; 
+        margin: 5px;
+        margin-left: 10px;
+        transition: background-color 0.2s ease; 
+    }
+
+    .button.selected {
+        /* styles for the selected button */
+    }
+
+    .button.not-selected {
+        opacity: 0.5;
+    }
+
+
+    .button:hover {
+        background-color: var(--brandLightBlue); 
+        opacity: 1;
+    }
+
+
+
 </style>

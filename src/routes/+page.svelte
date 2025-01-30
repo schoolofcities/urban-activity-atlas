@@ -8,6 +8,7 @@
     
     import metroRegionCentroids from '../data/metro_regions_centroids.geo.json';
     
+    
     // Variables
     let map;
     let metroName = "";
@@ -15,6 +16,7 @@
     let searchQuery = "";
     let dropdownOpen = false; // Initially set the dropdown as closed
     let mapInitialized = false;
+    let mapDimensionView = "3D" // "2D" or "3D"
 
     // Load min/max data from the JSON file
     import minmax from '../data/min_max.json';
@@ -88,12 +90,32 @@
 
         if (feature) {
             const [lon, lat] = feature.geometry.coordinates;
-            map.flyTo({
-                center: [lon - .1, lat], // Small adjustment since map is behind panel
-                zoom: 9,
-                essential: true, // Smooth transition
-                duration: 1000, // Transition duration in milliseconds
-            });
+            if (mapDimensionView === "3D") {
+                map.flyTo({
+                    bearing: 40,
+                    pitch: 50,
+                    center: [lon - .1, lat], // Small adjustment since map is behind panel
+                    zoom: 9.5,
+                    essential: true, // Smooth transition
+                    duration: 1000, // Transition duration in milliseconds
+                });
+            } else {
+                map.flyTo({
+                    bearing: 0,
+                    pitch: 0,
+                    center: [lon - .1, lat], // Small adjustment since map is behind panel
+                    zoom: 9.5,
+                    essential: true, // Smooth transition
+                    duration: 1000, // Transition duration in milliseconds
+                });
+            }
+        }
+    };
+
+    $: {
+        console.log(mapDimensionView);
+        if (metroName !== "") {
+            zoomToLocation(metroName);
         }
     };
 
@@ -114,6 +136,35 @@
     };
 </script>
 
+
+
+<svelte:head>
+	<meta
+		name="viewport"
+		content="width=device-width, initial-scale=1, minimum-scale=1"
+	/>
+
+	<title>Urban Activity Atlas | School of Cities</title>
+
+	<meta name="description" content="Explore maps of human activity levels in the 300 largest metropolitan regions in the US and Canada">
+	<meta name="author" content="Julia Greenberg, Aniket Kali, Jeff Allen, Karen Chapple">
+
+	<meta property="og:title" content="Urban Activity Atlas | School of Cities" />
+	<meta property="og:description" content="Explore maps of human activity levels in the 300 largest metropolitan regions in the US and Canada" />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="https://schoolofcities.github.io/urban-activity-atlas" />
+	<meta property="og:image" content="https://schoolofcities.github.io/urban-activity-atlas/web-card.png" />
+	<meta property="og:locale" content="en_CA">
+
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:site" content="https://schoolofcities.github.io/urban-activity-atlas" />
+	<meta name="twitter:creator" content="@UofTCities" />
+	<meta name="twitter:title" content="Urban Activity Atlas | School of Cities" />
+	<meta name="twitter:description" content="Explore maps of human activity levels in the 300 largest metropolitan regions in the US and Canada" />
+	<meta name="twitter:image" content="https://schoolofcities.github.io/urban-activity-atlas/web-card.png" /> 
+
+</svelte:head>
+
 <div class="container">
     <div class="panel">
         <SidePanel 
@@ -123,6 +174,7 @@
             handleInputChange={handleInputChange} 
             handleSearchInputClick={handleSearchInputClick} 
             selectLocation={selectLocation}
+            bind:mapDimensionView={mapDimensionView}
         />
     </div>
 
@@ -134,6 +186,7 @@
             minmax={minmax}
             selectLocation={selectLocation}
             on:mapInit={handleMapInit}
+            mapDimensionView={mapDimensionView}
         />
     </div>
 </div>
