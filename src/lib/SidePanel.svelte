@@ -8,6 +8,8 @@
     export let handleInputChange;
     export let handleSearchInputClick;
     export let selectLocation;
+    export let mapDimensionView;
+
     
     // Sort the features alphabetically by name
     metroRegionCentroids.features.sort((a, b) =>
@@ -28,6 +30,11 @@
             dropdownOpen = false;
         }
     }
+
+    function setMapDimensionView(dimension) {
+        mapDimensionView = dimension;
+    }
+
 </script>
 
 <div>
@@ -97,7 +104,12 @@
             <li class="low">Low</li>
             <li class="high">High</li>
         </ul>
-    </div>    
+    </div>
+
+    <div class="button-container">
+        <div id="2D" class="button" on:click={() => setMapDimensionView("2D")}>2D View</div>
+        <div id="3D" class="button" on:click={() => setMapDimensionView("3D")}>3D View</div>
+    </div>
 
     <hr>
     <p class="description">
@@ -275,4 +287,35 @@
         font-size: 1rem;
         color: white;
     }
+
+
+
+    .button-container {
+        display: flex; 
+        width: calc(100% - 30px);
+        height: 100%; 
+        margin: 15px;
+    }
+
+    /* Style for the buttons */
+    .button {
+        flex: 1; 
+        display: flex; 
+        justify-content: center;
+        align-items: center;
+        font-size: 16px;
+        font-weight: bold;
+        color: white;
+        background-color: #007bff; 
+        border: 1px solid #0056b3; 
+        cursor: pointer; 
+        transition: background-color 0.3s ease; 
+    }
+
+    .button:hover {
+        background-color: #0056b3; 
+    }
+
+
+
 </style>
