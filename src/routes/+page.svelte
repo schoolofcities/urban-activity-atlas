@@ -8,6 +8,7 @@
     
     import metroRegionCentroids from '../data/metro_regions_centroids.geo.json';
     
+    
     // Variables
     let map;
     let metroName = "";
@@ -15,6 +16,7 @@
     let searchQuery = "";
     let dropdownOpen = false; // Initially set the dropdown as closed
     let mapInitialized = false;
+    let mapDimensionView = "3D" // "2D" or "3D"
 
     // Load min/max data from the JSON file
     import minmax from '../data/min_max.json';
@@ -88,12 +90,32 @@
 
         if (feature) {
             const [lon, lat] = feature.geometry.coordinates;
-            map.flyTo({
-                center: [lon - .1, lat], // Small adjustment since map is behind panel
-                zoom: 9,
-                essential: true, // Smooth transition
-                duration: 1000, // Transition duration in milliseconds
-            });
+            if (mapDimensionView === "3D") {
+                map.flyTo({
+                    bearing: 40,
+                    pitch: 50,
+                    center: [lon - .1, lat], // Small adjustment since map is behind panel
+                    zoom: 9.5,
+                    essential: true, // Smooth transition
+                    duration: 1000, // Transition duration in milliseconds
+                });
+            } else {
+                map.flyTo({
+                    bearing: 0,
+                    pitch: 0,
+                    center: [lon - .1, lat], // Small adjustment since map is behind panel
+                    zoom: 9.5,
+                    essential: true, // Smooth transition
+                    duration: 1000, // Transition duration in milliseconds
+                });
+            }
+        }
+    };
+
+    $: {
+        console.log(mapDimensionView);
+        if (metroName !== "") {
+            zoomToLocation(metroName);
         }
     };
 
@@ -123,6 +145,7 @@
             handleInputChange={handleInputChange} 
             handleSearchInputClick={handleSearchInputClick} 
             selectLocation={selectLocation}
+            bind:mapDimensionView={mapDimensionView}
         />
     </div>
 
@@ -134,6 +157,7 @@
             minmax={minmax}
             selectLocation={selectLocation}
             on:mapInit={handleMapInit}
+            mapDimensionView={mapDimensionView}
         />
     </div>
 </div>
