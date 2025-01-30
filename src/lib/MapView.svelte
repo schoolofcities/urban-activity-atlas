@@ -45,7 +45,7 @@
                 }
             });
 
-            pmtilesURL = `http://localhost:5173/metro_region_geohash_stops_pm/${metroName.replace(/ /g, '%20')}.pmtiles`;
+            pmtilesURL = `/urban-activity-atlas/metro_region_geohash_stops_pm/${metroName.replace(/ /g, '%20')}.pmtiles`;
 
 			// console.log('pmtilesURL: ', pmtilesURL);
 
@@ -189,7 +189,7 @@
             // Add PMTiles source for metro regions boundaries
             map.addSource('metro-regions', {
                 type: 'vector',
-                url: 'pmtiles://http://localhost:5173/metro_regions_full.pmtiles'
+                url: 'pmtiles://metro_regions_full.pmtiles'
             });
 
             // Add centroids layer (visible at low zoom)
