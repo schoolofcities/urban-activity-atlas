@@ -136,6 +136,35 @@
     };
 </script>
 
+
+
+<svelte:head>
+	<meta
+		name="viewport"
+		content="width=device-width, initial-scale=1, minimum-scale=1"
+	/>
+
+	<title>Urban Activity Atlas | School of Cities</title>
+
+	<meta name="description" content="Explore maps of human activity levels in the 300 largest metropolitan regions in the US and Canada">
+	<meta name="author" content="Julia Greenberg, Aniket Kali, Jeff Allen, Karen Chapple">
+
+	<meta property="og:title" content="Urban Activity Atlas | School of Cities" />
+	<meta property="og:description" content="Explore maps of human activity levels in the 300 largest metropolitan regions in the US and Canada" />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="https://schoolofcities.github.io/urban-activity-atlas" />
+	<meta property="og:image" content="https://schoolofcities.github.io/urban-activity-atlas/web-card.png" />
+	<meta property="og:locale" content="en_CA">
+
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:site" content="https://schoolofcities.github.io/urban-activity-atlas" />
+	<meta name="twitter:creator" content="@UofTCities" />
+	<meta name="twitter:title" content="Urban Activity Atlas | School of Cities" />
+	<meta name="twitter:description" content="Explore maps of human activity levels in the 300 largest metropolitan regions in the US and Canada" />
+	<meta name="twitter:image" content="https://schoolofcities.github.io/urban-activity-atlas/web-card.png" /> 
+
+</svelte:head>
+
 <div class="container">
     <div class="panel">
         <SidePanel 
