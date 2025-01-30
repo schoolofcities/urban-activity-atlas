@@ -107,8 +107,8 @@
     </div>
 
     <div class="button-container">
-        <div id="2D" class="button" on:click={() => setMapDimensionView("2D")}>2D View</div>
-        <div id="3D" class="button" on:click={() => setMapDimensionView("3D")}>3D View</div>
+        <div id="2D" class={`button ${mapDimensionView === "2D" ? "selected" : "not-selected"}`} on:click={() => setMapDimensionView("2D")}>2D View</div>
+        <div id="3D" class={`button ${mapDimensionView === "3D" ? "selected" : "not-selected"}`} on:click={() => setMapDimensionView("3D")}>3D View</div>
     </div>
 
     <hr>
@@ -292,12 +292,11 @@
 
     .button-container {
         display: flex; 
-        width: calc(100% - 30px);
+        width: calc(100% - 20px);
         height: 100%; 
-        margin: 15px;
+        margin: 5px;
     }
 
-    /* Style for the buttons */
     .button {
         flex: 1; 
         display: flex; 
@@ -306,14 +305,27 @@
         font-size: 16px;
         font-weight: bold;
         color: white;
-        background-color: #007bff; 
-        border: 1px solid #0056b3; 
+        background-color: var(--brandDarkBlue); 
+        border: 1px solid var(--brandGray); 
+        border-radius: 5px;
         cursor: pointer; 
-        transition: background-color 0.3s ease; 
+        margin: 5px;
+        margin-left: 10px;
+        transition: background-color 0.2s ease; 
     }
 
+    .button.selected {
+        /* styles for the selected button */
+    }
+
+    .button.not-selected {
+        opacity: 0.5;
+    }
+
+
     .button:hover {
-        background-color: #0056b3; 
+        background-color: var(--brandLightBlue); 
+        opacity: 1;
     }
 
 
