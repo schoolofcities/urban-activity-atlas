@@ -92,7 +92,9 @@
     </div>
 
     <p class="description">
-        The colour of the grid pertains to how many people stopped or visited for the year-long period between April 1, 2023 and March 31, 2024. Data presented are normalized by the total activity in each metropolitan region.
+        The colour of the grid pertains to how many people stopped or visited for the year-long period between April 1, 2023 and March 31, 2024. 
+        <br><br>
+        Data presented are normalized by the total activity in each metropolitan region.
         <br>
     </p> 
     
@@ -112,8 +114,9 @@
     </div>
 
     <hr>
+
     <p class="description">
-        <i>The activity data on the map is derived from a sample of mobile phone data via <a href="https://spectus.ai/" target="_blank" rel="noopener noreferrer">Spectus</a>. Other reference data on the map are from <a href="https://www.openstreetmap.org/" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> via <a href="https://protomaps.com/" target="_blank" rel="noopener noreferrer">Protomaps</a>. Check out our <a href="hhttps://github.com/schoolofcities/urban-activity-atlas/" target="_blank" rel="noopener noreferrer">Github</a> for more information about the data and methods.</i>
+        <i>The activity data on the map is derived from a sample of mobile phone data via <a href="https://spectus.ai/" target="_blank" rel="noopener noreferrer">Spectus</a>. Other reference data on the map are from <a href="https://www.openstreetmap.org/" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> via <a href="https://protomaps.com/" target="_blank" rel="noopener noreferrer">Protomaps</a>. Check out our <a href="https://github.com/schoolofcities/urban-activity-atlas/" target="_blank" rel="noopener noreferrer">Github</a> for more information about the data and methods.</i>
     </p>
 
     <div id="logo">
@@ -289,7 +292,6 @@
     }
 
 
-
     .button-container {
         display: flex; 
         width: calc(100% - 20px);
@@ -312,10 +314,6 @@
         margin: 5px;
         margin-left: 10px;
         transition: background-color 0.2s ease; 
-    }
-
-    .button.selected {
-        /* styles for the selected button */
     }
 
     .button.not-selected {
