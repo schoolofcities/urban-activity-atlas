@@ -204,6 +204,19 @@
                 url: 'pmtiles://metro_regions_full.pmtiles'
             });
 
+            // Add secret hidden centroids layer for clicking with wide radius
+            map.addLayer({
+                id: 'metro-points-click-target', 
+                type: 'circle',
+                source: 'centroids',
+                paint: {
+                    'circle-radius': 30,  // Larger radius for easier clicking
+                    'circle-color': '#ffffff',
+                    'circle-opacity': 0,  // Make it invisible
+                },
+                maxzoom: 5
+            });
+
             // Add centroids layer (visible at low zoom)
             map.addLayer({
                 id: 'metro-points',
@@ -263,7 +276,7 @@
             });
 
             // Update metro region across the whole application using selectLocation
-            map.on('click', 'metro-points', (e) => {
+            map.on('click', 'metro-points-click-target', (e) => { 
                 if (e.features.length > 0) {
                     selectLocation(e.features[0].properties.name);
                 }
@@ -276,7 +289,7 @@
             });
 
             // Add hover effects
-            ['metro-points', 'metro-areas'].forEach(layer => {
+            ['metro-points-click-target', 'metro-areas'].forEach(layer => {  
                 map.on('mouseenter', layer, () => {
                     map.getCanvas().style.cursor = 'pointer';
                 });
