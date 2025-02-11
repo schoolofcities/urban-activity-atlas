@@ -46,7 +46,10 @@
         <a href='https://karenchapple.com/'>Karen Chapple</a></p>
     <hr>
     <p class="description">
-        Use this tool to explore human activity levels in the 300 largest metropolitan regions in the US and Canada. 
+        Certain parts of cities tend to be more popular than others, as people might congregate around commercial districts, downtowns, major transit stations, and other key places. Using mobile location data, we created an atlas where you can see what parts of a city people spend their time in.
+    </p> 
+    <p class="description">
+        Use this tool to explore how human activity levels vary geographically across a particular city, in a 300 largest metropolitan regions in the US and Canada.
     </p> 
 
     <!-- <p class="location-label">Select a metropolitan region:</p> -->
@@ -92,15 +95,19 @@
     </div>
 
     <p class="description">
-        The colour of the grid pertains to how many people stopped or visited for the year-long period between April 1, 2023 and March 31, 2024. 
-        <br><br>
-        Data presented are normalized by the total activity in each metropolitan region.
-        <br>
+        The part of the grid with a
+        {mapDimensionView === "2D" 
+            ? "brighter colour" 
+            : "brighter colour and taller bar"
+        }
+        is where the most people stopped or visited between the year-long period of April 1, 2023 to March 31, 2024. 
     </p> 
+    <p class="description">
+        Activity level data shown is normalized by the total activity in each Metropolitan region. That is, activity within one region (eg. Toronto) is not currently comparable to another (eg. New York-Newark-Jersey City).
+    </p>
     
-
     <div class="legend">
-        <p class="legend-title">Activity Level:</p>
+        <p class="legend-title">Activity Level (per region):</p>
         <div class="gradient-bar"></div>  
         <ul class="legend-label">
             <li class="low">Low</li>
