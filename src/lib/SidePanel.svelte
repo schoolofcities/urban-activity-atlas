@@ -46,6 +46,10 @@
         {handleSearchInputClick}
     />
 
+    <div class="button-container">
+        <button type="button" class={`button ${searchQuery === '' ? "not-selected" : "selected"}`} on:click={() => selectLocation('')}>Clear selection</button>
+    </div>
+
     <p class="description">
         The part of the grid with a
         {mapDimensionView === "2D" 
@@ -68,8 +72,8 @@
     </div>
 
     <div class="button-container">
-        <div id="2D" class={`button ${mapDimensionView === "2D" ? "selected" : "not-selected"}`} on:click={() => setMapDimensionView("2D")}>2D View</div>
-        <div id="3D" class={`button ${mapDimensionView === "3D" ? "selected" : "not-selected"}`} on:click={() => setMapDimensionView("3D")}>3D View</div>
+        <button type="button" id="2D" class={`button ${mapDimensionView === "2D" ? "selected" : "not-selected"}`} on:click={() => setMapDimensionView("2D")}>2D View</button>
+        <button type="button" id="3D" class={`button ${mapDimensionView === "3D" ? "selected" : "not-selected"}`} on:click={() => setMapDimensionView("3D")}>3D View</button>
     </div>
 
     <hr>
