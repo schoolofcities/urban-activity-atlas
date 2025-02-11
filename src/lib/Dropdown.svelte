@@ -23,6 +23,10 @@
         selectedIndex = -1;
     }
 
+    function toggleDropdown(forcedState = null) {
+        dropdownOpen = forcedState !== null ? forcedState : !dropdownOpen;
+    }
+
     function handleKeydown(e) {
         if (!dropdownOpen && e.key !== 'Enter') return;
 
@@ -47,12 +51,12 @@
                     } else {
                         selectLocation(displayedOptions[0].properties.name);
                     }
-                    dropdownOpen = false;
+                    toggleDropdown(false);
                 }
                 break;
             case 'Escape':
                 e.preventDefault();
-                dropdownOpen = false;
+                toggleDropdown(false);
                 break;
         }
     }
@@ -92,7 +96,7 @@
         tabindex="0"
         aria-haspopup="listbox"
         aria-expanded={dropdownOpen}
-        on:click={() => { if (!searchQuery) dropdownOpen = true; }}
+        on:click={() => { if (!searchQuery) toggleDropdown(true); }}
     >
         <input
             type="text"
@@ -103,11 +107,16 @@
             on:click={handleSearchInputClick}
             on:keydown={handleKeydown}
         />
+        
         <svg 
             class="chevron {dropdownOpen ? 'open' : ''}" 
             width="12" 
             height="12" 
             viewBox="0 0 24 24"
+            role="button"
+            tabindex="0"
+            aria-label="Toggle dropdown"
+            on:click|stopPropagation={() => toggleDropdown()}
         >
             <path 
                 fill="currentColor" 
