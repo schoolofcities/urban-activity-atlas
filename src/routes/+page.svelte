@@ -207,17 +207,20 @@
         .container {
             flex-direction: column-reverse;
         }
-        
-        .map-view {
-            height: 50vh;
-            width: 100vw;
-        }
 
         .panel {
             height: calc(50vh - 1px);
             width: 100vw;
+            min-width: 299px;
             border-top: solid 1px var(--brandGray);
             border-right: none;
         }
+        
+        .map-view {
+            height: 50vh;
+            width: 100vw;
+            min-width: 300px;
+        }
+
     }
 </style>
