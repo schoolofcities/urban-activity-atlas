@@ -41,6 +41,17 @@
             on:click={handleSearchInputClick}
             on:keydown={handleKeydown}
         />
+        <svg 
+            class="chevron {dropdownOpen ? 'open' : ''}" 
+            width="12" 
+            height="12" 
+            viewBox="0 0 24 24"
+        >
+            <path 
+                fill="currentColor" 
+                d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
+            />
+        </svg>
     </div>
 
     {#if dropdownOpen}
@@ -70,6 +81,7 @@
     }
 
     .dropdown-toggle {
+        position: relative;
         width: 100%;
         cursor: pointer;
         display: flex;
@@ -88,6 +100,20 @@
         background-color: black;
         color: white;
         padding-left: 5px;
+        padding-right: 30px; /* Make room for chevron */
+    }
+
+    .chevron {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--brandGray);
+        transition: transform 0.2s ease;
+    }
+
+    .chevron.open {
+        transform: translateY(-50%) rotate(180deg);
     }
 
     .dropdown-list {
