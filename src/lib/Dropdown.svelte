@@ -7,18 +7,64 @@
     export let handleSearchInputClick;
 
     let filteredOptions = metroRegionCentroids.features;
+    let selectedIndex = -1; // Track currently selected item
+    let displayedOptions = []; // Track current options for navigation
+    let isKeyboardSelection = false; // Track if last selection was from keyboard
 
     // Filter the options based on the search query
     $: filteredOptions = metroRegionCentroids.features.filter((feature) =>
         feature.properties.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
+    // Update displayed options when filter changes
+    $: {
+        displayedOptions = searchQuery === '' ? metroRegionCentroids.features : filteredOptions;
+        // Reset selection when options change
+        selectedIndex = -1;
+    }
+
     function handleKeydown(e) {
-        if (e.key === 'Enter' && filteredOptions.length > 0) {
-            e.preventDefault();
-            selectLocation(filteredOptions[0].properties.name);
-            dropdownOpen = false;
+        if (!dropdownOpen && e.key !== 'Enter') return;
+
+        switch(e.key) {
+            case 'ArrowDown':
+            case 'ArrowRight':
+                e.preventDefault();
+                isKeyboardSelection = true;
+                selectedIndex = Math.min(selectedIndex + 1, displayedOptions.length - 1);
+                break;
+            case 'ArrowUp':
+            case 'ArrowLeft':
+                e.preventDefault();
+                isKeyboardSelection = true;
+                selectedIndex = Math.max(selectedIndex - 1, -1);
+                break;
+            case 'Enter':
+                e.preventDefault();
+                if (displayedOptions.length > 0) {
+                    if (selectedIndex >= 0) {
+                        selectLocation(displayedOptions[selectedIndex].properties.name);
+                    } else {
+                        selectLocation(displayedOptions[0].properties.name);
+                    }
+                    dropdownOpen = false;
+                }
+                break;
+            case 'Escape':
+                e.preventDefault();
+                dropdownOpen = false;
+                break;
         }
+    }
+
+    function handleMouseEnter(index) {
+        if (!isKeyboardSelection) {
+            selectedIndex = index;
+        }
+    }
+
+    function handleMouseMove() {
+        isKeyboardSelection = false;
     }
 
     function getHighlightedParts(text, query) {
@@ -71,16 +117,18 @@
     </div>
 
     {#if dropdownOpen}
-        <div class="dropdown-list" role="listbox">
-            {#each searchQuery === '' ? metroRegionCentroids.features : filteredOptions as feature}
+        <div class="dropdown-list" role="listbox" tabindex="0" on:mousemove={handleMouseMove}>
+            {#each displayedOptions as feature, i}
                 {@const parts = getHighlightedParts(feature.properties.name, searchQuery)}
                 <!-- svelte-ignore a11y_click_events_have_key_events -->
                 <div
                     class="dropdown-item"
+                    class:selected={i === selectedIndex}
                     role="option"
-                    aria-selected="false"
+                    aria-selected={i === selectedIndex}
                     tabindex="0"
                     on:click={() => selectLocation(feature.properties.name)}
+                    on:mouseenter={() => handleMouseEnter(i)}
                 >
                     {parts.before}<span class="highlight">{parts.match}</span>{parts.after}
                 </div>
@@ -152,7 +200,7 @@
         color: white;
     }
 
-    .dropdown-item:hover {
+    .dropdown-item.selected {
         background-color: var(--brandMedBlue);
     }
 
