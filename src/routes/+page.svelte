@@ -181,15 +181,24 @@
 </div>
 
 <style>
+
+    :global(html, body) {
+        overflow-x: hidden; /* Prevent horizontal scrolling */
+        width: 100vw;
+        margin: 0;
+        padding: 0;
+    }
+
     .container {
         display: flex;
     }
 
     .panel {
         width: 399px;
-        min-width: 399px;
+        min-width: 280px;
+        max-width: 399px;
         border-right: solid 1px var(--brandGray);
-        height: 350px;
+        /* height: 350px; */
         height: 100vh;
         overflow: auto;
         overflow-x: hidden;
@@ -198,8 +207,8 @@
 
     .map-view {
         height: 100vh;
-        width: calc(100vw - 400px);
-        min-width: 350px;
+        width: calc(100vw - 399px);
+        min-width: 280px;
         background-color: var(--brandLightBlue); 
     }
 
@@ -210,6 +219,7 @@
 
         .panel {
             height: calc(50vh - 1px);
+            min-width: auto;
             width: 100vw;
             min-width: 299px;
             border-top: solid 1px var(--brandGray);
@@ -222,5 +232,12 @@
             min-width: 300px;
         }
 
+    }
+
+    /* Additional fixes for very small screens */
+    @media screen and (max-width: 500px) {
+        .panel {
+            font-size: 0.9rem;
+        }
     }
 </style>
