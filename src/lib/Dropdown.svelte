@@ -10,7 +10,7 @@
 
     // Filter the options based on the search query
     $: filteredOptions = metroRegionCentroids.features.filter((feature) =>
-        feature.properties.name.toLowerCase().startsWith(searchQuery.toLowerCase())
+        feature.properties.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     function handleKeydown(e) {
@@ -19,6 +19,22 @@
             selectLocation(filteredOptions[0].properties.name);
             dropdownOpen = false;
         }
+    }
+
+    function getHighlightedParts(text, query) {
+        if (!query) return { before: text, match: '', after: '' };
+        
+        const lowerText = text.toLowerCase();
+        const lowerQuery = query.toLowerCase();
+        const index = lowerText.indexOf(lowerQuery);
+        
+        if (index === -1) return { before: text, match: '', after: '' };
+        
+        return {
+            before: text.slice(0, index),
+            match: text.slice(index, index + query.length),
+            after: text.slice(index + query.length)
+        };
     }
 </script>
 
@@ -57,6 +73,7 @@
     {#if dropdownOpen}
         <div class="dropdown-list" role="listbox">
             {#each searchQuery === '' ? metroRegionCentroids.features : filteredOptions as feature}
+                {@const parts = getHighlightedParts(feature.properties.name, searchQuery)}
                 <!-- svelte-ignore a11y_click_events_have_key_events -->
                 <div
                     class="dropdown-item"
@@ -65,7 +82,7 @@
                     tabindex="0"
                     on:click={() => selectLocation(feature.properties.name)}
                 >
-                    {feature.properties.name}
+                    {parts.before}<span class="highlight">{parts.match}</span>{parts.after}
                 </div>
             {:else}
                 <div class="no-results">No results found</div>
@@ -142,5 +159,11 @@
     .no-results {
         padding: 8px;
         color: gray;
+    }
+
+    .highlight {
+        text-decoration: underline;
+        font-weight: bold;
+        color: var(--brandLightBlue);
     }
 </style>
