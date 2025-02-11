@@ -145,7 +145,7 @@
     h1 {
         font-family: TradeGothicBold;
         color: var(--brandWhite);
-        font-size: 40px;
+        font-size: 2.2rem;
         text-decoration: underline;
         margin: 15px 15px;
     }
