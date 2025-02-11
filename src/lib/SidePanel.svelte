@@ -35,6 +35,10 @@
     <p class="description">
         Use this tool to explore how human activity levels vary geographically across a particular city, in a 300 largest metropolitan regions in the US and Canada.
     </p> 
+    
+    <p class="description">
+        <b>Choose a metro region by clicking on it on the map, or choosing from the dropdown below.</b>
+    </p>
 
     <!-- <p class="location-label">Select a metropolitan region:</p> -->
     <Dropdown
