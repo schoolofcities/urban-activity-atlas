@@ -133,11 +133,21 @@
 
         document.addEventListener('click', handleClickOutside);
 
+        // Adjust initial zoom based on screen width
+        let initialZoom;
+        console.log(window.innerWidth);
+        if (window.innerWidth < 500) {
+            initialZoom = 2.3;  // Very zoomed out for small screens
+        } else if (window.innerWidth < 800) {
+            initialZoom = 3;  // Moderately zoomed out for tablets
+        } else {
+            initialZoom = 3.5;  // Default zoom for larger screens
+        }        
+
         map = new maplibregl.Map({
             container: "map", 
             style: {
                 version: 8,
-                // glyphs: 'https://protomaps.github.io/basemaps-assets/fonts/{fontstack}/{range}.pbf',
                 glyphs: "https://schoolofcities.github.io/fonts/fonts/{fontstack}/{range}.pbf",
                 sprite: "https://protomaps.github.io/basemaps-assets/sprites/v4/dark",
                 sources: {
@@ -149,10 +159,10 @@
                 },
                 layers: baseMap
             },
-            center: [-98, 45],
-            zoom: 3.5,
+            center: [-93, 41],
+            zoom: initialZoom, // 3.5,
             maxZoom: 13,
-            minZoom: 3,
+            minZoom: 2, // 3,
             bearing: 0,
             pitch: 0,
             attributionControl: false
@@ -210,7 +220,7 @@
                 type: 'circle',
                 source: 'centroids',
                 paint: {
-                    'circle-radius': 30,  // Larger radius for easier clicking
+                    'circle-radius': 20,  // Larger radius for easier clicking
                     'circle-color': '#ffffff',
                     'circle-opacity': 0,  // Make it invisible
                 },
@@ -250,10 +260,10 @@
                 source: 'metro-regions',
                 'source-layer': 'metro_region_full',  // Updated layer name
                 paint: {
-                    'line-color': '#fff',
-                    'line-opacity': 0.4,
-                    'line-width': 1,
-                    'line-dasharray': [4, 2] 
+                    'line-color': '#6FC7EA',//'#fff',
+                    'line-opacity': 0.6,
+                    'line-width': 2,
+                    // 'line-dasharray': [4, 2] 
                 },
                 filter: ['has', 'name'],  // Show all by default
                 minzoom: 5
@@ -266,9 +276,10 @@
                 source: 'metro-regions',
                 'source-layer': 'metro_region_full',  // Updated layer name
                 paint: {
-                    'line-color': '#94928a',
-                    'line-width': 2,
-                    'line-dasharray': [6, 3, 3, 3] 
+                    'line-color': '#6FC7EA',//'#94928a',
+                    'line-opacity': 0.9,
+                    'line-width': 4,
+                    // 'line-dasharray': [6, 3, 3, 3] 
                 },
                 filter: ['==', ['get', 'name'], ''],  // Start with empty filter
                 minzoom: 5,
