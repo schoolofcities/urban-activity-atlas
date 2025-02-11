@@ -194,11 +194,10 @@
     }
 
     .panel {
-        width: 399px;
+        width: 410px;
         min-width: 280px;
         max-width: 399px;
         border-right: solid 1px var(--brandGray);
-        /* height: 350px; */
         height: 100vh;
         overflow: auto;
         overflow-x: hidden;

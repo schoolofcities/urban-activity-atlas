@@ -30,14 +30,7 @@
         <a href='https://karenchapple.com/'>Karen Chapple</a></p>
     <hr>
     <p class="description">
-        Certain parts of cities tend to be more popular than others, as people might congregate around commercial districts, downtowns, major transit stations, and other key places. Using mobile location data, we created an atlas where you can see what parts of a city people spend their time in.
-    </p> 
-    <p class="description">
-        Use this tool to explore how human activity levels vary geographically across a particular city, in a 300 largest metropolitan regions in the US and Canada.
-    </p> 
-    
-    <p class="description">
-        <b>Choose a metro region by clicking on it on the map, or choosing from the dropdown below.</b>
+        This map shows which places people visit or spend time in the most in the 300 largest metropolitan regions (by population) in the US and Canada. Choose a metro region by clicking on it on the map, or choosing from the dropdown below.
     </p>
 
     <!-- <p class="location-label">Select a metropolitan region:</p> -->
@@ -55,15 +48,15 @@
     </div>
 
     <p class="description">
-        The part of the grid with a
+        The area with the
         {mapDimensionView === "2D" 
-            ? "brighter colour" 
-            : "brighter colour and taller bar"
+            ? "brightest white color" 
+            : "brightest white color and tallest bar"
         }
-        is where the most people stopped or visited between the year-long period of April 1, 2023 to March 31, 2024. 
+        had the most visits of anywhere in the selected metro region in the year between April 1, 2023 and March 31, 2024.
     </p> 
     <p class="description">
-        Activity level data shown is normalized by the total activity in each Metropolitan region. That is, activity within one region (eg. Toronto) is not currently comparable to another (eg. New York-Newark-Jersey City).
+        Activity level data shown is standardized by the total activity in each metropolitan region, so do not compare different regions to each other.
     </p>
     
     <div class="legend">
