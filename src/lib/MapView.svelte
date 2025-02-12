@@ -14,6 +14,7 @@
     export let map;
     export let selectLocation; 
     export let mapDimensionView;
+    export let getZoomLevel;
 
     // Internal state
     let pmtilesURL = "";
@@ -133,17 +134,6 @@
 
         document.addEventListener('click', handleClickOutside);
 
-        // Adjust initial zoom based on screen width
-        let initialZoom;
-        console.log(window.innerWidth);
-        if (window.innerWidth < 500) {
-            initialZoom = 2.3;  // Very zoomed out for small screens
-        } else if (window.innerWidth < 800) {
-            initialZoom = 3;  // Moderately zoomed out for tablets
-        } else {
-            initialZoom = 3.5;  // Default zoom for larger screens
-        }        
-
         map = new maplibregl.Map({
             container: "map", 
             style: {
@@ -160,9 +150,9 @@
                 layers: baseMap
             },
             center: [-93, 41],
-            zoom: initialZoom, // 3.5,
+            zoom: getZoomLevel().initZoom,
             maxZoom: 13,
-            minZoom: 2, // 3,
+            minZoom: getZoomLevel().minZoom,
             bearing: 0,
             pitch: 0,
             attributionControl: false
