@@ -1,5 +1,6 @@
 <script>
     import logo from '../assets/top-logo-full.svg';
+    import Dropdown from './Dropdown.svelte';
 
     // Props
     export let metroRegionCentroids;
@@ -10,31 +11,14 @@
     export let selectLocation;
     export let mapDimensionView;
 
-    
     // Sort the features alphabetically by name
     metroRegionCentroids.features.sort((a, b) =>
         a.properties.name.localeCompare(b.properties.name)
     );
 
-    let filteredOptions = metroRegionCentroids.features;
-
-    // Filter the options based on the search query
-    $: filteredOptions = metroRegionCentroids.features.filter((feature) =>
-        feature.properties.name.toLowerCase().startsWith(searchQuery.toLowerCase())
-    );
-
-    function handleKeydown(e) {
-        if (e.key === 'Enter' && filteredOptions.length > 0) {
-            e.preventDefault();
-            selectLocation(filteredOptions[0].properties.name);
-            dropdownOpen = false;
-        }
-    }
-
     function setMapDimensionView(dimension) {
         mapDimensionView = dimension;
     }
-
 </script>
 
 <div>
@@ -46,61 +30,38 @@
         <a href='https://karenchapple.com/'>Karen Chapple</a></p>
     <hr>
     <p class="description">
-        Use this tool to explore human activity levels in the 300 largest metropolitan regions in the US and Canada. 
-    </p> 
+        This map shows which places people visit or spend time in the most in the 300 largest metropolitan regions (by population) in the US and Canada. 
+        <b>Choose a metro region by clicking on it on the map, or choosing from the dropdown below.</b>
+    </p>
 
     <!-- <p class="location-label">Select a metropolitan region:</p> -->
-    <div class="dropdown-container">
-        <!-- svelte-ignore a11y_click_events_have_key_events -->
-        <div
-            class="dropdown-toggle"
-            role="button"
-            tabindex="0"
-            aria-haspopup="listbox"
-            aria-expanded={dropdownOpen}
-            on:click={() => { if (!searchQuery) dropdownOpen = true; }}
-        >
-            <input
-                type="text"
-                class="search-input"
-                bind:value={searchQuery}
-                placeholder={searchQuery ? '' : 'Search metropolitan region...'}
-                on:input={handleInputChange}
-                on:click={handleSearchInputClick}
-                on:keydown={handleKeydown}
-            />
-        </div>
-    
-        {#if dropdownOpen}
-            <div class="dropdown-list" role="listbox">
-                {#each searchQuery === '' ? metroRegionCentroids.features : filteredOptions as feature}
-                    <!-- svelte-ignore a11y_click_events_have_key_events -->
-                    <div
-                        class="dropdown-item"
-                        role="option"
-                        aria-selected="false"
-                        tabindex="0"
-                        on:click={() => selectLocation(feature.properties.name)}
-                    >
-                        {feature.properties.name}
-                    </div>
-                {:else}
-                    <div class="no-results">No results found</div>
-                {/each}
-            </div>
-        {/if}
+    <Dropdown
+        {metroRegionCentroids}
+        bind:searchQuery
+        bind:dropdownOpen
+        {selectLocation}
+        {handleInputChange}
+        {handleSearchInputClick}
+    />
+
+    <div class="button-container">
+        <button type="button" class={`button ${searchQuery === '' ? "not-selected" : "selected"}`} on:click={() => selectLocation('')}>Clear selection</button>
     </div>
 
     <p class="description">
-        The colour of the grid pertains to how many people stopped or visited for the year-long period between April 1, 2023 and March 31, 2024. 
-        <br><br>
-        Data presented are normalized by the total activity in each metropolitan region.
-        <br>
+        The area with the
+        {mapDimensionView === "2D" 
+            ? "brightest white color" 
+            : "brightest white color and tallest bar"
+        }
+        had the most visits of anywhere in the selected metro region in the year between April 1, 2023 and March 31, 2024.
     </p> 
+    <p class="description">
+        Activity level data shown is standardized by the total activity in each metropolitan region, so do not compare different regions to each other.
+    </p>
     
-
     <div class="legend">
-        <p class="legend-title">Activity Level:</p>
+        <p class="legend-title">Activity Level (per region):</p>
         <div class="gradient-bar"></div>  
         <ul class="legend-label">
             <li class="low">Low</li>
@@ -109,8 +70,8 @@
     </div>
 
     <div class="button-container">
-        <div id="2D" class={`button ${mapDimensionView === "2D" ? "selected" : "not-selected"}`} on:click={() => setMapDimensionView("2D")}>2D View</div>
-        <div id="3D" class={`button ${mapDimensionView === "3D" ? "selected" : "not-selected"}`} on:click={() => setMapDimensionView("3D")}>3D View</div>
+        <button type="button" id="2D" class={`button ${mapDimensionView === "2D" ? "selected" : "not-selected"}`} on:click={() => setMapDimensionView("2D")}>2D View</button>
+        <button type="button" id="3D" class={`button ${mapDimensionView === "3D" ? "selected" : "not-selected"}`} on:click={() => setMapDimensionView("3D")}>3D View</button>
     </div>
 
     <hr>
@@ -145,7 +106,7 @@
     h1 {
         font-family: TradeGothicBold;
         color: var(--brandWhite);
-        font-size: 40px;
+        font-size: 2.2rem;
         text-decoration: underline;
         margin: 15px 15px;
     }
@@ -197,60 +158,6 @@
         color: white;
         font-family: RobotoRegular;
         font-size: 1rem;
-    }
-
-    .dropdown-container {
-        position: relative;
-        margin: 0 15px 0 15px;
-    }
-
-    .dropdown-toggle {
-        width: 100%;
-        cursor: pointer;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .search-input {
-        width: 100%;
-        margin-top: 5px;
-        margin-bottom: 5px;
-        height: 25px;
-        border: solid 1px var(--brandGray);
-        border-radius: 5px;
-        font-family: RobotoRegular;
-        background-color: black;
-        color: white;
-        padding-left: 5px;
-    }
-
-    .dropdown-list {
-        position: absolute;
-        top: 40px;
-        left: 0;
-        right: 0;
-        background-color: black;
-        max-height: 200px;
-        overflow-y: auto;
-        z-index: 10;
-    }
-
-    .dropdown-item {
-        padding: 3px;
-        font-family: RobotoRegular;
-        font-size: .8rem;
-        cursor: pointer;
-        color: white;
-    }
-
-    .dropdown-item:hover {
-        background-color: var(--brandMedBlue);
-    }
-
-    .no-results {
-        padding: 8px;
-        color: gray;
     }
 
     .legend {
