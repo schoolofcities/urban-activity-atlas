@@ -5,11 +5,11 @@
 		<link rel="icon" href="./favicon.svg" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		
-		<link rel="modulepreload" href="./_app/immutable/entry/start.Dsfn30Fm.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/entry.71WqrVp9.js">
+		<link rel="modulepreload" href="./_app/immutable/entry/start.5rcvNjxr.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/entry.Dlfutro_.js">
 		<link rel="modulepreload" href="./_app/immutable/chunks/runtime.CYDMEvuj.js">
 		<link rel="modulepreload" href="./_app/immutable/chunks/index-client.Byxtf5GG.js">
-		<link rel="modulepreload" href="./_app/immutable/entry/app.Cim-EHvk.js">
+		<link rel="modulepreload" href="./_app/immutable/entry/app.Ji_mzI40.js">
 		<link rel="modulepreload" href="./_app/immutable/chunks/render.DfS_uqk0.js">
 		<link rel="modulepreload" href="./_app/immutable/chunks/disclose-version.BC7x2nJI.js">
 		<link rel="modulepreload" href="./_app/immutable/chunks/props.CqWJVn_M.js">
@@ -37,14 +37,22 @@
 		<meta name="twitter:title" content="Urban Activity Atlas | School of Cities" />
 		<meta name="twitter:description" content="Explore maps of human activity levels in the 300 largest metropolitan regions in the US and Canada" />
 		<meta name="twitter:image" content="https://schoolofcities.github.io/urban-activity-atlas/web-card.png" /> 
-
 		
 	</head>
+
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-XB09CWTEWB"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'G-XB09CWTEWB');
+	</script>
+
 	<body data-sveltekit-preload-data="hover">
 		<div style="display: contents">
 			<script>
 				{
-					__sveltekit_1ncqf94 = {
+					__sveltekit_14fjd98 = {
 						base: new URL(".", location).pathname.slice(0, -1),
 						assets: "/urban-activity-atlas"
 					};
@@ -52,8 +60,8 @@
 					const element = document.currentScript.parentElement;
 
 					Promise.all([
-						import("./_app/immutable/entry/start.Dsfn30Fm.js"),
-						import("./_app/immutable/entry/app.Cim-EHvk.js")
+						import("./_app/immutable/entry/start.5rcvNjxr.js"),
+						import("./_app/immutable/entry/app.Ji_mzI40.js")
 					]).then(([kit, app]) => {
 						kit.start(app, element);
 					});

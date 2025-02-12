@@ -67,6 +67,18 @@
             citiesPart;
     }
 
+    function getZoomLevel() {
+        let curScreenSize = window.innerWidth;
+        
+        if (curScreenSize < 500) {  // Very zoomed out for small screens
+            return {initZoom: 2.3, minZoom: 2, regionZoom: 8.5};
+        } else if (curScreenSize < 800) {  // Moderately zoomed out for tablets
+            return {initZoom: 3, minZoom: 2.5, regionZoom: 9};
+        } else {  // Default zoom for larger screens
+            return {initZoom: 3.5, minZoom: 3, regionZoom: 9.5};
+        }     
+    }
+
     // Function to handle location selection
     const selectLocation = (location) => {
         if (!mapInitialized) return; // Don't proceed if map isn't ready
@@ -77,12 +89,27 @@
         
         // Update URL without triggering a page reload
         const url = new URL(window.location);
-        url.searchParams.set('metro', getURLFormat(location));
+        if (location === '') {
+            url.searchParams.delete('metro'); 
+        } else {
+            url.searchParams.set('metro', getURLFormat(location));
+        }
         history.replaceState({}, '', url); // Ignore the suggestion to use the SvelteKit imported version of replaceState - it leads to a complicated situation of trying to update the URL that doesn't seem to work
     };
 
     // Function to zoom to the selected location
     const zoomToLocation = (locationName) => {
+        if (locationName === '') {
+            map.flyTo({
+                center: [-98, 45],
+                zoom: getZoomLevel().initZoom,
+                bearing: 0,
+                pitch: 0,
+                essential: true, // Smooth transition
+                duration: 1000, // Transition duration in milliseconds
+            });
+        }
+
         // Find the feature by name
         const feature = metroRegionCentroids.features.find(
             (feature) => feature.properties.name === locationName
@@ -95,7 +122,7 @@
                     bearing: 40,
                     pitch: 50,
                     center: [lon - .1, lat], // Small adjustment since map is behind panel
-                    zoom: 9.5,
+                    zoom: getZoomLevel().regionZoom,
                     essential: true, // Smooth transition
                     duration: 1000, // Transition duration in milliseconds
                 });
@@ -104,7 +131,7 @@
                     bearing: 0,
                     pitch: 0,
                     center: [lon - .1, lat], // Small adjustment since map is behind panel
-                    zoom: 9.5,
+                    zoom: getZoomLevel().regionZoom,
                     essential: true, // Smooth transition
                     duration: 1000, // Transition duration in milliseconds
                 });
@@ -161,20 +188,29 @@
             selectLocation={selectLocation}
             on:mapInit={handleMapInit}
             mapDimensionView={mapDimensionView}
+            getZoomLevel={getZoomLevel}
         />
     </div>
 </div>
 
 <style>
+
+    :global(html, body) {
+        overflow-x: hidden; /* Prevent horizontal scrolling */
+        width: 100vw;
+        margin: 0;
+        padding: 0;
+    }
+
     .container {
         display: flex;
     }
 
     .panel {
-        width: 399px;
-        min-width: 399px;
+        width: 410px;
+        min-width: 280px;
+        max-width: 399px;
         border-right: solid 1px var(--brandGray);
-        height: 350px;
         height: 100vh;
         overflow: auto;
         overflow-x: hidden;
@@ -183,8 +219,8 @@
 
     .map-view {
         height: 100vh;
-        width: calc(100vw - 400px);
-        min-width: 350px;
+        width: calc(100vw - 399px);
+        min-width: 280px;
         background-color: var(--brandLightBlue); 
     }
 
@@ -192,17 +228,28 @@
         .container {
             flex-direction: column-reverse;
         }
+
+        .panel {
+            height: calc(50vh - 1px);
+            min-width: auto;
+            width: 100vw;
+            min-width: 299px;
+            border-top: solid 1px var(--brandGray);
+            border-right: none;
+        }
         
         .map-view {
             height: 50vh;
             width: 100vw;
+            min-width: 300px;
         }
 
+    }
+
+    /* Additional fixes for very small screens */
+    @media screen and (max-width: 500px) {
         .panel {
-            height: calc(50vh - 1px);
-            width: 100vw;
-            border-top: solid 1px var(--brandGray);
-            border-right: none;
+            font-size: 0.9rem;
         }
     }
 </style>

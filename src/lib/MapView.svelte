@@ -14,37 +14,42 @@
     export let map;
     export let selectLocation; 
     export let mapDimensionView;
+    export let getZoomLevel;
 
     // Internal state
     let pmtilesURL = "";
 
     const dispatch = createEventDispatcher();
 
+    // Clear metro layers and extraneous sources on the map 
+    function cleanMap(map) {
+        // First remove all metro layers
+        const layers = map.getStyle().layers;
+        layers.forEach((layer) => {
+            // Remove metro-specific layers
+            if (layer.id.endsWith('-layer') && map.getLayer(layer.id)) {
+                map.removeLayer(layer.id);
+            }
+        });
+
+        // Then remove corresponding sources, excluding essential ones
+        Object.keys(map.style.sourceCaches).forEach((sourceId) => {
+            if (sourceId !== 'protomaps' && 
+                sourceId !== 'centroids' && 
+                sourceId !== 'metro-regions' && 
+                sourceId !== 'esri-hillshade' && 
+                map.getSource(sourceId)) {
+                map.removeSource(sourceId);
+            }
+        });
+    }
+
     // Reactive statement for map updates
 	$: {
-        if (map && metroName) {
-
+        if (map && metroName) {  // Note when metroName == '', it's boolean is false.
             const layerId = `${metroName}-layer`;
 
-            // First remove all metro layers
-            const layers = map.getStyle().layers;
-            layers.forEach((layer) => {
-                // Remove metro-specific layers
-                if (layer.id.endsWith('-layer') && map.getLayer(layer.id)) {
-                    map.removeLayer(layer.id);
-                }
-            });
-
-            // Then remove corresponding sources, excluding essential ones
-            Object.keys(map.style.sourceCaches).forEach((sourceId) => {
-                if (sourceId !== 'protomaps' && 
-                    sourceId !== 'centroids' && 
-                    sourceId !== 'metro-regions' && 
-                    sourceId !== 'esri-hillshade' && 
-                    map.getSource(sourceId)) {
-                    map.removeSource(sourceId);
-                }
-            });
+            cleanMap(map);
 
             pmtilesURL = `/urban-activity-atlas/metro_region_geohash_stops_pm/${metroName.replace(/ /g, '%20')}.pmtiles`;
 
@@ -119,6 +124,8 @@
             map.setFilter('metro-areas', ['!=', ['get', 'name'], metroName]);  // Show all except selected
             map.setFilter('selected-metro-outline', ['==', ['get', 'name'], metroName]);  // Show only selected outline
 		} else if (map) {
+            cleanMap(map);
+
             // When no region selected, show all regions and no outline
             map.setFilter('metro-areas', ['has', 'name']);  // Show all regions
             map.setFilter('selected-metro-outline', ['==', ['get', 'name'], '']);  // Hide outline
@@ -137,7 +144,6 @@
             container: "map", 
             style: {
                 version: 8,
-                // glyphs: 'https://protomaps.github.io/basemaps-assets/fonts/{fontstack}/{range}.pbf',
                 glyphs: "https://schoolofcities.github.io/fonts/fonts/{fontstack}/{range}.pbf",
                 sprite: "https://protomaps.github.io/basemaps-assets/sprites/v4/dark",
                 sources: {
@@ -149,10 +155,10 @@
                 },
                 layers: baseMap
             },
-            center: [-98, 45],
-            zoom: 3.5,
+            center: [-93, 41],
+            zoom: getZoomLevel().initZoom,
             maxZoom: 13,
-            minZoom: 3,
+            minZoom: getZoomLevel().minZoom,
             bearing: 0,
             pitch: 0,
             attributionControl: false
@@ -204,6 +210,19 @@
                 url: 'pmtiles://metro_regions_full.pmtiles'
             });
 
+            // Add secret hidden centroids layer for clicking with wide radius
+            map.addLayer({
+                id: 'metro-points-click-target', 
+                type: 'circle',
+                source: 'centroids',
+                paint: {
+                    'circle-radius': 20,  // Larger radius for easier clicking
+                    'circle-color': '#ffffff',
+                    'circle-opacity': 0,  // Make it invisible
+                },
+                maxzoom: 5
+            });
+
             // Add centroids layer (visible at low zoom)
             map.addLayer({
                 id: 'metro-points',
@@ -237,10 +256,10 @@
                 source: 'metro-regions',
                 'source-layer': 'metro_region_full',  // Updated layer name
                 paint: {
-                    'line-color': '#fff',
-                    'line-opacity': 0.4,
-                    'line-width': 1,
-                    'line-dasharray': [4, 2] 
+                    'line-color': '#6FC7EA',//'#fff',
+                    'line-opacity': 0.6,
+                    'line-width': 2,
+                    // 'line-dasharray': [4, 2] 
                 },
                 filter: ['has', 'name'],  // Show all by default
                 minzoom: 5
@@ -253,9 +272,10 @@
                 source: 'metro-regions',
                 'source-layer': 'metro_region_full',  // Updated layer name
                 paint: {
-                    'line-color': '#94928a',
-                    'line-width': 2,
-                    'line-dasharray': [6, 3, 3, 3] 
+                    'line-color': '#6FC7EA',//'#94928a',
+                    'line-opacity': 0.9,
+                    'line-width': 4,
+                    // 'line-dasharray': [6, 3, 3, 3] 
                 },
                 filter: ['==', ['get', 'name'], ''],  // Start with empty filter
                 minzoom: 5,
@@ -263,7 +283,7 @@
             });
 
             // Update metro region across the whole application using selectLocation
-            map.on('click', 'metro-points', (e) => {
+            map.on('click', 'metro-points-click-target', (e) => { 
                 if (e.features.length > 0) {
                     selectLocation(e.features[0].properties.name);
                 }
@@ -276,7 +296,7 @@
             });
 
             // Add hover effects
-            ['metro-points', 'metro-areas'].forEach(layer => {
+            ['metro-points-click-target', 'metro-areas'].forEach(layer => {  
                 map.on('mouseenter', layer, () => {
                     map.getCanvas().style.cursor = 'pointer';
                 });
