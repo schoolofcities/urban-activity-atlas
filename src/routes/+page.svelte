@@ -67,6 +67,18 @@
             citiesPart;
     }
 
+    function getZoomLevel() {
+        let curScreenSize = window.innerWidth;
+        
+        if (curScreenSize < 500) {  // Very zoomed out for small screens
+            return {initZoom: 2.3, minZoom: 2, regionZoom: 8.5};
+        } else if (curScreenSize < 800) {  // Moderately zoomed out for tablets
+            return {initZoom: 3, minZoom: 2.5, regionZoom: 9};
+        } else {  // Default zoom for larger screens
+            return {initZoom: 3.5, minZoom: 3, regionZoom: 9.5};
+        }     
+    }
+
     // Function to handle location selection
     const selectLocation = (location) => {
         if (!mapInitialized) return; // Don't proceed if map isn't ready
@@ -90,7 +102,7 @@
         if (locationName === '') {
             map.flyTo({
                 center: [-98, 45],
-                zoom: 3.5,
+                zoom: getZoomLevel().initZoom,
                 bearing: 0,
                 pitch: 0,
                 essential: true, // Smooth transition
@@ -110,7 +122,7 @@
                     bearing: 40,
                     pitch: 50,
                     center: [lon - .1, lat], // Small adjustment since map is behind panel
-                    zoom: 9.5,
+                    zoom: getZoomLevel().regionZoom,
                     essential: true, // Smooth transition
                     duration: 1000, // Transition duration in milliseconds
                 });
@@ -119,7 +131,7 @@
                     bearing: 0,
                     pitch: 0,
                     center: [lon - .1, lat], // Small adjustment since map is behind panel
-                    zoom: 9.5,
+                    zoom: getZoomLevel().regionZoom,
                     essential: true, // Smooth transition
                     duration: 1000, // Transition duration in milliseconds
                 });
@@ -176,6 +188,7 @@
             selectLocation={selectLocation}
             on:mapInit={handleMapInit}
             mapDimensionView={mapDimensionView}
+            getZoomLevel={getZoomLevel}
         />
     </div>
 </div>
