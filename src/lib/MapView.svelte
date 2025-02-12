@@ -21,31 +21,35 @@
 
     const dispatch = createEventDispatcher();
 
+    // Clear metro layers and extraneous sources on the map 
+    function cleanMap(map) {
+        // First remove all metro layers
+        const layers = map.getStyle().layers;
+        layers.forEach((layer) => {
+            // Remove metro-specific layers
+            if (layer.id.endsWith('-layer') && map.getLayer(layer.id)) {
+                map.removeLayer(layer.id);
+            }
+        });
+
+        // Then remove corresponding sources, excluding essential ones
+        Object.keys(map.style.sourceCaches).forEach((sourceId) => {
+            if (sourceId !== 'protomaps' && 
+                sourceId !== 'centroids' && 
+                sourceId !== 'metro-regions' && 
+                sourceId !== 'esri-hillshade' && 
+                map.getSource(sourceId)) {
+                map.removeSource(sourceId);
+            }
+        });
+    }
+
     // Reactive statement for map updates
 	$: {
-        if (map && metroName) {
-
+        if (map && metroName) {  // Note when metroName == '', it's boolean is false.
             const layerId = `${metroName}-layer`;
 
-            // First remove all metro layers
-            const layers = map.getStyle().layers;
-            layers.forEach((layer) => {
-                // Remove metro-specific layers
-                if (layer.id.endsWith('-layer') && map.getLayer(layer.id)) {
-                    map.removeLayer(layer.id);
-                }
-            });
-
-            // Then remove corresponding sources, excluding essential ones
-            Object.keys(map.style.sourceCaches).forEach((sourceId) => {
-                if (sourceId !== 'protomaps' && 
-                    sourceId !== 'centroids' && 
-                    sourceId !== 'metro-regions' && 
-                    sourceId !== 'esri-hillshade' && 
-                    map.getSource(sourceId)) {
-                    map.removeSource(sourceId);
-                }
-            });
+            cleanMap(map);
 
             pmtilesURL = `/urban-activity-atlas/metro_region_geohash_stops_pm/${metroName.replace(/ /g, '%20')}.pmtiles`;
 
@@ -120,6 +124,8 @@
             map.setFilter('metro-areas', ['!=', ['get', 'name'], metroName]);  // Show all except selected
             map.setFilter('selected-metro-outline', ['==', ['get', 'name'], metroName]);  // Show only selected outline
 		} else if (map) {
+            cleanMap(map);
+
             // When no region selected, show all regions and no outline
             map.setFilter('metro-areas', ['has', 'name']);  // Show all regions
             map.setFilter('selected-metro-outline', ['==', ['get', 'name'], '']);  // Hide outline
