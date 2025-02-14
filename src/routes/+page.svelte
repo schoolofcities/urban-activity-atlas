@@ -209,7 +209,6 @@
     .panel {
         width: 410px;
         min-width: 280px;
-        max-width: 399px;
         border-right: solid 1px var(--brandGray);
         height: 100vh;
         overflow: auto;
