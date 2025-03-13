@@ -182,7 +182,7 @@
     }
 
     .gradient-bar {
-        width: 100%;
+        width: calc(100% - 2px);
         height: 20px;
         border: solid 1px var(--brandGray);
         border-radius: 5px;
