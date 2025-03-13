@@ -31,7 +31,7 @@
     <hr>
     <p class="description">
         This map shows which places people visit or spend time in the 300 largest metropolitan regions (by population) in the US and Canada. 
-        <b>Choose a metro region by clicking on it on the map, or choosing from the dropdown below.</b>
+        Choose a metro region by clicking on it on the map, or choosing from the dropdown below.
     </p>
 
     <!-- <p class="location-label">Select a metropolitan region:</p> -->
@@ -92,7 +92,7 @@
         width: 100%;
         max-width: 399px;
         height: auto;
-        opacity: 0.90;
+        opacity: 1;
     }
 
     #logo img {
@@ -100,6 +100,10 @@
         height: auto; 
         max-height: 60px;
         display: block;
+    }
+
+    #logo:hover {
+        opacity: 0.75;
     }
 
 
