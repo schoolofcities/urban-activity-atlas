@@ -4,6 +4,7 @@
 # Data
 data/activity_2023-04-01_2024-03-31.csv
 data/metro_region_geohashes.csv
+data/Exploring_daily_locations
 
 # npm
 node_modules
