@@ -46,9 +46,9 @@
 body {
 	padding: 0px;
 	margin: 0px;
-	background-color: #111a1a;
 	overflow-x: hidden;
-	width: 100%
+	width: 100%;
+	background-color: black;
 }
 
 @media (max-width: 400px) {
