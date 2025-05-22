@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="./favicon.svg" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		
+		<link rel="modulepreload" href="./_app/immutable/entry/start.CC5LtgnR.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/entry.BXRrC859.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/runtime.DN73Zm9j.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/index-client.CedVX3lY.js">
+		<link rel="modulepreload" href="./_app/immutable/entry/app.D5bwdjEq.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/render.BGMhVoZ0.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/disclose-version.BJWUB3wQ.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/props.D28Buolp.js">
+
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, minimum-scale=1"
+		/>
+
+		<title>Urban Activity Atlas | School of Cities</title>
+
+		<meta name="description" content="Explore maps of human activity levels in the 300 largest metropolitan regions in the US and Canada">
+		<meta name="author" content="Julia Greenberg, Aniket Kali, Jeff Allen, Karen Chapple">
+
+		<meta property="og:title" content="Urban Activity Atlas | School of Cities" />
+		<meta property="og:description" content="Explore maps of human activity levels in the 300 largest metropolitan regions in the US and Canada" />
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content="https://schoolofcities.github.io/urban-activity-atlas" />
+		<meta property="og:image" content="https://schoolofcities.github.io/urban-activity-atlas/web-card.png" />
+		<meta property="og:locale" content="en_CA">
+
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:site" content="https://schoolofcities.github.io/urban-activity-atlas" />
+		<meta name="twitter:creator" content="@UofTCities" />
+		<meta name="twitter:title" content="Urban Activity Atlas | School of Cities" />
+		<meta name="twitter:description" content="Explore maps of human activity levels in the 300 largest metropolitan regions in the US and Canada" />
+		<meta name="twitter:image" content="https://schoolofcities.github.io/urban-activity-atlas/web-card.png" /> 
+		
+	</head>
+
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-XB09CWTEWB"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'G-XB09CWTEWB');
+	</script>
+
+	<body data-sveltekit-preload-data="hover">
+		<div style="display: contents">
+			<script>
+				{
+					__sveltekit_zqie3j = {
+						base: new URL(".", location).pathname.slice(0, -1),
+						assets: "/urban-activity-atlas"
+					};
+
+					const element = document.currentScript.parentElement;
+
+					Promise.all([
+						import("./_app/immutable/entry/start.CC5LtgnR.js"),
+						import("./_app/immutable/entry/app.D5bwdjEq.js")
+					]).then(([kit, app]) => {
+						kit.start(app, element);
+					});
+				}
+			</script>
+		</div>
+	</body>
+</html>
