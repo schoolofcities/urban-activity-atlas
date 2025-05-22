@@ -31,25 +31,29 @@
 		imagesLoaded = false;
 		decodedImages = [];
 
-		await Promise.all(
-			imagePaths.map(src => {
-				return new Promise(resolve => {
-					const img = new Image();
-					img.src = src;
-					img.onload = async () => {
-						try {
-							await img.decode();
-						} catch (e) {}
-						decodedImages.push(src);
-						resolve();
-					};
-					img.onerror = resolve;
-				});
-			})
-		);
+		const firstBatch = imagePaths.slice(0, 5);
+		const rest = imagePaths.slice(5);
 
+		const load = src => new Promise(resolve => {
+			const img = new Image();
+			img.src = src;
+			img.onload = async () => {
+				try {
+					await img.decode();
+				} catch (e) {}
+				decodedImages.push(src);
+				resolve();
+			};
+			img.onerror = resolve;
+		});
+
+		await Promise.all(firstBatch.map(load));
 		imagesLoaded = true;
+
+		// Load remaining in background
+		rest.forEach(load);
 	}
+
 
 	onMount(() => {
 		switchMode('weekday');
@@ -72,6 +76,7 @@
 		isPlaying = false;
 		clearInterval(interval);
 	}
+
 </script>
 
 
