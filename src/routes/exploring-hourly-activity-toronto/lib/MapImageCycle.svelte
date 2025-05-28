@@ -4,6 +4,8 @@
 	export let title = '';
 	export let folder_weekday = '';
 	export let folder_weekend = '';
+	export let legendColors = [];
+	export let legendLabels = [];
 
 	let folder;
 	let currentHour = 0;
@@ -27,33 +29,6 @@
 		loadImages();
 	}
 
-	// async function loadImages() {
-	// 	imagesLoaded = false;
-	// 	decodedImages = [];
-
-	// 	const firstBatch = imagePaths.slice(0, 24);
-	// 	const rest = imagePaths.slice(24);
-
-	// 	const load = src => new Promise(resolve => {
-	// 		const img = new Image();
-	// 		img.src = src;
-	// 		img.onload = async () => {
-	// 			try {
-	// 				await img.decode();
-	// 			} catch (e) {}
-	// 			decodedImages.push(src);
-	// 			resolve();
-	// 		};
-	// 		img.onerror = resolve;
-	// 	});
-
-	// 	await Promise.all(firstBatch.map(load));
-	// 	imagesLoaded = true;
-
-	// 	// Load remaining in background
-	// 	rest.forEach(load);
-	// }
-
 	async function loadImages() {
   imagesLoaded = false;
   decodedImages = [];
@@ -75,15 +50,15 @@
     requestIdleCallback(() => loadSingleImage(img), { timeout: 2000 });
   });
 
-  imagesLoaded = true; // Enable UI after critical images load
+  imagesLoaded = true; 
 }
 
 async function loadSingleImage(src) {
-  const img = new Image();
-  img.src = src;
-  img.decoding = "async"; // ← Critical for mobile
-  await img.decode().catch(() => {});
-  decodedImages.push(src);
+	const img = new Image();
+	img.src = src;
+	img.decoding = "async"; 
+	await img.decode().catch(() => {});
+	decodedImages.push(src);
 }
 
 
@@ -109,12 +84,25 @@ async function loadSingleImage(src) {
 		clearInterval(interval);
 	}
 
+
+
 </script>
 
 
 <div class="container">
 
 	<h3>{title}</h3>
+
+	<div class="legend-container">
+		<div class="gradient-legend" 
+			 style="background: linear-gradient(to right, {legendColors.join(',')})">
+		</div>
+		<div class="legend-labels">
+			{#each legendLabels as label, i}
+				<span class="label-{i}">{label}</span>
+			{/each}
+		</div>
+	  </div>
 
 	<div class="controls">
 		<div class="range-play-wrapper">
@@ -184,6 +172,60 @@ async function loadSingleImage(src) {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+	}
+
+	.legend-container {
+		width: 100%;
+		max-width: 470px;
+		margin: 0 auto;
+		margin-top: 10px;
+		margin-bottom: 0px;
+	}
+	
+	.gradient-legend {
+		height: 8px;
+		width: 100%;
+		border-radius: 0px;
+		margin-bottom: 5px;
+	}
+
+	.legend-labels {
+		display: flex;
+		justify-content: space-between;
+		width: 100%;
+		position: relative;
+	}
+	
+	.legend-labels span {
+		font-size: 10px;
+		color: white;
+		padding-left: 3px;
+		padding-right: 3px;
+	}
+	
+	/* 2-label version */
+	.legend-labels span:first-child:nth-last-child(2),
+	.legend-labels span:last-child:nth-first-child(2) {
+		flex: 1;
+	}
+	
+	/* 3-label version */
+	.legend-labels span:first-child:nth-last-child(3),
+	.legend-labels span:last-child:nth-first-child(3) {
+		flex: 1;
+	}
+	
+	.legend-labels span:first-child {
+		text-align: left;
+	}
+	
+	.legend-labels span:last-child {
+		text-align: right;
+	}
+	
+	/* Only applies when there's 3 labels */
+	.legend-labels span:nth-child(2) {
+		text-align: center;
 	}
 
 	img {
