@@ -36,7 +36,7 @@
 </div>
 
 <MapImageCycle 
-	title = "Mean hourly activity in Toronto via mobile phone data"
+	title = "Mean hourly activity in Toronto"
 	folder_weekday="exploring-hourly-activity-toronto/Weekday_Total_small"
 	folder_weekend="exploring-hourly-activity-toronto/Weekend_Total_small"
 />
@@ -133,7 +133,7 @@
 
 <div class="text">
 	<p>
-		Clustering patterns also exhibit a noticeable 'pulse' throughout the day. Between 10 am and 5pm high levels of activity become more spatially concentrated. In the evening and overnight hours, this clustering diminishes and activity becomes more spatially dispersed. This pattern likely reflects the daily movement of people into concentrated employment or commercial areas during working hours, as reported in the maps above. Additionally, clustering is generally lower on weekends, particularly on Sundays. This supports our earlier observation in the maps that weekend activity lacks the structured, location-specific patterns which are observed during weekdays. 
+		Clustering patterns also exhibit a noticeable 'pulse' throughout the day. Between 10am and 5pm high levels of activity become more spatially concentrated. In the evening and overnight hours, this clustering diminishes and activity becomes more spatially dispersed. This pattern likely reflects the daily movement of people into concentrated employment or commercial areas during working hours, as reported in the maps above. Additionally, clustering is generally lower on weekends, particularly on Sundays. This supports our earlier observation in the maps that weekend activity lacks the structured, location-specific patterns which are observed during weekdays. 
 	</p>
 </div>
 

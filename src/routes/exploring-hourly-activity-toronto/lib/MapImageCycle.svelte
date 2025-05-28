@@ -27,32 +27,64 @@
 		loadImages();
 	}
 
+	// async function loadImages() {
+	// 	imagesLoaded = false;
+	// 	decodedImages = [];
+
+	// 	const firstBatch = imagePaths.slice(0, 24);
+	// 	const rest = imagePaths.slice(24);
+
+	// 	const load = src => new Promise(resolve => {
+	// 		const img = new Image();
+	// 		img.src = src;
+	// 		img.onload = async () => {
+	// 			try {
+	// 				await img.decode();
+	// 			} catch (e) {}
+	// 			decodedImages.push(src);
+	// 			resolve();
+	// 		};
+	// 		img.onerror = resolve;
+	// 	});
+
+	// 	await Promise.all(firstBatch.map(load));
+	// 	imagesLoaded = true;
+
+	// 	// Load remaining in background
+	// 	rest.forEach(load);
+	// }
+
 	async function loadImages() {
-		imagesLoaded = false;
-		decodedImages = [];
+  imagesLoaded = false;
+  decodedImages = [];
 
-		const firstBatch = imagePaths.slice(0, 5);
-		const rest = imagePaths.slice(5);
+  // PHASE 1: Critical first frame (0ms delay)
+  await loadSingleImage(imagePaths[0]); 
+  
+  // PHASE 2: Next 3 visible hours (50ms delay to avoid blocking)
+  setTimeout(async () => {
+    await Promise.all([
+      loadSingleImage(imagePaths[1]),
+      loadSingleImage(imagePaths[2]),
+      loadSingleImage(imagePaths[3])
+    ]);
+  }, 50);
 
-		const load = src => new Promise(resolve => {
-			const img = new Image();
-			img.src = src;
-			img.onload = async () => {
-				try {
-					await img.decode();
-				} catch (e) {}
-				decodedImages.push(src);
-				resolve();
-			};
-			img.onerror = resolve;
-		});
+  // PHASE 3: Remaining images during idle time
+  imagePaths.slice(4).forEach(img => {
+    requestIdleCallback(() => loadSingleImage(img), { timeout: 2000 });
+  });
 
-		await Promise.all(firstBatch.map(load));
-		imagesLoaded = true;
+  imagesLoaded = true; // Enable UI after critical images load
+}
 
-		// Load remaining in background
-		rest.forEach(load);
-	}
+async function loadSingleImage(src) {
+  const img = new Image();
+  img.src = src;
+  img.decoding = "async"; // ← Critical for mobile
+  await img.decode().catch(() => {});
+  decodedImages.push(src);
+}
 
 
 	onMount(() => {
@@ -135,6 +167,8 @@
 	</div>
 	
 	<img
+		loading="lazy"
+  		decoding="async"
 		src={imagesLoaded ? imagePaths[currentHour] : './urban-activity-atlas/exploring-daily-activity-toronto/blank-image.png'}
 		alt={`Hour ${currentHour}`}
 		class:loading={!imagesLoaded}
@@ -145,7 +179,7 @@
 <style>
 	.container {
 		width: 100%;
-		max-width: 690px;
+		max-width: 540px;
 		margin: 0 auto;
 		display: flex;
 		flex-direction: column;
