@@ -40,7 +40,7 @@
 	folder_weekday="exploring-hourly-activity-toronto/Weekday_Total_small"
 	folder_weekend="exploring-hourly-activity-toronto/Weekend_Total_small"
 	legendColors = {["#331d33","#c53e2e","#eddd53"]}
-	legendLabels = {['Few mobile phones','Many mobile phones']}
+	legendLabels = {['Few active mobile phones','Many active mobile phones']}
 />
 
 <div class="text">
@@ -70,7 +70,7 @@
 	folder_weekday="exploring-hourly-activity-toronto/Weekday_Difference_small"
 	folder_weekend="exploring-hourly-activity-toronto/Weekend_Difference_small"
 	legendColors = {["#d0f9ff","#4ca4c3","#331d33","#c53e2e","#eddd53"]}
-	legendLabels = {['Low', 'Mean', 'High']}
+	legendLabels = {['Relatively low activity', 'Mean activity', 'Relatively high activity']}
 />
 
 <div class="text">
