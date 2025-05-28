@@ -56,10 +56,12 @@
   
 	  // Generate path data for each day
 	  const lines = days.map(day => {
+		const isWeekend = day === 'Saturday' || day === 'Sunday';
 		return {
 		  day,
 		  path: line(data.map(d => ({ Hour: d.Hour, value: d[day] }))),
-		  color: colors[days.indexOf(day)]
+		  color: colors[days.indexOf(day)],
+		  isDashed: isWeekend
 		};
 	  });
   
@@ -81,13 +83,21 @@
 	
 	<!-- Legend container -->
 	<div class="legend-container">
-	  {#each chartElements?.lines as line}
-		<div class="legend-item">
-		  <span class="legend-line" style="border-color: {line.color}"></span>
-		  <span class="legend-text">{line.day}</span>
-		</div>
-	  {/each}
-	</div>
+		{#each chartElements?.lines as line}
+		  <div class="legend-item">
+			<svg width="24" height="12" viewBox="0 0 24 12">
+			  <path 
+				d="M0,6 L24,6" 
+				stroke={line.color} 
+				stroke-width="3" 
+				stroke-dasharray={line.isDashed ? '4,2' : '0'} 
+				fill="none"
+			  />
+			</svg>
+			<span class="legend-text">{line.day}</span>
+		  </div>
+		{/each}
+	  </div>
 	
 	<svg width={containerWidth} height="400" viewBox={`0 0 ${containerWidth} 400`}>
 	  <!-- Background -->
@@ -122,7 +132,13 @@
   
 	  <!-- Plot each day's line -->
 	  {#each chartElements?.lines as line}
-		<path d={line.path} fill="none" stroke={line.color} stroke-width="2" />
+		<path 
+		  d={line.path} 
+		  fill="none" 
+		  stroke={line.color} 
+		  stroke-width="3" 
+		  stroke-dasharray={line.isDashed ? '4,2' : '0'} 
+		/>
 	  {/each}
 
 	  {#if y_axis_title}
@@ -175,31 +191,30 @@
 		gap: 12px 24px;
 		padding: 0 20px;
 	}
-	
-	.legend-item {
+  
+  .legend-item {
 		display: flex;
 		align-items: center;
 		gap: 6px;
 	}
-	
-	.legend-line {
-		display: inline-block;
-		width: 20px;
-		border-bottom: 2px solid;
+  
+  .legend-item svg {
+		display: block;
 	}
-	
-	.legend-text {
+  
+  .legend-text {
 		color: #fff;
 		font-family: RobotoRegular;
 		font-size: 12px;
 	}
-	
-	@media (max-width: 500px) {
+  
+  @media (max-width: 500px) {
 		.legend-container {
 			gap: 8px 16px;
 		}
-		.legend-line {
-			width: 15px;
+		.legend-item svg {
+			width: 20px;
+			height: 10px;
 		}
 		.legend-text {
 			font-size: 11px;
