@@ -17,21 +17,30 @@
 	<img src={topImage} alt=""/>
     <h1>Exploring hourly activity patterns in Toronto</h1>
 	<p id="authors">
-		<a href="https://camhkerr.com/">Cameron Kerr</a>
-		<a href="https://www.urbandisplacement.org/team/julia-greenberg/">Julia Greenberg</a>
+		<a href="https://camhkerr.com/">Cameron Kerr</a>,
+		<a href="https://www.urbandisplacement.org/team/julia-greenberg/">Julia Greenberg</a>,
 		<a href="https://jamaps.github.io/">Jeff Allen</a>
 	</p>
 </div>
 
 <div class="text">
     <p>
-		A city is a constantly changing complex system. Even hourly, as millions of people move from home to work, to events, and through their daily routines the city develops it's own pulse. We set out to visualize the pulse of the city and identify any patterns that emerge.
+		Metropolitan regions are constantly changing, complex systems. As their inhabitants and visitors move between 
+		home and work, to and from events, and through their daily routines, regions develop their own unique pulse.	
 	</p>
-    <p>
-		The Greater Toronto Area (GTA) provides a model area to investigate as it contains almost 7 million people and a diverse set of rural, mid-size-and mega- cities. 
+    <p>	
+		The following visualizations illustrate this movement through the Greater Toronto Area (GTA) - a region with 
+		almost 7 million people and a mix of urban, rural, and suburban communities - at different hours of the day using mobile 
+		phone data.
 	</p>
+	<h2>Methodology</h2>
     <p>
-		The bounding box around the GTA was subdivided into a rectangular grid containing over 16,000 grid cells each about 1km wide. To investigate hourly activity across the GTA the accumulated time in each of these grid cells was calculated. Hourly activity was measured by the accumulated time in each grid cell (i.e if 2 people spend half of the hour in a given cell, the region has an accumulated time of 1 in that hour). The time each person spends in each cell was calculated using a sample of mobile location data provided by Spectus. In the map below the total accumulated time is shown for the average weekday and weekend over the summer of 2024 in the GTA.
+		The bounding box around the GTA (i.e., the rectangular area containing the region's boundaries) was subdivided into a 
+		rectangular grid containing over 16,000 grid cells, each about 1 kilometer wide.
+	</p>
+	<p>Hourly activity was measured using the <i>accumulated time</i> in each grid cell. For example, if two mobile 
+		devices each spend 30 minutes of a given hour in a given cell, the region has an accumulated time of 1 in that hour. The time 
+		each device spends in each cell was calculated using a sample of mobile location data provided by <a href="https://docs.spectus.ai/" target="_blank">Spectus</a>.
 	</p>
 </div>
 
@@ -44,11 +53,15 @@
 />
 
 <div class="text">
-    <p>
-		The map demonstrates that the patterns of total hourly activity are relatively constant throughout the average weekend and weekday. There are no large structural changes in the distribution of activity throughout the city. Hourly activity is concentrated around Toronto and it's surrounding large municipalities with more distant pockets having lower activity. 
+	<p>
+		The map above, which shows the total accumulated time for the average weekday and weekend in the summer of 2024 in the GTA,
+		demonstrates that the spatial distribution of total hourly activity is relatively constant. Despite some small fluctuations, 
+		activity at all hours during both types of days is consistently concentrated in the city of Toronto, especially downtown.
 	</p>
     <p>	
-		Smaller patterns which can be picked up include the increase in activity at the Toronto Pearson Airport during the day and the empty space it leaves at night. The only large scale change is the general drop in activity during the night, especially seen between 3am and 5 am. The plot below shows the number of active phones in the sample during each hour throughout the week. The observed drop could be due to the nature of the mobile location data, as cell phones send out less location pings during the night. Another factor could be people commuting from outside of the GTA and leaving during the night. 
+		However, the map does reveal some interesting trends. In the region overall, there is less activity in general at night.
+		There is also a notable dark area on the map where the Pearson International Airport is located, indicating that there is
+		generally less activity there compared to other parts of the region.
 	</p>
 </div>
 
@@ -61,7 +74,19 @@
 
 <div class="text">
 	<p>
-		In the map above, the underlying population density distribution obscures the hourly changes which occur. To better visualize these changes we subtracted each cell's hourly activity by it's average hourly activity throughout the summer of 2024. This new metric measures how much more or less activity occurs in a given cell compared to it's typical activity. 
+		The plot above shows the number of active phones in the sample during each hour throughout the week. The observed drop could be 
+		due to the nature of the mobile location data, as lower overall levels of movement at night results in fewer cell phone "pings". 
+		Another factor could be commuters coming into the GTA to work during the day and leaving the region at night.
+	</p>
+	<p>
+		In the first map shown above, the underlying population density of the region distribution obscures hourly changes in activity. 
+		In other words, since there are almost always more people downtown and in the city of Toronto than anywhere else in the region,
+		the spatial distribution of overall activity levels always looks pretty similar.
+	</p>
+	<p>
+		To better visualize <i>relative</i> changes in activity, we calculated the difference between each individual cell's hourly 
+		activity and its <i>average</i> hourly activity throughout the summer of 2024. This new metric - shown in the map below - 
+		measures how much more or less activity occurs in a given cell compared to the typical level of activity in that cell. 
 	</p>
 </div>
 
@@ -72,6 +97,19 @@
 	legendColors = {["#d0f9ff","#4ca4c3","#331d33","#c53e2e","#eddd53"]}
 	legendLabels = {['Relatively low activity', 'Mean activity', 'Relatively high activity']}
 />
+
+<div class="text">
+	<p>
+		Patterns of movement throughout the region are much more pronounced in this version of the map. Similar to the previous map, most 
+		cells in this map experience lower-than-average activity at night and higher-than-average activity during the day. This map also 
+		shows, however, how people cluster in employment centers during weekdays and then become more dispersed during weeknights.
+
+		HERE ONWARD IS WHERE I NEED TO KEEP EDITING!
+
+		For example, the southeastern part of Brampton is an employment area that becomes busier during weekdays, with the surrounding 
+		northern and western part containing residential areas. During the evening, these residential areas have a higher than average activity and during 9-5 on weekdays the employment areas are at higher activity. Similarly, Vaughan's primary employment area is located in the South and is surrounded by residential areas. Activity is concentrated in the employment areas during 9-5 on weekdays and spreads out to the surrounding areas in the evening. Due to it's high density it is difficult to discern similar patterns for Toronto, but a signfiicant increase in activity can be seen in the downtown core during working hours. Additionally, between 3 pm and 6 pm lines of increased activity can be seen on highway 400 and highway 401, representing the commute out of commercial areas.
+	</p>
+</div>
 
 <div class="text">
 	<p>
