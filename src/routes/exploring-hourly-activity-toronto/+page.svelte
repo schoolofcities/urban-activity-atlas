@@ -30,12 +30,12 @@
 		errands, and engage in other activities, regions develop their own unique pulse and rhythm.	
 	</p>
     <p>	
-		The following visualizations illustrate this movement through the Greater Toronto Area (GTA)–a region with 
+		The following visualizations illustrate this movement throughout the Greater Toronto Area (GTA)–a region with 
 		almost 7 million people and a mix of urban, rural, and suburban communities–at different hours of the day using data collected 
 		from mobile devices.
 	</p>
     <p>
-		To do so, we selected over 16,000 grid cells, each about 1 kilometer wide, across the GTA. For each of these grid cell, we measured hourly activity by calculating the <i>accumulated time</i> that a sample of mobile devices (i.e., cell phones) spent in each grid 
+		To do so, we selected over 16,000 grid cells, each about 1 kilometer wide, across the GTA. For each of these grid cells, we measured hourly activity by calculating the <i>accumulated time</i> that a sample of mobile devices (i.e., cell phones) spent in each grid 
 		cell. For example, if two mobile devices each spent 30 minutes of a given hour in a given cell, the region would be assigned an 
 		accumulated time of 1 for that hour. The sample of mobile device location data was provided by <a href="https://cuebiq.com/social-impact/" target="_blank">Cuebiq</a>.
 	</p>
@@ -99,11 +99,11 @@
 <div class="text">
 	<p>
 		Patterns of movement throughout the region are much more pronounced in this version of the map. This map reveals that people cluster in employment centers during weekdays and then become more dispersed during weekday evenings. For example, the southeastern part of 
-		Brampton and northwestern Mississauga is a massive employment area that becomes busier than usual during weekday working hours. During weekday evenings, on the other hand, the more residential northern and western parts of Brampton experience higher than average activity.
+		Brampton and northeastern Mississauga is a massive employment area that becomes busier than usual during weekday working hours. During weekday evenings, on the other hand, the more residential northern and western parts of Brampton experience higher than average activity.
 	</p>
 	<p>		
 		This trend of increased activity in employment zones during weekday working hours is prevalent throughout the GTA, including
-		in the southern part of Vaughan, parts of Markham, and in downtown Toronto. Areas that mostly consist of residential buildings (rather than retail and commercial) have more activity in the evenings. Commuting patterns are also highlighted in the weekday version of the map, as activity visibly increases between 3 pm and 6 pm on Highway 400, Highway 401, and the QEW
+		in the southern part of Vaughan, parts of Markham, and in downtown Toronto. Areas that mostly consist of residential buildings (rather than retail and commercial) have more activity in the evenings. Commuting patterns are also highlighted in the weekday version of the map, as activity visibly increases between 3 pm and 6 pm on Highway 400, Highway 401, and the QEW.
 	</p>
 	<p>
 		Spatial patterns during the weekend are somewhat similar to weekday patterns, with some key differences. While weekday activity
