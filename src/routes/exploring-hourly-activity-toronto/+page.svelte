@@ -17,21 +17,33 @@
 	<img src={topImage} alt=""/>
     <h1>Exploring hourly activity patterns in Toronto</h1>
 	<p id="authors">
-		<a href="https://camhkerr.com/">Cameron Kerr</a>
-		<a href="https://www.urbandisplacement.org/team/julia-greenberg/">Julia Greenberg</a>
-		<a href="https://jamaps.github.io/">Jeff Allen</a>
+		<a href="https://camhkerr.com/" target="_blank">Cameron Kerr</a>,
+		<a href="https://www.urbandisplacement.org/team/julia-greenberg/" target="_blank">Julia Greenberg</a>,
+		<a href="https://jamaps.github.io/" target="_blank">Jeff Allen</a> |
+		June 2025
 	</p>
 </div>
 
 <div class="text">
     <p>
-		A city is a constantly changing complex system. Even hourly, as millions of people move from home to work, to events, and through their daily routines the city develops it's own pulse. We set out to visualize the pulse of the city and identify any patterns that emerge.
+		Metropolitan regions are constantly changing, complex systems. As their inhabitants and visitors commute between home and work, run
+		errands, and engage in other activities, regions develop their own unique pulse and rhythm.	
+	</p>
+    <p>	
+		The following visualizations illustrate this movement throughout the Greater Toronto Area (GTA)–a region with 
+		almost 7 million people and a mix of urban, rural, and suburban communities–at different hours of the day using data collected 
+		from mobile devices.
 	</p>
     <p>
-		The Greater Toronto Area (GTA) provides a model area to investigate as it contains almost 7 million people and a diverse set of rural, mid-size-and mega- cities. 
+		To do so, we selected over 16,000 grid cells, each about 1 kilometer wide, across the GTA. For each of these grid cells, we measured hourly activity by calculating the <i>accumulated time</i> that a sample of mobile devices (i.e., cell phones) spent in each grid 
+		cell. For example, if two mobile devices each spent 30 minutes of a given hour in a given cell, the region would be assigned an 
+		accumulated time of 1 for that hour. The sample of mobile device location data was provided by <a href="https://cuebiq.com/social-impact/" target="_blank">Cuebiq</a>.
 	</p>
-    <p>
-		The bounding box around the GTA was subdivided into a rectangular grid containing over 16,000 grid cells each about 1km wide. To investigate hourly activity across the GTA the accumulated time in each of these grid cells was calculated. Hourly activity was measured by the accumulated time in each grid cell (i.e if 2 people spend half of the hour in a given cell, the region has an accumulated time of 1 in that hour). The time each person spends in each cell was calculated using a sample of mobile location data provided by Spectus. In the map below the total accumulated time is shown for the average weekday and weekend over the summer of 2024 in the GTA.
+	<p>
+		We then mapped the results and calculated statistics summarizing the patterns that we observed. 
+	</p>
+	<p>
+		The first map below shows the total accumulated time for each hour (shown using the 24 hour clock) of the average weekday and weekend in the summer of 2024 in the GTA. There isn't much fluctuation, demonstrating that the spatial distribution of total hourly activity is relatively constant. Activity at all hours during both types of days is consistently concentrated in specific locations (e.g. downtown Toronto)
 	</p>
 </div>
 
@@ -40,15 +52,14 @@
 	folder_weekday="exploring-hourly-activity-toronto/Weekday_Total_small"
 	folder_weekend="exploring-hourly-activity-toronto/Weekend_Total_small"
 	legendColors = {["#331d33","#c53e2e","#eddd53"]}
-	legendLabels = {['Few active mobile phones','Many active mobile phones']}
+	legendLabels = {['Few active mobile devices','Many active mobile devices']}
 />
 
 <div class="text">
-    <p>
-		The map demonstrates that the patterns of total hourly activity are relatively constant throughout the average weekend and weekday. There are no large structural changes in the distribution of activity throughout the city. Hourly activity is concentrated around Toronto and it's surrounding large municipalities with more distant pockets having lower activity. 
-	</p>
     <p>	
-		Smaller patterns which can be picked up include the increase in activity at the Toronto Pearson Airport during the day and the empty space it leaves at night. The only large scale change is the general drop in activity during the night, especially seen between 3am and 5 am. The plot below shows the number of active phones in the sample during each hour throughout the week. The observed drop could be due to the nature of the mobile location data, as cell phones send out less location pings during the night. Another factor could be people commuting from outside of the GTA and leaving during the night. 
+		However, the map does reveal some interesting trends when looking closely. In the region overall, there is less activity at night.
+		There is also a notable dark area on the map where the Pearson International Airport is located, indicating that there is
+		generally less activity there compared to other parts of the region at night.
 	</p>
 </div>
 
@@ -61,7 +72,19 @@
 
 <div class="text">
 	<p>
-		In the map above, the underlying population density distribution obscures the hourly changes which occur. To better visualize these changes we subtracted each cell's hourly activity by it's average hourly activity throughout the summer of 2024. This new metric measures how much more or less activity occurs in a given cell compared to it's typical activity. 
+		The plot above shows the number of active devices in the sample during each hour throughout the week. The observed drop could be 
+		due to the nature of the device location data, as lower overall levels of movement at night may result in fewer instances of devices' 
+		locations being collected by the data provider. Another factor could be commuters coming into the GTA to work during the day and 
+		leaving the region at night.
+	</p>
+	<p>
+		In the map shown above, the underlying population density of the region distribution obscures hourly changes in activity. 
+		In other words, since there are almost always more people in the city of Toronto (especially downtown) than anywhere else in the region, the spatial distribution of overall activity levels always looks fairly similar.
+	</p>
+	<p>
+		To better illustrate <i>relative</i> changes in activity, the map below shows the difference between each individual cell's hourly 
+		activity and its <i>average</i> hourly activity throughout the summer of 2024. This new metric
+		measures how much more or less activity occurs in a given cell compared to the typical level of activity in that cell. 
 	</p>
 </div>
 
@@ -75,39 +98,80 @@
 
 <div class="text">
 	<p>
-		This map demonstrates both large and small scale flucuations throughout the day. Similar to the previous map, most cells have a lower than average activity during the night and higher than average activity during the day. In addition, we can see movement from residential areas and into employment areas during the day. For example, the south-eastern part of Brampton is an employment area with the surrounding northern and western part containing residential areas. During the evening, these residential areas have a higher than average activity and during 9-5 on weekdays the employment areas are at higher activity. Similarly, Vaughan's primary employment area is located in the South and is surrounded by residential areas. Activity is concentrated in the employment areas during 9-5 on weekdays and spreads out to the surrounding areas in the evening. Due to it's high density it is difficult to discern similar patterns for Toronto, but a signfiicant increase in activity can be seen in the downtown core during working hours. Additionally, between 3 pm and 6 pm lines of increased activity can be seen on highway 400 and highway 401, representing the commute out of commercial areas.
+		Patterns of movement throughout the region are much more pronounced in this version of the map. This map reveals that people cluster in employment centers during weekdays and then become more dispersed during weekday evenings. For example, the southeastern part of 
+		Brampton and northeastern Mississauga is a massive employment area that becomes busier than usual during weekday working hours. During weekday evenings, on the other hand, the more residential northern and western parts of Brampton experience higher than average activity.
+	</p>
+	<p>		
+		This trend of increased activity in employment zones during weekday working hours is prevalent throughout the GTA, including
+		in the southern part of Vaughan, parts of Markham, and in downtown Toronto. Areas that mostly consist of residential buildings (rather than retail and commercial) have more activity in the evenings. Commuting patterns are also highlighted in the weekday version of the map, as activity visibly increases between 3 pm and 6 pm on Highway 400, Highway 401, and the QEW.
 	</p>
 	<p>
-		In contrast to the commercial shift on weekdays, the progression through a weekend is less predicatable. In the evening the distribution is similar to that seen on weekdays, with most high activity occuring in residential areas. However, activity during the day is scattered throughout commercial and residential areas. The activity also starts much later in the day, with low activity in central areas as late as 11 am. 
+		Spatial patterns during the weekend are somewhat similar to weekday patterns, with some key differences. While weekday activity
+		generally begins around 7 am, especially in the northwest part of the region and around the airport, on weekends
+		there is still low overall activity at this time. Weekend activity picks up a few hours later, around 10 or 11 am.
+	</p>
+	<p>
+		Activity during the day is also more evenly spread out throughout the region on weekends, and does not concentrate in major 
+		employment areas like on weekdays. During both weekends and weekdays, however, activity in the central part of the city 
+		of Toronto increases significantly around 10 or 11 pm.
 	</p>
 	<h2>Diversity and clustering</h2>
 	<p>
-		Diversity and clustering statistics were used to quantify the daily patterns observed in the maps above. To measure the diversity of hourly activity across the GTA, we applied Shannon's Diversity Index. This index captures both the number of cells with activity (richness) and how evenly that activity is distributed among them (evenness). A high Shannon index means that many cells have activity and that activity levels are relatively balanced across them. In contrast, a low Shannon index suggests that fewer cells are active and that activity is concentrated in specific cells. Note that this index is spatially unaware, if all the cells were shuffled into different positions on the map, the Shannon index value would remain the same. 
+		Diversity and clustering statistics were used to quantify the daily patterns observed in the maps above. <a href="https://en.wikipedia.org/wiki/Diversity_index#Shannon_index" target="_blank">Shannon's Diversity 
+		Index</a> captures both <i>richness</i> (the number of grid cells on the map with activity) and <i>evenness</i> (how evenly that 
+		activity is distributed among them). 
+	</p>
+	<p>		
+		A high Shannon Index means that many cells have activity and that activity levels are relatively balanced across them. In contrast, 
+		a low Shannon Index suggests that fewer cells are experiencing activity and that activity is concentrated in specific cells. 
+	</p>
+	<p>
+		Note that this index is "spatially unaware". In other words, if all the cells were shuffled into different positions on the map, the 
+		Shannon index value would remain the same.
 	</p>
 </div>
 
 <LineChart 
-  path_to_data="exploring-hourly-activity-toronto/data/shannon.csv" 
-  title="Shannon diversity index of hourly activity in Toronto" 
-  yticks={[7.9, 8, 8.1, 8.2]}
-  y_axis_title=""
+	path_to_data="exploring-hourly-activity-toronto/data/shannon.csv" 
+	title="Shannon diversity index of hourly activity in Toronto" 
+	yticks={[7.9, 8, 8.1, 8.2]}
+	y_axis_title=""
 />
 
 <div class="text">
 	<p>
-		In the plot above a clear 'pulse' in diversity forms throughout the day. Activity becomes more diverse during daytime hours, with an additional spike between 3 pm and 5 pm. The diversity subsequently drops off in the evening and overnight. Although the differences in the actual index values are relatively small, an Aligned Rank Transform (ART) ANOVA test confirmed that the variation in diversity between day and night is statistically significant. One possible explanation is that during the day people are more mobile and are accumulating less activity in specific cells, especially during commuting hours (when diversity peaks). Additionally, this diversity pulse appears later in the day on Saturdays and Sundays, likely due to delayed daily routines on weekends. 
+		The plot above shows that activity becomes more <i>spatially diverse</i> during daytime hours, peaking between 3 pm and 5 pm, and then decreases in the evening and remains low throughout the night. Although differences in the actual index values are relatively small, an <a href="https://search.r-project.org/CRAN/refmans/ARTool/html/art.html" target="_blank">Aligned Rank Transform (ART) ANOVA</a> test confirmed that the variation in diversity between day and night is statistically 
+		significant.
+	</p>
+	<p>		
+		One possible explanation is that during the day, people are more mobile and spend less time staying fixed in specific locations
+		relative to evenings, especially during commuting hours (when diversity peaks). The diversity index also increases slightly later in 
+		the day on weekends compared to weekdays, likely corresponding with non-work weekend routines.
 	</p>
 	<p>
-		As mentioned above, Shannon's index reflects both richness and evenness. To better understand each components contribution to diversity, we can examine them seperately. In our case, richness represents the number of cells in the GTA which are visited within a given hour. Evenness represents the degree to which activity is uniformly distributed. 
+		As mentioned above, Shannon's Index reflects both <i>richness</i> and <i>evenness</i>. To better understand each component's 
+		contribution to diversity, they were examined seperately. Richness, in this case, represents the number of cells in the GTA that 
+		are visited within a given hour. Evenness indicates the degree to which activity is uniformly distributed throughout the region.
 	</p>
 </div>
 
 <LineChart 
   path_to_data="exploring-hourly-activity-toronto/data/richness.csv" 
-  title="Fraction of cells with activity throughout the day" 
+  title="Proportion of cells with activity throughout the day" 
   yticks={[0.4, 0.5, 0.6, 0.7]}
   y_axis_title="Richness"
 />
+
+<div class="text">
+	<p>
+		Richness (the proportion of grid cells experiencing activity) reveals a pattern similar to Shannon's Diversity Index. During the day, 
+		more people are moving around, generating activity in a large number of cells. At night, activity becomes concentrated in 
+		residential areas, leaving roughly half of the cells inactive.
+	</p>
+	<!-- <p>
+		Additionally, the drop in the number of mobile devices, as seen in the first plot, contributes to a lower number of active cells. 
+	</p> -->
+</div>
 
 <LineChart 
   path_to_data="exploring-hourly-activity-toronto/data/evenness.csv" 
@@ -118,13 +182,23 @@
 
 <div class="text">
 	<p>
-		The plot of richness (expressed here as the fraction of active cells) reveals a simlair daily 'pulse' to that seen in Shannon's diversity. During the day, more people are moving which generates activity in a large number of cells. At night, activity becomes concentrated in residential areas leaving roughly half of the cells inactive. Additionally, the drop in the number of phones (as seen in the first plot) contributes to a lower number of active cells. 
+		Evenness (how evenly activity is spread out throughout the region) follows a reverse pattern. It generally 
+		spikes at night around 3 am and gradually decreases during the day, likely reflecting the transition from home to more concentrated 
+		areas of work and leisure.
+	</p>
+	<p>		
+		Evenness also increases again slightly on weekdays between 3 pm and 5 pm, most likely a result of commuters spreading out throughout
+		the GTA as they leave work.
 	</p>
 	<p>
-		Evenness follows a different pattern; it tends to spike at night and gradually decreases during the day, with a smaller increase on weekdays between 3pm and 5 pm. The nightime spike likely results from low activity levels where urban and rural cells experience minimal activity. The increase between 3 and 5 pm may reflect commuting, as people spread out more evenly across the GTA. Note that despite the distinct pattern seen, the numerical change in evenness is small.
+		In addition to diversity indices, <i>clustering</i> was calculated using the Moran's I statistic for each hour throughout the week. 
+		<a href="https://en.wikipedia.org/wiki/Moran%27s_I" target="_blank">Moran's I</a> in this case measures whether cells with similar activity levels tend to be located near each other, and its possible 
+		values range from -1 (negative spatial autocorrelation) to +1 (positive spatial autocorrelation). 
 	</p>
-	<p>
-		To investigate clustering, we calculated Moran's I for each hour throughout the week. In our case, Moran's I measures whether cells with similar activity levels tend to be located near each other. A high Moran's I value indicates that cells with similar activity are spatially close, suggesting strong spatial autocorrelation. A value near zero suggests that activity levels are randomly distributed across space. A negative value indicates that high-activity cells are typically surrounded by low-activity cells and vice versa. Moran's I ranges from -1 (negative spatial autocorrelation) to +1 (positive spatial autocorrelation).
+	<p>		
+		A high, positive Moran's I value indicates that cells with similar activity are geographically close to each other, suggesting strong 
+		spatial autocorrelation. A value near zero suggests that activity levels are randomly distributed across space. A low negative value 
+		indicates that high-activity cells are typically surrounded by low-activity cells and vice versa.
 	</p>
 </div>
 
@@ -137,7 +211,20 @@
 
 <div class="text">
 	<p>
-		Clustering patterns also exhibit a noticeable 'pulse' throughout the day. Between 10am and 5pm high levels of activity become more spatially concentrated. In the evening and overnight hours, this clustering diminishes and activity becomes more spatially dispersed. This pattern likely reflects the daily movement of people into concentrated employment or commercial areas during working hours, as reported in the maps above. Additionally, clustering is generally lower on weekends, particularly on Sundays. This supports our earlier observation in the maps that weekend activity lacks the structured, location-specific patterns which are observed during weekdays. 
+		The plot above reveals that activity is more spatially concentrated during the day, especially in late afternoons, compared to 
+		evenings and nights, when activity is more dispersed. This clustering trend is relatively similar to the trends for diversity and
+		richness.
+	</p>
+	<p>			
+		However, one noticeable difference is that the clustering plot shows a larger disparity between weekends and weekdays compared
+		to the diversity and richness plots. On Saturdays and especially Sundays, there is less spatial clustering during the day compared to
+		weekdays.
+	</p>
+	<p>			
+		In other words, on weekend mornings and afternoons, there is a similar, even slightly higher proportion of grid cells with activity 
+		compared to weekday mornings and afternoons. However, the places where people spend time on weekend mornings and afternoons are less 
+		spatially concentrated. This makes sense, given that employment centers tend to be in specific areas whereas leisure activities are
+		generally more spread out.
 	</p>
 </div>
 
