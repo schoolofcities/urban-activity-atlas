@@ -29,37 +29,107 @@
 		loadImages();
 	}
 
-	async function loadImages() {
-  imagesLoaded = false;
-  decodedImages = [];
+// 	async function loadImages() {
+//   imagesLoaded = false;
+//   decodedImages = [];
 
-  // PHASE 1: Critical first frame (0ms delay)
-  await loadSingleImage(imagePaths[0]); 
+//   // PHASE 1: Critical first frame (0ms delay)
+//   await loadSingleImage(imagePaths[0]); 
   
-  // PHASE 2: Next 3 visible hours (50ms delay to avoid blocking)
-  setTimeout(async () => {
-    await Promise.all([
-      loadSingleImage(imagePaths[1]),
-      loadSingleImage(imagePaths[2]),
-      loadSingleImage(imagePaths[3])
-    ]);
-  }, 50);
+//   // PHASE 2: Next 3 visible hours (50ms delay to avoid blocking)
+//   setTimeout(async () => {
+//     await Promise.all([
+//       loadSingleImage(imagePaths[1]),
+//       loadSingleImage(imagePaths[2]),
+//       loadSingleImage(imagePaths[3])
+//     ]);
+//   }, 50);
 
-  // PHASE 3: Remaining images during idle time
-  imagePaths.slice(4).forEach(img => {
-    requestIdleCallback(() => loadSingleImage(img), { timeout: 2000 });
-  });
+//   // PHASE 3: Remaining images during idle time
+//   imagePaths.slice(4).forEach(img => {
+//     requestIdleCallback(() => loadSingleImage(img), { timeout: 2000 });
+//   });
 
-  imagesLoaded = true; 
-}
+//   imagesLoaded = true; 
+// }
 
-async function loadSingleImage(src) {
-	const img = new Image();
-	img.src = src;
-	img.decoding = "async"; 
-	await img.decode().catch(() => {});
-	decodedImages.push(src);
-}
+// async function loadSingleImage(src) {
+// 	const img = new Image();
+// 	img.src = src;
+// 	img.decoding = "async"; 
+// 	await img.decode().catch(() => {});
+// 	decodedImages.push(src);
+// }
+
+	function scheduleIdleCallback(callback) {
+		if ('requestIdleCallback' in window) {
+			requestIdleCallback(callback, { timeout: 2000 });
+		} else {
+			// Fallback for Safari and older browsers
+			setTimeout(callback, 100);
+		}
+	}
+
+	async function loadSingleImage(src) {
+		return new Promise((resolve) => {
+			const img = new Image();
+			img.src = src;
+			img.decoding = "async";
+
+			let handled = false;
+
+			img.onload = () => {
+				if (!handled) {
+					decodedImages.push(src);
+					handled = true;
+					resolve();
+				}
+			};
+
+			img.onerror = () => {
+				if (!handled) {
+					handled = true;
+					resolve();
+				}
+			};
+
+			if (img.decode) {
+				img.decode().then(() => {
+					if (!handled) {
+						decodedImages.push(src);
+						handled = true;
+						resolve();
+					}
+				}).catch(() => {
+					// If decode fails, wait for onload instead
+				});
+			}
+		});
+	}
+
+	async function loadImages() {
+		imagesLoaded = false;
+		decodedImages = [];
+
+		// PHASE 1: Load first image immediately
+		await loadSingleImage(imagePaths[0]);
+
+		// PHASE 2: Load next few images shortly after
+		setTimeout(async () => {
+			await Promise.all([
+				loadSingleImage(imagePaths[1]),
+				loadSingleImage(imagePaths[2]),
+				loadSingleImage(imagePaths[3])
+			]);
+		}, 50);
+
+		// PHASE 3: Load remaining images during idle time or with timeout fallback
+		imagePaths.slice(4).forEach(img => {
+			scheduleIdleCallback(() => loadSingleImage(img));
+		});
+
+		imagesLoaded = true;
+	}
 
 
 	onMount(() => {
