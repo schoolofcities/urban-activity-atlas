@@ -227,10 +227,11 @@
 	<img
 		loading="lazy"
   		decoding="async"
-		src={imagesLoaded ? imagePaths[currentHour] : './urban-activity-atlas/exploring-daily-activity-toronto/blank-image.png'}
+		src={imagesLoaded ? imagePaths[currentHour] : '/urban-activity-atlas/exploring-hourly-activity-toronto/blank-image.png'}
 		alt={`Hour ${currentHour}`}
 		class:loading={!imagesLoaded}
 	/>
+
 </div>
 
 

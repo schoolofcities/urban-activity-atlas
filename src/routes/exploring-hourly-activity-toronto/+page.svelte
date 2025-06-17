@@ -183,22 +183,13 @@
 <div class="text">
 	<p>
 		Evenness (how evenly activity is spread out throughout the region) follows a reverse pattern. It generally 
-		spikes at night around 3 am and gradually decreases during the day, likely reflecting the transition from home to more concentrated 
-		areas of work and leisure.
-	</p>
-	<p>		
-		Evenness also increases again slightly on weekdays between 3 pm and 5 pm, most likely a result of commuters spreading out throughout
-		the GTA as they leave work.
+		spikes at night around 3 am and gradually decreases during the day, likely reflecting the transition from home to more concentrated areas of work and leisure.
 	</p>
 	<p>
-		In addition to diversity indices, <i>clustering</i> was calculated using the Moran's I statistic for each hour throughout the week. 
-		<a href="https://en.wikipedia.org/wiki/Moran%27s_I" target="_blank">Moran's I</a> in this case measures whether cells with similar activity levels tend to be located near each other, and its possible 
-		values range from -1 (negative spatial autocorrelation) to +1 (positive spatial autocorrelation). 
+		Evenness also increases again slightly on weekdays between 3 pm and 5 pm, most likely a result of commuters spreading out throughout the GTA as they leave work.
 	</p>
-	<p>		
-		A high, positive Moran's I value indicates that cells with similar activity are geographically close to each other, suggesting strong 
-		spatial autocorrelation. A value near zero suggests that activity levels are randomly distributed across space. A low negative value 
-		indicates that high-activity cells are typically surrounded by low-activity cells and vice versa.
+	<p>
+		In addition to diversity indices, clustering was calculated using the <a href="https://en.wikipedia.org/wiki/Moran%27s_I" target="_blank">Moran's I</a> statistic for each hour throughout the week. A high, positive (between 0 and +1) Moran’s I value indicates that cells with similar activity are geographically close to each other, suggesting strong spatial autocorrelation. A value near zero suggests that activity levels are randomly distributed across space. A low negative value (between 0 and -1) indicates that high-activity cells are typically surrounded by low-activity cells and vice versa.
 	</p>
 </div>
 
@@ -221,10 +212,7 @@
 		weekdays.
 	</p>
 	<p>			
-		In other words, on weekend mornings and afternoons, there is a similar, even slightly higher proportion of grid cells with activity 
-		compared to weekday mornings and afternoons. However, the places where people spend time on weekend mornings and afternoons are less 
-		spatially concentrated. This makes sense, given that employment centers tend to be in specific areas whereas leisure activities are
-		generally more spread out.
+		In other words, on weekend mornings and afternoons, there is a similar, even slightly higher proportion of grid cells with activity compared to weekday mornings and afternoons. However, the places where people spend time on weekend mornings and afternoons are less spatially concentrated. This makes sense, given that employment centers tend to be in specific areas whereas leisure activities are generally more spread out.
 	</p>
 </div>
 

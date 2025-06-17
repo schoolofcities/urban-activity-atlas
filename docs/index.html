@@ -5,14 +5,21 @@
 		<link rel="icon" href="./favicon.svg" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		
-		<link rel="modulepreload" href="./_app/immutable/entry/start.B8N0SH2b.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/entry.CavSwic5.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/runtime.GVz-zu-4.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/index-client.CHCEbK_U.js">
-		<link rel="modulepreload" href="./_app/immutable/entry/app.DRrMta5N.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/render.DcWhrcIw.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/disclose-version.B_6IR0ZE.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/props.BBmB40Jv.js">
+		<link href="./_app/immutable/assets/3.Bbn-lpaB.css" rel="stylesheet">
+		<link href="./_app/immutable/assets/top-logo-full.yshczv5W.css" rel="stylesheet">
+		<link rel="modulepreload" href="./_app/immutable/entry/start.DTJSLGzi.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/entry.BDXXE1Dk.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/runtime.BZKQqjz2.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/index-client.kG3SwSxu.js">
+		<link rel="modulepreload" href="./_app/immutable/entry/app.DEs9hNMN.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/render.CPk_Rj9m.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/disclose-version.DGdhgyke.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/props.B_Fx1jNj.js">
+		<link rel="modulepreload" href="./_app/immutable/nodes/0.DEw3LfzC.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/layout.CMZaah6c.js">
+		<link rel="modulepreload" href="./_app/immutable/nodes/3.BShB4Aaj.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/lifecycle.xsc8TNuo.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/top-logo-full.BdX9ClYW.js">
 
 		<meta
 			name="viewport"
@@ -49,10 +56,14 @@
 	</script>
 
 	<body data-sveltekit-preload-data="hover">
-		<div style="display: contents">
+		<div style="display: contents"><!--[--><!--[--><!----><!--[!--><!----><div class="container svelte-d71fmz"><div class="panel svelte-d71fmz"><div><h1 class="svelte-p7yai9">Urban Activity Atlas</h1> <p id="authors" class="svelte-p7yai9"><a href="https://www.urbandisplacement.org/team/julia-greenberg/" class="svelte-p7yai9">Julia Greenberg</a>, <a href="https://www.linkedin.com/in/aniket-k-8a8b9921b/" class="svelte-p7yai9">Aniket Kali</a>, <a href="https://jamaps.github.io/" class="svelte-p7yai9">Jeff Allen</a>, <a href="https://karenchapple.com/" class="svelte-p7yai9">Karen Chapple</a></p> <hr> <p class="description svelte-p7yai9">This map shows which places people visit or spend time in the 300 largest metropolitan regions (by population) in the US and Canada. 
+        Choose a metro region by clicking on it on the map, or choosing from the dropdown below.</p> <div class="dropdown-container svelte-81q61v"><div class="dropdown-toggle svelte-81q61v" role="button" tabindex="0" aria-haspopup="listbox" aria-expanded="false"><input type="text" class="search-input svelte-81q61v" value="" placeholder="Search metropolitan region..."> <svg class="chevron  svelte-81q61v" width="12" height="12" viewBox="0 0 24 24" role="button" tabindex="0" aria-label="Toggle dropdown"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"></path></svg></div> <!--[!--><!--]--></div><!----> <div class="button-container svelte-p7yai9"><button type="button" class="button not-selected svelte-p7yai9">Clear selection</button></div> <p class="description svelte-p7yai9">The area with the
+        brightest white color and tallest bar
+        had the most visits of anywhere in the selected metro region in the year between April 1, 2023 and March 31, 2024.</p> <p class="description svelte-p7yai9">Activity level data shown is standardized by the total activity in each metropolitan region, so do not compare different regions to each other.</p> <div class="legend svelte-p7yai9"><p class="legend-title svelte-p7yai9">Activity Level (per region):</p> <div class="gradient-bar svelte-p7yai9"></div> <ul class="legend-label svelte-p7yai9"><li class="low">Low</li> <li class="high">High</li></ul></div> <div class="button-container svelte-p7yai9"><button type="button" id="2D" class="button not-selected svelte-p7yai9">2D View</button> <button type="button" id="3D" class="button selected svelte-p7yai9">3D View</button></div> <hr> <p class="description svelte-p7yai9"><i>The activity data on the map is derived from a sample of mobile phone data via <a href="https://spectus.ai/" target="_blank" rel="noopener noreferrer" class="svelte-p7yai9">Spectus</a>. Other reference data on the map are from <a href="https://www.openstreetmap.org/" target="_blank" rel="noopener noreferrer" class="svelte-p7yai9">OpenStreetMap</a> via <a href="https://protomaps.com/" target="_blank" rel="noopener noreferrer" class="svelte-p7yai9">Protomaps</a>. Check out our <a href="https://github.com/schoolofcities/urban-activity-atlas/" target="_blank" rel="noopener noreferrer" class="svelte-p7yai9">Github</a> for more information about the data and methods.</i></p> <div id="logo" class="svelte-p7yai9"><a href="https://www.schoolofcities.utoronto.ca/" class="svelte-p7yai9"><img src="/urban-activity-atlas/_app/immutable/assets/top-logo-full.BnB_mwd3.svg" alt="School of Cities" class="svelte-p7yai9"></a></div></div><!----></div> <div class="map-view svelte-d71fmz"><div id="map" class="svelte-46eruv"></div><!----></div></div><!----><!--]--><!----><!----><!--]--> <!--[!--><!--]--><!--]-->
+			
 			<script>
 				{
-					__sveltekit_1diywou = {
+					__sveltekit_oq3k34 = {
 						base: new URL(".", location).pathname.slice(0, -1),
 						assets: "/urban-activity-atlas"
 					};
@@ -60,10 +71,15 @@
 					const element = document.currentScript.parentElement;
 
 					Promise.all([
-						import("./_app/immutable/entry/start.B8N0SH2b.js"),
-						import("./_app/immutable/entry/app.DRrMta5N.js")
+						import("./_app/immutable/entry/start.DTJSLGzi.js"),
+						import("./_app/immutable/entry/app.DEs9hNMN.js")
 					]).then(([kit, app]) => {
-						kit.start(app, element);
+						kit.start(app, element, {
+							node_ids: [0, 3],
+							data: [null,null],
+							form: null,
+							error: null
+						});
 					});
 				}
 			</script>
