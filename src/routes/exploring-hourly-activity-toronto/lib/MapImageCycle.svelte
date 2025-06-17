@@ -101,7 +101,6 @@
 						resolve();
 					}
 				}).catch(() => {
-					// If decode fails, wait for onload instead
 				});
 			}
 		});
@@ -111,10 +110,8 @@
 		imagesLoaded = false;
 		decodedImages = [];
 
-		// PHASE 1: Load first image immediately
 		await loadSingleImage(imagePaths[0]);
 
-		// PHASE 2: Load next few images shortly after
 		setTimeout(async () => {
 			await Promise.all([
 				loadSingleImage(imagePaths[1]),
@@ -123,7 +120,6 @@
 			]);
 		}, 50);
 
-		// PHASE 3: Load remaining images during idle time or with timeout fallback
 		imagePaths.slice(4).forEach(img => {
 			scheduleIdleCallback(() => loadSingleImage(img));
 		});
