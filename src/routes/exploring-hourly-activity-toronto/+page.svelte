@@ -9,6 +9,31 @@
 </script>
 
 
+<svelte:head>
+
+	<title>Activity Patterns Greater Toronto Area | School of Cities</title>
+
+	<meta name="description" content="Exploring daily and hourly activity patterns in Toronto via charts and animated maps">
+	<meta name="author" content="Cameron Kerr, Julia Greenberg, Jeff Allen">
+
+	<meta property="og:title" content="Activity Patterns Greater Toronto Area | School of Cities" />
+	<meta property="og:description" content="Exploring daily and hourly activity patterns in Toronto via charts and animated maps" />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="https://schoolofcities.github.io/urban-activity-atlas/exploring-hourly-activity-toronto" />
+	<meta property="og:image" content="https://schoolofcities.github.io/urban-activity-atlas/web-card-gta-activity.png" />
+	<meta property="og:locale" content="en_CA">
+
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:site" content="https://schoolofcities.github.io/urban-activity-atlas/exploring-hourly-activity-toronto" />
+	<meta name="twitter:creator" content="@UofTCities" />
+	<meta name="twitter:title" content="Activity Patterns Greater Toronto Area | School of Cities" />
+	<meta name="twitter:description" content="Exploring daily and hourly activity patterns in Toronto via charts and animated maps" />
+	<meta name="twitter:image" content="https://schoolofcities.github.io/urban-activity-atlas/web-card-gta-activity.png" /> 
+
+</svelte:head>
+
+
+
 <TopSofC/>
 
 <main>
