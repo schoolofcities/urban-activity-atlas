@@ -51,19 +51,18 @@
 
 <div class="text">
     <p>
-		Metropolitan regions are constantly changing, complex systems. As their inhabitants and visitors commute between home and work, run
-		errands, and engage in other activities, regions develop their own unique pulse and rhythm.	
+		Metropolitan regions are constantly changing, complex systems. As their inhabitants and visitors commute between home and work, run errands, and engage in other activities, regions develop their own unique pulse and rhythm.	
 	</p>
     <p>	
 		The following visualizations illustrate this movement throughout the Greater Toronto Area (GTA)–a region with 
-		almost 7 million people and a mix of urban, rural, and suburban communities–at different hours of the day using data collected 
+		almost 7 million people and a mix of urban, rural, and suburban communities–at different hours of the day using anonymized and aggregated data collected 
 		from mobile devices.
 	</p>
     <p>
 		To do so, we selected over 16,000 grid cells, each about 1 kilometer wide, across the GTA. For each of these grid cells, we measured hourly activity by calculating the <i>accumulated time</i> that a sample of mobile devices (i.e., cell phones) spent in each grid 
-		cell. For example, if two mobile devices each spent 30 minutes of a given hour in a given cell, the region would be assigned an 
-		accumulated time of 1 for that hour. The sample of mobile device location data was provided by <a href="https://cuebiq.com/social-impact/" target="_blank">Cuebiq</a>.
+		cell. For example, if two mobile devices each spent 30 minutes of a given hour in a given cell, the region would be assigned an accumulated time of 1 for that hour.
 	</p>
+	
 	<p>
 		We then mapped the results and calculated statistics summarizing the patterns that we observed. 
 	</p>
@@ -147,12 +146,10 @@
 		activity is distributed among them). 
 	</p>
 	<p>		
-		A high Shannon Index means that many cells have activity and that activity levels are relatively balanced across them. In contrast, 
-		a low Shannon Index suggests that fewer cells are experiencing activity and that activity is concentrated in specific cells. 
+		A high Shannon Index means that many cells have activity and that activity levels are relatively balanced across them. In contrast, a low Shannon Index suggests that fewer cells are experiencing activity and that activity is concentrated in specific cells. 
 	</p>
 	<p>
-		Note that this index is "spatially unaware". In other words, if all the cells were shuffled into different positions on the map, the 
-		Shannon index value would remain the same.
+		Note that this index is "spatially unaware". In other words, if all the cells were shuffled into different positions on the map, the Shannon index value would remain the same.
 	</p>
 </div>
 
@@ -189,8 +186,7 @@
 
 <div class="text">
 	<p>
-		Richness (the proportion of grid cells experiencing activity) reveals a pattern similar to Shannon's Diversity Index. During the day, 
-		more people are moving around, generating activity in a large number of cells. At night, activity becomes concentrated in 
+		Richness (the proportion of grid cells experiencing activity) reveals a pattern similar to Shannon's Diversity Index. During the day, more people are moving around, generating activity in a large number of cells. At night, activity becomes concentrated in 
 		residential areas, leaving roughly half of the cells inactive.
 	</p>
 	<!-- <p>
@@ -238,6 +234,12 @@
 	</p>
 	<p>			
 		In other words, on weekend mornings and afternoons, there is a similar, even slightly higher proportion of grid cells with activity compared to weekday mornings and afternoons. However, the places where people spend time on weekend mornings and afternoons are less spatially concentrated. This makes sense, given that employment centers tend to be in specific areas whereas leisure activities are generally more spread out.
+	</p>
+	<h2>
+		Data source description:
+	</h2>
+	<p>
+		Aggregated mobility data are provided by Cuebiq, a location intelligence platform. Data is collected from anonymized users who have opted-in to provide access to their location data anonymously, through a CCPA and GDPR-compliant framework. Through its Social Impact program, Cuebiq provides mobility insights for academic research and humanitarian initiatives. The Cuebiq responsible data sharing framework enables research partners to query anonymized and privacy enhanced data, by providing access to an auditable, on-premise Data Cleanroom environment. All final outputs provided to partners are aggregated in order to preserve privacy
 	</p>
 </div>
 
