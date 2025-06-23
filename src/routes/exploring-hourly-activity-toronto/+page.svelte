@@ -71,6 +71,8 @@
 	</p>
 </div>
 
+
+
 <MapImageCycle 
 	title = "Mean hourly activity in Toronto"
 	folder_weekday="exploring-hourly-activity-toronto/Weekday_Total_small"
@@ -223,24 +225,31 @@
 
 <div class="text">
 	<p>
-		The plot above reveals that activity is more spatially concentrated during the day, especially in late afternoons, compared to 
-		evenings and nights, when activity is more dispersed. This clustering trend is relatively similar to the trends for diversity and
-		richness.
+		The plot above reveals that activity is more spatially concentrated during the day, especially in late afternoons, compared to evenings and nights, when activity is more dispersed. This clustering trend is relatively similar to the trends for diversity and richness.
 	</p>
 	<p>			
-		However, one noticeable difference is that the clustering plot shows a larger disparity between weekends and weekdays compared
-		to the diversity and richness plots. On Saturdays and especially Sundays, there is less spatial clustering during the day compared to
-		weekdays.
+		However, one noticeable difference is that the clustering plot shows a larger disparity between weekends and weekdays compared to the diversity and richness plots. On Saturdays and especially Sundays, there is less spatial clustering during the day compared to weekdays.
 	</p>
 	<p>			
 		In other words, on weekend mornings and afternoons, there is a similar, even slightly higher proportion of grid cells with activity compared to weekday mornings and afternoons. However, the places where people spend time on weekend mornings and afternoons are less spatially concentrated. This makes sense, given that employment centers tend to be in specific areas whereas leisure activities are generally more spread out.
 	</p>
+</div>
+
+<div class="text">
+
 	<h2>
-		Data source description:
+		Data sources:
 	</h2>
-	<p>
-		Aggregated mobility data are provided by Cuebiq, a location intelligence platform. Data is collected from anonymized users who have opted-in to provide access to their location data anonymously, through a CCPA and GDPR-compliant framework. Through its Social Impact program, Cuebiq provides mobility insights for academic research and humanitarian initiatives. The Cuebiq responsible data sharing framework enables research partners to query anonymized and privacy enhanced data, by providing access to an auditable, on-premise Data Cleanroom environment. All final outputs provided to partners are aggregated in order to preserve privacy
+	<p style="font-size: 15px;">
+		Aggregated mobility data are provided by <a href="https://cuebiq.com/" target="_blank">GitHub</a>, a location intelligence platform. Data is collected from anonymized users who have opted-in to provide access to their location data anonymously, through a CCPA and GDPR-compliant framework. Through its Social Impact program, Cuebiq provides mobility insights for academic research and humanitarian initiatives. The Cuebiq responsible data sharing framework enables research partners to query anonymized and privacy enhanced data, by providing access to an auditable, on-premise Data Cleanroom environment. All final outputs provided to partners are aggregated in order to preserve privacy
 	</p>
+	<p style="font-size: 15px;">
+		The frames of the animated maps were created using QGIS. They additionally include reference data (municipal boundaries) from Statistics Canada.
+	</p>
+	<p style="font-size: 15px;>
+		More information about the data sources and related projects are available on <a href="https://github.io/schoolofcities/urban-activity-atlas/" target="_blank">GitHub</a>.
+	</p>
+
 </div>
 
 </main>
@@ -303,6 +312,17 @@
 		font-weight: normal;
 		font-size: 26px;
 
+    }
+
+	h3 {
+        margin: 0 auto;
+		text-align: center;
+        padding-left: 20px;
+		padding-right: 20px;
+		padding-top: 20px;
+		font-family: TradeGothicBold, sans-serif;
+		font-weight: normal;
+		font-size: 20px;
     }
 
     p {
