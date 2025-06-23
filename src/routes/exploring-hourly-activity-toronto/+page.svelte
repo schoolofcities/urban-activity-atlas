@@ -241,7 +241,7 @@
 		Data sources:
 	</h2>
 	<p style="font-size: 15px;">
-		Aggregated mobility data are provided by <a href="https://cuebiq.com/" target="_blank">GitHub</a>, a location intelligence platform. Data is collected from anonymized users who have opted-in to provide access to their location data anonymously, through a CCPA and GDPR-compliant framework. Through its Social Impact program, Cuebiq provides mobility insights for academic research and humanitarian initiatives. The Cuebiq responsible data sharing framework enables research partners to query anonymized and privacy enhanced data, by providing access to an auditable, on-premise Data Cleanroom environment. All final outputs provided to partners are aggregated in order to preserve privacy
+		Aggregated mobility data are provided by <a href="https://cuebiq.com/" target="_blank">Cuebiq</a>, a location intelligence platform. Data is collected from anonymized users who have opted-in to provide access to their location data anonymously, through a CCPA and GDPR-compliant framework. Through its Social Impact program, Cuebiq provides mobility insights for academic research and humanitarian initiatives. The Cuebiq responsible data sharing framework enables research partners to query anonymized and privacy enhanced data, by providing access to an auditable, on-premise Data Cleanroom environment. All final outputs provided to partners are aggregated in order to preserve privacy
 	</p>
 	<p style="font-size: 15px;">
 		The frames of the animated maps were created using QGIS. They additionally include reference data (municipal boundaries) from Statistics Canada.
