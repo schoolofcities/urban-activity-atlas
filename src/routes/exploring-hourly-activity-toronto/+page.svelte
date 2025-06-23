@@ -246,7 +246,7 @@
 	<p style="font-size: 15px;">
 		The frames of the animated maps were created using QGIS. They additionally include reference data (municipal boundaries) from Statistics Canada.
 	</p>
-	<p style="font-size: 15px;>
+	<p style="font-size: 15px;">
 		More information about the data sources and related projects are available on <a href="https://github.io/schoolofcities/urban-activity-atlas/" target="_blank">GitHub</a>.
 	</p>
 
