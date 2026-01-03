@@ -17,6 +17,7 @@
     let dropdownOpen = false; // Initially set the dropdown as closed
     let mapInitialized = false;
     let mapDimensionView = "3D" // "2D" or "3D"
+    let timePeriod = '2023-2024';
 
     // Load min/max data from the JSON file
     import minmax from '../data/min_max.json';
@@ -203,6 +204,7 @@
             handleSearchInputClick={handleSearchInputClick} 
             selectLocation={selectLocation}
             bind:mapDimensionView={mapDimensionView}
+            bind:timePeriod={timePeriod}
         />
     </div>
 

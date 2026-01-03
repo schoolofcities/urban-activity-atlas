@@ -10,6 +10,7 @@
     export let handleSearchInputClick;
     export let selectLocation;
     export let mapDimensionView;
+    export let timePeriod;
 
     // Sort the features alphabetically by name
     metroRegionCentroids.features.sort((a, b) =>
@@ -18,6 +19,10 @@
 
     function setMapDimensionView(dimension) {
         mapDimensionView = dimension;
+    }
+
+    function setTimePeriod(period) {
+        timePeriod = period;
     }
 </script>
 
@@ -69,9 +74,21 @@
         </ul>
     </div>
 
-    <div class="button-container">
-        <button type="button" id="2D" class={`button ${mapDimensionView === "2D" ? "selected" : "not-selected"}`} on:click={() => setMapDimensionView("2D")}>2D View</button>
-        <button type="button" id="3D" class={`button ${mapDimensionView === "3D" ? "selected" : "not-selected"}`} on:click={() => setMapDimensionView("3D")}>3D View</button>
+    <div class="section">
+        <p class="section-title">Time Period:</p>
+        <div class="button-container">
+            <button type="button" class={`button ${timePeriod === "2023-2024" ? "selected" : "not-selected"}`} on:click={() => setTimePeriod("2023-2024")}>2023-2024</button>
+            <button type="button" class={`button ${timePeriod === "2024-2025" ? "selected" : "not-selected"}`} on:click={() => setTimePeriod("2024-2025")}>2024-2025</button>
+            <button type="button" class={`button ${timePeriod === "change" ? "selected" : "not-selected"}`} on:click={() => setTimePeriod("change")}>Change</button>
+        </div>
+    </div>
+
+    <div class="section">
+        <p class="section-title">Map View:</p>
+        <div class="button-container">
+            <button type="button" id="2D" class={`button ${mapDimensionView === "2D" ? "selected" : "not-selected"}`} on:click={() => setMapDimensionView("2D")}>2D View</button>
+            <button type="button" id="3D" class={`button ${mapDimensionView === "3D" ? "selected" : "not-selected"}`} on:click={() => setMapDimensionView("3D")}>3D View</button>
+        </div>
     </div>
 
     <hr>
@@ -178,6 +195,19 @@
     .legend-title {
         font-family: RobotoBold;
         margin-bottom: 5px;
+        font-size: 1rem;
+    }
+
+    .section {
+        margin-bottom: 15px;
+    }
+
+    .section-title {
+        font-family: RobotoBold;
+        margin-bottom: 0;
+        margin-top: 0;
+        margin-left: 15px;
+        margin-right: 15px;
         font-size: 1rem;
     }
 
