@@ -11,6 +11,8 @@
     export let selectLocation;
     export let mapDimensionView;
     export let timePeriod;
+    export let changePeriodFrom;
+    export let changePeriodTo;
 
     // Sort the features alphabetically by name
     metroRegionCentroids.features.sort((a, b) =>
@@ -24,6 +26,56 @@
     function setTimePeriod(period) {
         timePeriod = period;
     }
+
+    function updateChangeModeIfReady() {
+        const hasValidSelection = Boolean(changePeriodFrom) && Boolean(changePeriodTo);
+        if (hasValidSelection) {
+            timePeriod = "change";
+        }
+    }
+
+    function setChangePeriodFrom(period) {
+        changePeriodFrom = period;
+        if (!period) {
+            changePeriodTo = "";
+            return;
+        }
+
+        if (period === "2023-2024" && changePeriodTo !== "2024-2025") {
+            changePeriodTo = "";
+        }
+
+        updateChangeModeIfReady();
+    }
+
+    function setChangePeriodTo(period) {
+        changePeriodTo = period;
+        updateChangeModeIfReady();
+    }
+
+    const timePeriodRanges = {
+        "2019-2020": "April 1, 2019 and March 31, 2020",
+        "2023-2024": "April 1, 2023 and March 31, 2024",
+        "2024-2025": "April 1, 2024 and March 31, 2025",
+        "change": "the difference between selected windows"
+    };
+
+    $: hasSelectedChangePeriods = Boolean(changePeriodFrom) && Boolean(changePeriodTo);
+    $: changeRangeLabel = hasSelectedChangePeriods
+        ? `the difference between ${changePeriodFrom} and ${changePeriodTo}`
+        : "the difference between selected windows";
+    $: timePeriodRanges.change = changeRangeLabel;
+
+    $: timePeriodRange = timePeriodRanges[timePeriod] ?? timePeriodRanges["2023-2024"];
+    $: isChangeMode = timePeriod === "change";
+    $: legendTitle = isChangeMode
+        ? `Relative Change: ${changePeriodFrom} to ${changePeriodTo}`
+        : "Activity Level (per region):";
+    $: legendLowLabel = isChangeMode ? `Decrease` : "Low";
+    $: legendHighLabel = isChangeMode ? `Increase` : "High";
+    $: legendGradient = isChangeMode
+        ? "linear-gradient(90deg, #ff9aa0 0%, #8f232c 45%, #000000 50%, #245e86 55%, #6fc7ea 100%)"
+        : "linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(30,55,101,1) 20%, rgba(0,127,163,1) 40%, rgba(101,177,199,1) 60%, rgba(111,199,234,1) 80%, rgba(255,255,255,1) 100%)";
 </script>
 
 <div>
@@ -59,29 +111,52 @@
             ? "brightest white color" 
             : "brightest white color and tallest bar"
         }
-        had the most visits of anywhere in the selected metro region in the year between April 1, 2023 and March 31, 2024.
+        had the most visits of anywhere in the selected metro region in the period between {timePeriodRange}.
     </p> 
     <p class="description">
         Activity level data shown is standardized by the total activity in each metropolitan region, so do not compare different regions to each other.
     </p>
     
     <div class="legend">
-        <p class="legend-title">Activity Level (per region):</p>
-        <div class="gradient-bar"></div>  
+        <p class="legend-title">{legendTitle}</p>
+        <div class="gradient-bar" style={`background: ${legendGradient};`}></div>
         <ul class="legend-label">
-            <li class="low">Low</li>
-            <li class="high">High</li>
+            <li class="low">{legendLowLabel}</li>
+            <li class="high">{legendHighLabel}</li>
         </ul>
     </div>
 
     <div class="section">
         <p class="section-title">Time Period:</p>
-        <div class="button-container">
+        <div class={`button-container ${isChangeMode ? "mode-inactive" : ""}`}>
+            <button type="button" class={`button ${timePeriod === "2019-2020" ? "selected" : "not-selected"}`} on:click={() => setTimePeriod("2019-2020")}>2019-2020</button>
             <button type="button" class={`button ${timePeriod === "2023-2024" ? "selected" : "not-selected"}`} on:click={() => setTimePeriod("2023-2024")}>2023-2024</button>
             <button type="button" class={`button ${timePeriod === "2024-2025" ? "selected" : "not-selected"}`} on:click={() => setTimePeriod("2024-2025")}>2024-2025</button>
-            <button type="button" class={`button ${timePeriod === "change" ? "selected" : "not-selected"}`} on:click={() => setTimePeriod("change")}>Change</button>
         </div>
     </div>
+
+    <div class = {`section ${!isChangeMode ? "mode-inactive" : ""}`}>
+        <p class = "section-title">Change: </p>
+        <div class = "change-row">
+            <select class = "period-select" value = {changePeriodFrom} 
+            on:change={(e) => setChangePeriodFrom(e.currentTarget.value)}>
+                <option value = "">Select start year</option>
+                <option value = "2019-2020">2019-2020</option>
+                <option value = "2023-2024">2023-2024</option>
+            </select>
+            <span class = "vs-label">vs.</span>
+            <select class = "period-select" value = {changePeriodTo} 
+            disabled={!changePeriodFrom}
+            on:change={(e) => setChangePeriodTo(e.currentTarget.value)}>
+                <option value = "">Select end year</option>
+                {#if changePeriodFrom === "2019-2020"}
+                    <option value="2023-2024">2023-2024</option>
+                {/if}
+                <option value="2024-2025">2024-2025</option>
+            </select>
+        </div>
+    </div>
+    
 
     <div class="section">
         <p class="section-title">Map View:</p>
@@ -94,7 +169,7 @@
     <hr>
 
     <p class="description">
-        <i>The activity data on the map is derived from a sample of mobile phone data via <a href="https://spectus.ai/" target="_blank" rel="noopener noreferrer">Spectus</a>. Other reference data on the map are from <a href="https://www.openstreetmap.org/" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> via <a href="https://protomaps.com/" target="_blank" rel="noopener noreferrer">Protomaps</a>. Check out our <a href="https://github.com/schoolofcities/urban-activity-atlas/" target="_blank" rel="noopener noreferrer">Github</a> for more information about the data and methods.</i>
+        <i>The activity data on the map is derived from a sample of mobile phone data via <a href="https://cuebiq.com/" target="_blank" rel="noopener noreferrer">Cuebiq</a>. Other reference data on the map are from <a href="https://www.openstreetmap.org/" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> via <a href="https://protomaps.com/" target="_blank" rel="noopener noreferrer">Protomaps</a>. Check out our <a href="https://github.com/schoolofcities/urban-activity-atlas/" target="_blank" rel="noopener noreferrer">Github</a> for more information about the data and methods.</i>
     </p>
 
     <div id="logo">
@@ -265,6 +340,44 @@
     .button:hover {
         background-color: var(--brandLightBlue); 
         opacity: 1;
+    }
+
+    .mode-inactive {
+        opacity: 0.5;
+    }
+
+    .change-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 8px 15px 0 15px;
+    }
+
+    .period-select {
+        flex: 1;
+        min-width: 0;
+        height: 38px;
+        border-radius: 5px;
+        border: 1px solid var(--brandGray);
+        background-color: var(--brandDarkBlue);
+        color: var(--brandWhite);
+        cursor: pointer; 
+        font-size: 16px;
+        font-weight: bold;
+        padding: 0 10px;
+        transition: background-color 0.2s ease; 
+    }
+
+    .period-select:hover {
+        background-color: var(--brandLightBlue);
+        opacity: 1;
+    }
+
+    .vs-label {
+        color: var(--brandWhite);
+        font-family: RobotoBold;
+        font-size: 0.95rem;
+        white-space: nowrap;
     }
 
 

@@ -4,7 +4,7 @@
 
 # Input and output file paths
 INPUT="data/metro_regions_full.geojson"
-OUTPUT="static/metro_regions_full.pmtiles"
+OUTPUT="static/metro_regions_full_2023_2024.pmtiles"
 
 # Auto-determine max zoom based on data
 # Remove feature and tile size limits

@@ -14,18 +14,45 @@
     export let map;
     export let selectLocation; 
     export let mapDimensionView;
+    export let timePeriod = "2023-2024";
+    export let changePeriodFrom = "2023-2024";
+    export let changePeriodTo = "2024-2025";
     export let getZoomLevel;
 
     // Internal state
     let pmtilesURL = "";
+    let isMapLoaded = false;
+    const CHANGE_CAP = 3; // 300%
+    const CHANGE_MAX_HEIGHT = 5000;
+
+    // Map time period -> PMTiles folder
+    const pmtilesFolderMap = {
+        "2019-2020": "metro_region_geohash_stops_2019_2020_pm",
+        "2023-2024": "metro_region_geohash_stops_2023_2024_pm",
+        "2024-2025": "metro_region_geohash_stops_2024_2025_pm",
+    };
+
+    function getPmtilesFolder(period) {
+        return pmtilesFolderMap[period] ?? pmtilesFolderMap["2023-2024"];
+    }
+
+    function getChangePmtilesFolder(fromPeriod, toPeriod) {
+        const fromSafe = fromPeriod.replace('-', '_');
+        const toSafe = toPeriod.replace('-', '_');
+        return `metro_region_geohash_stops_change_${fromSafe}_to_${toSafe}_pm`;
+    }
 
     const dispatch = createEventDispatcher();
 
     // Clear metro layers and extraneous sources on the map 
     function cleanMap(map) {
+        const style = map?.getStyle?.();
+        if (!style || !style.layers) {
+            return;
+        }
+
         // First remove all metro layers
-        const layers = map.getStyle().layers;
-        layers.forEach((layer) => {
+        style.layers.forEach((layer) => {
             // Remove metro-specific layers
             if (layer.id.endsWith('-layer') && map.getLayer(layer.id)) {
                 map.removeLayer(layer.id);
@@ -33,7 +60,7 @@
         });
 
         // Then remove corresponding sources, excluding essential ones
-        Object.keys(map.style.sourceCaches).forEach((sourceId) => {
+        Object.keys(style.sources ?? {}).forEach((sourceId) => {
             if (sourceId !== 'protomaps' && 
                 sourceId !== 'centroids' && 
                 sourceId !== 'metro-regions' && 
@@ -46,12 +73,17 @@
 
     // Reactive statement for map updates
 	$: {
-        if (map && metroName) {  // Note when metroName == '', it's boolean is false.
+        if (map && isMapLoaded && metroName) {  // Note when metroName == '', it's boolean is false.
             const layerId = `${metroName}-layer`;
 
             cleanMap(map);
 
-            pmtilesURL = `/urban-activity-atlas/metro_region_geohash_stops_pm/${metroName.replace(/ /g, '%20')}.pmtiles`;
+            const folder =
+                timePeriod === 'change'
+                    ? getChangePmtilesFolder(changePeriodFrom, changePeriodTo)
+                    : getPmtilesFolder(timePeriod);
+            const safeMetroName = encodeURI(metroName);
+            pmtilesURL = `/urban-activity-atlas/${folder}/${safeMetroName}.pmtiles`;
 
 			// console.log('pmtilesURL: ', pmtilesURL);
 
@@ -61,14 +93,108 @@
                 url: `pmtiles://${pmtilesURL}`,
             });
 
-            const minmax_metro = minmax[metroName]; // Get min & max values for region
-            // console.log('minmax_metro:', minmax_metro);
-            const minmax_metro_diff = minmax_metro[1] - minmax_metro[0]
+            const isChangeMode = timePeriod === 'change';
+            const metricKey = isChangeMode ? 'prop_subset_stops_change' : 'prop_subset_stops';
+            const metricRawExpr = ['coalesce', ['get', metricKey], 0];
+            const metricExpr = isChangeMode
+                ? ['max', -CHANGE_CAP, ['min', CHANGE_CAP, metricRawExpr]]
+                : metricRawExpr;
 
             const breakpoints = [0, 0.05, 0.2, 0.35, 0.5];
-            const colors = ['#000000', '#1e3765', '#007fa3', '#6fc7ea', '#c1edff'];
 
-            const extrusionMultiplier = 10000 / minmax_metro[1] 
+            // Colours for the non-change stops
+            const colors = ['#000000', '#1e3765', '#007fa3', '#6fc7ea', '#ffffff'];
+
+            let minmax_metro = [0, 1];
+            let minmax_metro_diff = 1;
+            let extrusionHeightExpr = ['*', ['get', metricKey], 10000];
+            let extrusionBaseExpr = 0;
+            let colorExpr;
+
+            if (!isChangeMode) {
+                minmax_metro = minmax[metroName]; // Get min & max values for region
+                minmax_metro_diff = minmax_metro[1] - minmax_metro[0];
+                extrusionHeightExpr = ['*', ['get', metricKey], 10000 / minmax_metro[1]];
+                extrusionBaseExpr = 0;
+                colorExpr = [
+                    'interpolate',
+                    ['linear'],
+                    metricExpr,
+                    breakpoints[0] * minmax_metro_diff + minmax_metro[0], colors[0],
+                    breakpoints[1] * minmax_metro_diff + minmax_metro[0], colors[1],
+                    breakpoints[2] * minmax_metro_diff + minmax_metro[0], colors[2],
+                    breakpoints[3] * minmax_metro_diff + minmax_metro[0], colors[3],
+                    breakpoints[4] * minmax_metro_diff + minmax_metro[0], colors[4]
+                ];
+            } else {
+                const changeHeightAbs = [
+                    'interpolate',
+                    ['linear'],
+                    ['abs', metricExpr],
+                    0, 0,
+                    CHANGE_CAP, CHANGE_MAX_HEIGHT
+                ];
+
+                extrusionHeightExpr = changeHeightAbs;
+                extrusionBaseExpr = 0;
+
+                colorExpr = [
+                    'interpolate',
+                    ['linear'],
+                    metricExpr,
+                    -CHANGE_CAP, '#5a0000',
+                    -1.5, '#a5161a',
+                    -0.45, '#ff9aa0',
+                    0, '#000000',
+                    0.45, '#245e86',
+                    CHANGE_CAP, '#002B5E'
+                ];
+            }
+
+            const applyDynamicChangeScale = () => {
+                if (!isChangeMode || !map.getSource(metroName) || !map.getLayer(layerId)) {
+                    return;
+                }
+
+                const sourceLayer = metroName.replace(/[^\w]/g, "");
+                const features = map.querySourceFeatures(metroName, { sourceLayer });
+                const values = features
+                    .map((feature) => Number(feature?.properties?.[metricKey]))
+                    .filter((value) => Number.isFinite(value));
+
+                if (!values.length) {
+                    return;
+                }
+
+                const minValue = Math.min(...values);
+                const maxValue = Math.max(...values);
+                const rangeAbs = Math.max(Math.abs(minValue), Math.abs(maxValue), 1e-6);
+                
+                // Colour range for the relative change in stops
+                const dynamicColorExpr = [
+                    'interpolate',
+                    ['linear'],
+                    metricRawExpr,
+                    -rangeAbs, '#ff9aa0',
+                    -rangeAbs * 0.15, '#8f232c',
+                    0, '#000000',
+                    rangeAbs * 0.15, '#245e86',
+                    rangeAbs, '#6fc7ea'
+                ];
+
+                const colorPaintProperty = mapDimensionView === "3D"
+                    ? 'fill-extrusion-color'
+                    : 'fill-color';
+                map.setPaintProperty(layerId, colorPaintProperty, dynamicColorExpr);
+
+                if (mapDimensionView === "3D") {
+                    const heightScale = CHANGE_MAX_HEIGHT / rangeAbs;
+                    const dynamicHeightAbsExpr = ['*', ['abs', metricRawExpr], heightScale];
+
+                    map.setPaintProperty(layerId, 'fill-extrusion-height', dynamicHeightAbsExpr);
+                    map.setPaintProperty(layerId, 'fill-extrusion-base', 0);
+                }
+            };
 
             // toggle layer style depending if 2D or 3D view
             if (mapDimensionView === "3D") {
@@ -79,17 +205,9 @@
                     "source": metroName,
                     "source-layer": metroName.replace(/[^\w]/g, ""),
                     'paint': {
-                        'fill-extrusion-color': [
-                            'interpolate',
-                            ['linear'], // Use linear interpolation
-                            ['get', 'prop_subset_stops'], // Replace with your numeric property
-                            breakpoints[0] * minmax_metro_diff + minmax_metro[0], colors[0],
-                            breakpoints[1] * minmax_metro_diff + minmax_metro[0], colors[1],
-                            breakpoints[2] * minmax_metro_diff + minmax_metro[0], colors[2],
-                            breakpoints[3] * minmax_metro_diff + minmax_metro[0], colors[3],
-                            breakpoints[4] * minmax_metro_diff + minmax_metro[0], colors[4]
-                        ],
-                        'fill-extrusion-height': ['*', ['get', 'prop_subset_stops'], extrusionMultiplier],
+                        'fill-extrusion-color': colorExpr,
+                        'fill-extrusion-height': extrusionHeightExpr,
+                        'fill-extrusion-base': extrusionBaseExpr,
                         // 'fill-extrusion-height': 10000,
                         'fill-extrusion-opacity': 1 // Adjust opacity as needed
                     },
@@ -104,26 +222,25 @@
                     "source": metroName,
                     "source-layer": metroName.replace(/[^\w]/g, ""),
                     'paint': {
-                        'fill-color': [
-                            'interpolate',
-                            ['linear'], // Use linear interpolation
-                            ['get', 'prop_subset_stops'], // Replace with your numeric property
-                            breakpoints[0] * minmax_metro_diff + minmax_metro[0], colors[0],
-                            breakpoints[1] * minmax_metro_diff + minmax_metro[0], colors[1],
-                            breakpoints[2] * minmax_metro_diff + minmax_metro[0], colors[2],
-                            breakpoints[3] * minmax_metro_diff + minmax_metro[0], colors[3],
-                            breakpoints[4] * minmax_metro_diff + minmax_metro[0], colors[4]
-                        ],
+                        'fill-color': colorExpr,
                         'fill-opacity': 1 // Adjust opacity as needed
                     },
                     "minzoom": 5  // Add this line to match metro-areas visibility
                 }, "water_outline");
             }            
+
+            if (isChangeMode) {
+                if (map.isSourceLoaded(metroName)) {
+                    applyDynamicChangeScale();
+                } else {
+                    map.once('idle', applyDynamicChangeScale);
+                }
+            }
             
             // Update the filters to show/hide appropriate regions
             map.setFilter('metro-areas', ['!=', ['get', 'name'], metroName]);  // Show all except selected
             map.setFilter('selected-metro-outline', ['==', ['get', 'name'], metroName]);  // Show only selected outline
-		} else if (map) {
+        } else if (map && isMapLoaded) {
             cleanMap(map);
 
             // When no region selected, show all regions and no outline
@@ -182,6 +299,8 @@
         });
 
         map.on('load', () => {
+            isMapLoaded = true;
+
             map.addSource('esri-hillshade', {
                 'type': 'raster',
                 'tiles': [
@@ -217,7 +336,7 @@
                 source: 'centroids',
                 paint: {
                     'circle-radius': 20,  // Larger radius for easier clicking
-                    'circle-color': '#ffffff',
+                    'circle-color': '#000000',
                     'circle-opacity': 0,  // Make it invisible
                 },
                 maxzoom: 5
@@ -311,6 +430,7 @@
     });
 
     onDestroy(() => {
+        isMapLoaded = false;
         if (map) {
             map.remove();
         }

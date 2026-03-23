@@ -1,6 +1,7 @@
 <script>
     import "../assets/global-styles.css"; 
     import { onMount } from 'svelte';
+    import { replaceState } from '$app/navigation';
     import { page } from '$app/stores';
     
     import MapView from '$lib/MapView.svelte';
@@ -18,6 +19,13 @@
     let mapInitialized = false;
     let mapDimensionView = "3D" // "2D" or "3D"
     let timePeriod = '2023-2024';
+    let changePeriodFrom = '';
+    let changePeriodTo = '';
+    let showOregonPrivacyPopup = false;
+    let hasShownOregonPrivacyPopup = false;
+
+    const OREGON_PRIVACY_URL = 'https://olis.oregonlegislature.gov/liz/2025R1/Measures/Overview/HB2008';
+    const OREGON_PRIVACY_SESSION_KEY = 'oregon-privacy-popup-shown';
 
     // Load min/max data from the JSON file
     import minmax from '../data/min_max.json';
@@ -80,11 +88,27 @@
         }     
     }
 
+    function isOregonMetro(locationName) {
+        const stateSegment = locationName.split(', ')[1];
+        if (!stateSegment) {
+            return false;
+        }
+
+        return stateSegment.split('-').includes('OR');
+    }
+
     // Function to handle location selection
     const selectLocation = (location) => {
         if (!mapInitialized) return; // Don't proceed if map isn't ready
         metroName = location;
         searchQuery = location; // Update the search bar with the selected location
+
+        if (location && isOregonMetro(location) && !hasShownOregonPrivacyPopup) {
+            showOregonPrivacyPopup = true;
+            hasShownOregonPrivacyPopup = true;
+            sessionStorage.setItem(OREGON_PRIVACY_SESSION_KEY, '1');
+        }
+
         zoomToLocation(metroName);
         dropdownOpen = false; // Close the dropdown after selection, as applicable
         
@@ -95,7 +119,7 @@
         } else {
             url.searchParams.set('metro', getURLFormat(location));
         }
-        history.replaceState({}, '', url); // Ignore the suggestion to use the SvelteKit imported version of replaceState - it leads to a complicated situation of trying to update the URL that doesn't seem to work
+        replaceState(url, {});
     };
 
     // Function to zoom to the selected location
@@ -141,7 +165,7 @@
     };
 
     $: {
-        console.log(mapDimensionView);
+        //console.log(mapDimensionView);
         if (metroName !== "") {
             zoomToLocation(metroName);
         }
@@ -162,6 +186,10 @@
             selectLocation(fullMetro);
         }
     };
+
+    onMount(() => {
+        hasShownOregonPrivacyPopup = sessionStorage.getItem(OREGON_PRIVACY_SESSION_KEY) === '1';
+    });
 </script>
 
 
@@ -205,6 +233,8 @@
             selectLocation={selectLocation}
             bind:mapDimensionView={mapDimensionView}
             bind:timePeriod={timePeriod}
+            bind:changePeriodFrom={changePeriodFrom}
+            bind:changePeriodTo={changePeriodTo}
         />
     </div>
 
@@ -217,10 +247,28 @@
             selectLocation={selectLocation}
             on:mapInit={handleMapInit}
             mapDimensionView={mapDimensionView}
+            timePeriod={timePeriod}
+            changePeriodFrom={changePeriodFrom}
+            changePeriodTo={changePeriodTo}
             getZoomLevel={getZoomLevel}
         />
     </div>
 </div>
+
+{#if showOregonPrivacyPopup}
+    <div class="modal-backdrop">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="oregon-privacy-title">
+            <h2 id="oregon-privacy-title">Oregon Data Notice</h2>
+            <p>
+                Oregon's Consumer Privacy Act enacted in 2025 prevents the collection of Cuebiq data. Only 2023-2024 data is shown as it was collected prior to the change.
+            </p>
+            <p>
+                <a href={OREGON_PRIVACY_URL} target="_blank" rel="noopener noreferrer">View HB2008 on the Oregon Legislature site.</a>
+            </p>
+            <button type="button" class="close-modal" on:click={() => (showOregonPrivacyPopup = false)}>Close</button>
+        </div>
+    </div>
+{/if}
 
 <style>
 
@@ -229,6 +277,22 @@
         width: 100vw;
         margin: 0;
         padding: 0;
+    }
+
+    a {
+        color: var(--brandLightBlue);
+        text-decoration: none;
+        font-family: RobotoRegular;
+    }
+
+    a:visited {
+        color: var(--brandLightBlue);
+    }
+
+    a:hover {
+        color: var(--brandMedGreen);
+        text-decoration: underline;
+        cursor: pointer;
     }
 
     .container {
@@ -279,5 +343,51 @@
         .panel {
             font-size: 0.9rem;
         }
+    }
+
+    .modal-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.55);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 3000;
+        padding: 16px;
+    }
+
+    .modal {
+        max-width: 520px;
+        width: 100%;
+        background: #111a1a;
+        border: 1px solid var(--brandGray);
+        border-radius: 8px;
+        padding: 16px;
+        color: var(--brandWhite);
+    }
+
+    .modal h2 {
+        margin: 0 0 8px 0;
+        font-family: TradeGothicBold;
+        font-size: 1.2rem;
+    }
+
+    .modal p {
+        margin: 0 0 10px 0;
+        line-height: 1.35;
+    }
+
+    .close-modal {
+        border: 1px solid var(--brandGray);
+        background: var(--brandDarkBlue);
+        color: var(--brandWhite);
+        border-radius: 5px;
+        padding: 8px 12px;
+        cursor: pointer;
+        font-family: RobotoBold;
+    }
+
+    .close-modal:hover {
+        background: var(--brandLightBlue);
     }
 </style>
