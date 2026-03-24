@@ -9,9 +9,20 @@
 }
 
 @font-face {
+	font-family: RobotoItalic;
+	src: url("roboto/Roboto-Italic.ttf");
+}
+
+@font-face {
 	font-family: RobotoBold;
 	src: url("roboto/Roboto-Bold.ttf");
 }
+
+@font-face {
+	font-family: RobotoBoldItalic;
+	src: url("roboto/Roboto-BoldItalic.ttf");
+}
+
 
 @font-face {
 	font-family: SourceSerif;

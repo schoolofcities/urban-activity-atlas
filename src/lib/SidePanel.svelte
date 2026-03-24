@@ -69,8 +69,8 @@
     $: timePeriodRange = timePeriodRanges[timePeriod] ?? timePeriodRanges["2023-2024"];
     $: isChangeMode = timePeriod === "change";
     $: legendTitle = isChangeMode
-        ? `Relative Change: ${changePeriodFrom} to ${changePeriodTo}`
-        : "Activity Level (per region):";
+        ? `Change in activity`
+        : "Activity level (per region):";
     $: legendLowLabel = isChangeMode ? `Decrease` : "Low";
     $: legendHighLabel = isChangeMode ? `Increase` : "High";
     $: legendGradient = isChangeMode
@@ -87,8 +87,7 @@
         <a href='https://karenchapple.com/'>Karen Chapple</a></p>
     <hr>
     <p class="description">
-        This map shows which places people visit or spend time in the 300 largest metropolitan regions (by population) in the US and Canada. 
-        Choose a metro region by clicking on it on the map, or choosing from the dropdown below.
+        This map shows which places people visit or spend time in the 300 largest metropolitan regions (by population) in the US and Canada. Choose a metro region by clicking on it on the map, or choosing from the dropdown below.
     </p>
 
     <!-- <p class="location-label">Select a metropolitan region:</p> -->
@@ -114,29 +113,23 @@
         had the most visits of anywhere in the selected metro region in the period between {timePeriodRange}.
     </p> 
     <p class="description">
-        Activity level data shown is standardized by the total activity in each metropolitan region, so do not compare different regions to each other.
+        Activity level data shown is standardized by the total activity in each metropolitan region. Values are thus not comparable between regions since regions vary in size and population.
     </p>
     
-    <div class="legend">
-        <p class="legend-title">{legendTitle}</p>
-        <div class="gradient-bar" style={`background: ${legendGradient};`}></div>
-        <ul class="legend-label">
-            <li class="low">{legendLowLabel}</li>
-            <li class="high">{legendHighLabel}</li>
-        </ul>
-    </div>
+    
 
     <div class="section">
-        <p class="section-title">Time Period:</p>
+        <p class="section-title">Time Period</p>
         <div class={`button-container ${isChangeMode ? "mode-inactive" : ""}`}>
             <button type="button" class={`button ${timePeriod === "2019-2020" ? "selected" : "not-selected"}`} on:click={() => setTimePeriod("2019-2020")}>2019-2020</button>
             <button type="button" class={`button ${timePeriod === "2023-2024" ? "selected" : "not-selected"}`} on:click={() => setTimePeriod("2023-2024")}>2023-2024</button>
             <button type="button" class={`button ${timePeriod === "2024-2025" ? "selected" : "not-selected"}`} on:click={() => setTimePeriod("2024-2025")}>2024-2025</button>
         </div>
+        <!-- <p class="description" style="margin-top: -0px;">Time period is from {timePeriodRange}</p> -->
     </div>
 
     <div class = {`section ${!isChangeMode ? "mode-inactive" : ""}`}>
-        <p class = "section-title">Change: </p>
+        <p class = "section-title">Change between time periods</p>
         <div class = "change-row">
             <select class = "period-select" value = {changePeriodFrom} 
             on:change={(e) => setChangePeriodFrom(e.currentTarget.value)}>
@@ -155,6 +148,15 @@
                 <option value="2024-2025">2024-2025</option>
             </select>
         </div>
+    </div>
+
+    <div class="legend">
+        <p class="legend-title">{legendTitle}</p>
+        <div class="gradient-bar" style={`background: ${legendGradient};`}></div>
+        <ul class="legend-label">
+            <li class="low">{legendLowLabel}</li>
+            <li class="high">{legendHighLabel}</li>
+        </ul>
     </div>
     
 
@@ -302,7 +304,7 @@
         list-style: none;
         padding: 0;
         margin: 0;
-        font-family: RobotoBold;
+        font-family: RobotoItalic;
         font-size: 1rem;
         color: white;
     }

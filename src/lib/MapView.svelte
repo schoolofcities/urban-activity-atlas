@@ -301,21 +301,21 @@
         map.on('load', () => {
             isMapLoaded = true;
 
-            map.addSource('esri-hillshade', {
-                'type': 'raster',
-                'tiles': [
-                    'https://services.arcgisonline.com/arcgis/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}'
-                ],
-                'tileSize': 256
-            });
-            map.addLayer({
-                'id': 'esri-hillshade',
-                'type': 'raster',
-                'source': 'esri-hillshade',
-                'paint': {
-                    'raster-opacity': 0.08
-                }
-            });
+            // map.addSource('esri-hillshade', {
+            //     'type': 'raster',
+            //     'tiles': [
+            //         'https://services.arcgisonline.com/arcgis/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}'
+            //     ],
+            //     'tileSize': 256
+            // });
+            // map.addLayer({
+            //     'id': 'esri-hillshade',
+            //     'type': 'raster',
+            //     'source': 'esri-hillshade',
+            //     'paint': {
+            //         'raster-opacity': 0.08
+            //     }
+            // });
 
             // Add centroids source
             map.addSource('centroids', {

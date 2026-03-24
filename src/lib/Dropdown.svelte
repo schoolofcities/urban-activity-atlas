@@ -151,7 +151,7 @@
 <style>
     .dropdown-container {
         position: relative;
-        margin: 0 15px 0 15px;
+        margin: 0 20px 0 15px;
     }
 
     .dropdown-toggle {
@@ -171,7 +171,7 @@
         border: solid 1px var(--brandGray);
         border-radius: 5px;
         font-family: RobotoRegular;
-        background-color: black;
+        background-color: var(--brandDarkBlue);
         color: white;
         padding-left: 5px;
         padding-right: 30px; /* Make room for chevron */
@@ -195,7 +195,7 @@
         top: 40px;
         left: 0;
         right: 0;
-        background-color: black;
+        background-color: var(--brandDarkBlue);
         max-height: 200px;
         overflow-y: auto;
         z-index: 10;
