@@ -4,8 +4,8 @@
 # metro_region_geohash_stops_change_2019_2020_to_2023_2024
 # metro_region_geohash_stops_change_2023_2024_to_2024_2025
 
-in_dir="data/metro_region_geohash_stops_change_2023_2024_to_2024_2025"
-out_dir="static/metro_region_geohash_stops_change_2023_2024_to_2024_2025_pm/"
+in_dir="data/metro_region_geohash_stops_merged_6cols"
+out_dir="static/metro_region_geohash_stops_merged_pm/"
 
 # Ensure output folder exists
 mkdir -p "$out_dir"

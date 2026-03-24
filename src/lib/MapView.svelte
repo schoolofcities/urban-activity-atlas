@@ -4,7 +4,7 @@
     import "maplibre-gl/dist/maplibre-gl.css";
     import * as pmtiles from "pmtiles";
     import layers from 'protomaps-themes-base';
-    import metroRegionCentroids from '../data/metro_regions_centroids.geo.json';
+    import metroRegionCentroids from '../data/metro_regions_centroids_no_oregon.geo.json';
     import baseMap from "../data/base_map_style.json";
 
     // Props
@@ -25,21 +25,15 @@
     const CHANGE_CAP = 3; // 300%
     const CHANGE_MAX_HEIGHT = 5000;
 
-    // Map time period -> PMTiles folder
-    const pmtilesFolderMap = {
-        "2019-2020": "metro_region_geohash_stops_2019_2020_pm",
-        "2023-2024": "metro_region_geohash_stops_2023_2024_pm",
-        "2024-2025": "metro_region_geohash_stops_2024_2025_pm",
-    };
+    // All periods now use merged PMTiles from one folder
+    const PMTILES_FOLDER = "metro_region_geohash_stops_merged_pm";
 
-    function getPmtilesFolder(period) {
-        return pmtilesFolderMap[period] ?? pmtilesFolderMap["2023-2024"];
+    function getPmtilesFolder(_) {
+        return PMTILES_FOLDER;
     }
 
-    function getChangePmtilesFolder(fromPeriod, toPeriod) {
-        const fromSafe = fromPeriod.replace('-', '_');
-        const toSafe = toPeriod.replace('-', '_');
-        return `metro_region_geohash_stops_change_${fromSafe}_to_${toSafe}_pm`;
+    function getChangePmtilesFolder(_, __) {
+        return PMTILES_FOLDER;
     }
 
     const dispatch = createEventDispatcher();
@@ -94,7 +88,21 @@
             });
 
             const isChangeMode = timePeriod === 'change';
-            const metricKey = isChangeMode ? 'prop_subset_stops_change' : 'prop_subset_stops';
+            const periodMetricMap = {
+                '2019-2020': 'prop_subset_stops_2019_2020',
+                '2023-2024': 'prop_subset_stops_2023_2024',
+                '2024-2025': 'prop_subset_stops_2024_2025',
+            };
+
+            let metricKey;
+            if (isChangeMode) {
+                const fromSafe = changePeriodFrom.replace(/-/g, '_');
+                const toSafe = changePeriodTo.replace(/-/g, '_');
+                metricKey = `prop_subset_stops_change_${fromSafe}_to_${toSafe}`;
+            } else {
+                metricKey = periodMetricMap[timePeriod] ?? 'prop_subset_stops';
+            }
+
             const metricRawExpr = ['coalesce', ['get', metricKey], 0];
             const metricExpr = isChangeMode
                 ? ['max', -CHANGE_CAP, ['min', CHANGE_CAP, metricRawExpr]]
@@ -326,7 +334,7 @@
             // Add PMTiles source for metro regions boundaries
             map.addSource('metro-regions', {
                 type: 'vector',
-                url: 'pmtiles://metro_regions_full.pmtiles'
+                url: 'pmtiles://metro_regions_full_no_oregon.pmtiles'
             });
 
             // Add secret hidden centroids layer for clicking with wide radius

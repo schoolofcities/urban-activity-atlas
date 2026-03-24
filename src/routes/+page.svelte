@@ -21,11 +21,6 @@
     let timePeriod = '2023-2024';
     let changePeriodFrom = '';
     let changePeriodTo = '';
-    let showOregonPrivacyPopup = false;
-    let hasShownOregonPrivacyPopup = false;
-
-    const OREGON_PRIVACY_URL = 'https://olis.oregonlegislature.gov/liz/2025R1/Measures/Overview/HB2008';
-    const OREGON_PRIVACY_SESSION_KEY = 'oregon-privacy-popup-shown';
 
     // Load min/max data from the JSON file
     import minmax from '../data/min_max.json';
@@ -102,12 +97,6 @@
         if (!mapInitialized) return; // Don't proceed if map isn't ready
         metroName = location;
         searchQuery = location; // Update the search bar with the selected location
-
-        if (location && isOregonMetro(location) && !hasShownOregonPrivacyPopup) {
-            showOregonPrivacyPopup = true;
-            hasShownOregonPrivacyPopup = true;
-            sessionStorage.setItem(OREGON_PRIVACY_SESSION_KEY, '1');
-        }
 
         zoomToLocation(metroName);
         dropdownOpen = false; // Close the dropdown after selection, as applicable
@@ -186,10 +175,6 @@
             selectLocation(fullMetro);
         }
     };
-
-    onMount(() => {
-        hasShownOregonPrivacyPopup = sessionStorage.getItem(OREGON_PRIVACY_SESSION_KEY) === '1';
-    });
 </script>
 
 
@@ -255,7 +240,7 @@
     </div>
 </div>
 
-{#if showOregonPrivacyPopup}
+<!-- {#if showOregonPrivacyPopup}
     <div class="modal-backdrop">
         <div class="modal" role="dialog" aria-modal="true" aria-labelledby="oregon-privacy-title">
             <h2 id="oregon-privacy-title">Oregon Data Notice</h2>
@@ -268,7 +253,7 @@
             <button type="button" class="close-modal" on:click={() => (showOregonPrivacyPopup = false)}>Close</button>
         </div>
     </div>
-{/if}
+{/if} -->
 
 <style>
 

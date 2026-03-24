@@ -3,8 +3,8 @@
 # Generate PMTiles file from GeoJSON with metro region boundaries
 
 # Input and output file paths
-INPUT="data/metro_regions_full.geojson"
-OUTPUT="static/metro_regions_full_2023_2024.pmtiles"
+INPUT="data/metro_regions_full_no_oregon.geojson"
+OUTPUT="static/metro_regions_full_no_oregon.pmtiles"
 
 # Auto-determine max zoom based on data
 # Remove feature and tile size limits

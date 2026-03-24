@@ -121,9 +121,9 @@
     <div class="section">
         <p class="section-title">Time Period</p>
         <div class={`button-container ${isChangeMode ? "mode-inactive" : ""}`}>
-            <button type="button" class={`button ${timePeriod === "2019-2020" ? "selected" : "not-selected"}`} on:click={() => setTimePeriod("2019-2020")}>2019-2020</button>
-            <button type="button" class={`button ${timePeriod === "2023-2024" ? "selected" : "not-selected"}`} on:click={() => setTimePeriod("2023-2024")}>2023-2024</button>
-            <button type="button" class={`button ${timePeriod === "2024-2025" ? "selected" : "not-selected"}`} on:click={() => setTimePeriod("2024-2025")}>2024-2025</button>
+            <button type="button" class={`button period-button ${timePeriod === "2019-2020" ? "selected" : "not-selected"}`} on:click={() => setTimePeriod("2019-2020")}>04/2019-03/2020</button>
+            <button type="button" class={`button period-button ${timePeriod === "2023-2024" ? "selected" : "not-selected"}`} on:click={() => setTimePeriod("2023-2024")}>04/2023-03/2024</button>
+            <button type="button" class={`button period-button ${timePeriod === "2024-2025" ? "selected" : "not-selected"}`} on:click={() => setTimePeriod("2024-2025")}>04/2024-03/2025</button>
         </div>
         <!-- <p class="description" style="margin-top: -0px;">Time period is from {timePeriodRange}</p> -->
     </div>
@@ -134,8 +134,8 @@
             <select class = "period-select" value = {changePeriodFrom} 
             on:change={(e) => setChangePeriodFrom(e.currentTarget.value)}>
                 <option value = "">Select start year</option>
-                <option value = "2019-2020">2019-2020</option>
-                <option value = "2023-2024">2023-2024</option>
+                <option value = "2019-2020">04/2019-03/2020</option>
+                <option value = "2023-2024">04/2023-03/2024</option>
             </select>
             <span class = "vs-label">vs.</span>
             <select class = "period-select" value = {changePeriodTo} 
@@ -143,9 +143,9 @@
             on:change={(e) => setChangePeriodTo(e.currentTarget.value)}>
                 <option value = "">Select end year</option>
                 {#if changePeriodFrom === "2019-2020"}
-                    <option value="2023-2024">2023-2024</option>
+                    <option value="2023-2024">04/2023-03/2024</option>
                 {/if}
-                <option value="2024-2025">2024-2025</option>
+                <option value="2024-2025">04/2024-03/2025</option>
             </select>
         </div>
     </div>
@@ -172,6 +172,8 @@
 
     <p class="description">
         <i>The activity data on the map is derived from a sample of mobile phone data via <a href="https://cuebiq.com/" target="_blank" rel="noopener noreferrer">Cuebiq</a>. Other reference data on the map are from <a href="https://www.openstreetmap.org/" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> via <a href="https://protomaps.com/" target="_blank" rel="noopener noreferrer">Protomaps</a>. Check out our <a href="https://github.com/schoolofcities/urban-activity-atlas/" target="_blank" rel="noopener noreferrer">Github</a> for more information about the data and methods.</i>
+        <br><br>
+        <i>Note: <a href="https://olis.oregonlegislature.gov/liz/2025R1/Measures/Overview/HB2008" target="_blank" rel="noopener noreferrer">Oregon's Consumer Privacy Act</a> enacted in 2025 prevents the collection of Cuebiq data, hence why Oregon could not be included.</i>
     </p>
 
     <div id="logo">
@@ -315,6 +317,7 @@
         width: calc(100% - 20px);
         height: 100%; 
         margin: 5px;
+        flex-wrap: wrap;
     }
 
     .button {
@@ -330,6 +333,7 @@
         border-radius: 5px;
         cursor: pointer; 
         margin: 5px;
+        padding: 5px;
         margin-left: 10px;
         transition: background-color 0.2s ease; 
     }
@@ -342,6 +346,13 @@
     .button:hover {
         background-color: var(--brandLightBlue); 
         opacity: 1;
+    }
+
+    .period-button {
+        font-size: 14px;          
+        padding: 4px 8px; /* smaller spacing */
+        margin: 3px; /* smaller gap */
+        margin-left: 5px;
     }
 
     .mode-inactive {
@@ -364,7 +375,7 @@
         background-color: var(--brandDarkBlue);
         color: var(--brandWhite);
         cursor: pointer; 
-        font-size: 16px;
+        font-size: 12px;
         font-weight: bold;
         padding: 0 10px;
         transition: background-color 0.2s ease; 
