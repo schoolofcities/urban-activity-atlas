@@ -73,9 +73,27 @@
         : "Activity level (per region):";
     $: legendLowLabel = isChangeMode ? `Decrease` : "Low";
     $: legendHighLabel = isChangeMode ? `Increase` : "High";
+
+    const CHANGE_GRADIENT_COLORS = {
+        start: "#ff9aa0",
+        midDarkRed: "#8f232c",
+        midpoint: "#000000",
+        midDarkBlue: "#245e86",
+        end: "#6fc7ea"
+    };
+
+    const ACTIVITY_GRADIENT_COLORS = {
+        start: "#000000",
+        navy: "#1e3765",
+        teal: "#007fa3",
+        lightBlue: "#65b1c7",
+        skyBlue: "#6fc7ea",
+        end: "#ffffff"
+    };
+
     $: legendGradient = isChangeMode
-        ? "linear-gradient(90deg, #ff9aa0 0%, #8f232c 45%, #000000 50%, #245e86 55%, #6fc7ea 100%)"
-        : "linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(30,55,101,1) 20%, rgba(0,127,163,1) 40%, rgba(101,177,199,1) 60%, rgba(111,199,234,1) 80%, rgba(255,255,255,1) 100%)";
+        ? `linear-gradient(90deg, ${CHANGE_GRADIENT_COLORS.start} 0%, ${CHANGE_GRADIENT_COLORS.midDarkRed} 45%, ${CHANGE_GRADIENT_COLORS.midpoint} 50%, ${CHANGE_GRADIENT_COLORS.midDarkBlue} 55%, ${CHANGE_GRADIENT_COLORS.end} 100%)`
+        : `linear-gradient(90deg, ${ACTIVITY_GRADIENT_COLORS.start} 0%, ${ACTIVITY_GRADIENT_COLORS.navy} 20%, ${ACTIVITY_GRADIENT_COLORS.teal} 40%, ${ACTIVITY_GRADIENT_COLORS.lightBlue} 60%, ${ACTIVITY_GRADIENT_COLORS.skyBlue} 80%, ${ACTIVITY_GRADIENT_COLORS.end} 100%)`;
 </script>
 
 <div>
@@ -84,7 +102,8 @@
         <a href='https://www.urbandisplacement.org/team/julia-greenberg/'>Julia Greenberg</a>, 
         <a href='https://www.linkedin.com/in/aniket-k-8a8b9921b/'>Aniket Kali</a>, 
         <a href='https://jamaps.github.io/'>Jeff Allen</a>, 
-        <a href='https://karenchapple.com/'>Karen Chapple</a></p>
+        <a href='https://karenchapple.com/'>Karen Chapple</a>,
+        <a href='https://www.linkedin.com/in/yihoi-jung-0b95351b5/'>Yihoi Jung</a></p>
     <hr>
     <p class="description">
         This map shows which places people visit or spend time in the 300 largest metropolitan regions (by population) in the US and Canada. Choose a metro region by clicking on it on the map, or choosing from the dropdown below.

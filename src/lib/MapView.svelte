@@ -79,8 +79,6 @@
             const safeMetroName = encodeURI(metroName);
             pmtilesURL = `/urban-activity-atlas/${folder}/${safeMetroName}.pmtiles`;
 
-			// console.log('pmtilesURL: ', pmtilesURL);
-
 			// Add the PMTiles source
 			map.addSource(metroName, {
                 type: "vector",
@@ -95,6 +93,7 @@
             };
 
             let metricKey;
+            // Change between time periods
             if (isChangeMode) {
                 const fromSafe = changePeriodFrom.replace(/-/g, '_');
                 const toSafe = changePeriodTo.replace(/-/g, '_');
