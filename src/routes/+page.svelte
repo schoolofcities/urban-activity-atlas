@@ -17,8 +17,8 @@
     let searchQuery = "";
     let dropdownOpen = false; // Initially set the dropdown as closed
     let mapInitialized = false;
-    let mapDimensionView = "3D" // "2D" or "3D"
-    let timePeriod = '2023-2024';
+    let mapDimensionView = "2D" // "2D" or "3D"
+    let timePeriod = '2024-2025';
     let changePeriodFrom = '';
     let changePeriodTo = '';
 

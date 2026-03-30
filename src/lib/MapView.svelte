@@ -182,11 +182,11 @@
                     'interpolate',
                     ['linear'],
                     metricRawExpr,
-                    -rangeAbs, '#ff9aa0',
-                    -rangeAbs * 0.15, '#8f232c',
-                    0, '#000000',
-                    rangeAbs * 0.15, '#245e86',
-                    rangeAbs, '#6fc7ea'
+                    -rangeAbs, '#ff472f',
+                    -rangeAbs * 0.2, '#ff472fae',
+                    0, '#00000089',
+                    rangeAbs * 0.2, '#78d9ffae',
+                    rangeAbs, '#78d9ff'
                 ];
 
                 const colorPaintProperty = mapDimensionView === "3D"
@@ -219,7 +219,18 @@
                         'fill-extrusion-opacity': 1 // Adjust opacity as needed
                     },
                     "minzoom": 5  // Add this line to match metro-areas visibility
-                }, "water_outline");
+                }, "water");
+
+
+                map.once('idle', () => {
+                    map.easeTo({
+                        pitch: 35,
+                        bearing: 35,
+                        duration: 500
+                    });
+                });
+
+                
             
 
             } else {
@@ -233,7 +244,15 @@
                         'fill-opacity': 1 // Adjust opacity as needed
                     },
                     "minzoom": 5  // Add this line to match metro-areas visibility
-                }, "water_outline");
+                }, "water");
+
+                map.once('idle', () => {
+                    map.easeTo({
+                        pitch: 0,
+                        bearing: 0,
+                        duration: 500
+                    });
+                });
             }            
 
             if (isChangeMode) {
@@ -375,15 +394,15 @@
                 },
                 filter: ['has', 'name'],  // Show all by default
                 minzoom: 5
-            }, "water_outline");
+            }, "water");
             map.addLayer({
                 id: 'metro-area-outlines',
                 type: 'line',
                 source: 'metro-regions',
                 'source-layer': 'metro_region_full',  // Updated layer name
                 paint: {
-                    'line-color': '#6FC7EA',//'#fff',
-                    'line-opacity': 0.6,
+                    'line-color': '#fff',//'#fff',
+                    'line-opacity': 0.36,
                     'line-width': 2,
                     // 'line-dasharray': [4, 2] 
                 },
@@ -398,14 +417,14 @@
                 source: 'metro-regions',
                 'source-layer': 'metro_region_full',  // Updated layer name
                 paint: {
-                    'line-color': '#6FC7EA',//'#94928a',
-                    'line-opacity': 0.9,
+                    'line-color': '#fff',//'#94928a',
+                    'line-opacity': 0.49,
                     'line-width': 4,
-                    // 'line-dasharray': [6, 3, 3, 3] 
+                    'line-dasharray': [1, 1, 1, 1] 
                 },
                 filter: ['==', ['get', 'name'], ''],  // Start with empty filter
                 minzoom: 5,
-                maxzoom: 11
+                maxzoom: 14
             });
 
             // Update metro region across the whole application using selectLocation

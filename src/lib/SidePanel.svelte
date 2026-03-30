@@ -75,11 +75,11 @@
     $: legendHighLabel = isChangeMode ? `Increase` : "High";
 
     const CHANGE_GRADIENT_COLORS = {
-        start: "#ff9aa0",
-        midDarkRed: "#8f232c",
-        midpoint: "#000000",
-        midDarkBlue: "#245e86",
-        end: "#6fc7ea"
+        start: "#ff472f",
+        midDarkRed: "#ff472fae",
+        midpoint: "#00000089",
+        midDarkBlue: "#78d9ffae",
+        end: "#78d9ff"
     };
 
     const ACTIVITY_GRADIENT_COLORS = {
@@ -92,7 +92,7 @@
     };
 
     $: legendGradient = isChangeMode
-        ? `linear-gradient(90deg, ${CHANGE_GRADIENT_COLORS.start} 0%, ${CHANGE_GRADIENT_COLORS.midDarkRed} 45%, ${CHANGE_GRADIENT_COLORS.midpoint} 50%, ${CHANGE_GRADIENT_COLORS.midDarkBlue} 55%, ${CHANGE_GRADIENT_COLORS.end} 100%)`
+        ? `linear-gradient(90deg, ${CHANGE_GRADIENT_COLORS.start} 0%, ${CHANGE_GRADIENT_COLORS.midDarkRed} 25%, ${CHANGE_GRADIENT_COLORS.midpoint} 50%, ${CHANGE_GRADIENT_COLORS.midDarkBlue} 75%, ${CHANGE_GRADIENT_COLORS.end} 100%)`
         : `linear-gradient(90deg, ${ACTIVITY_GRADIENT_COLORS.start} 0%, ${ACTIVITY_GRADIENT_COLORS.navy} 20%, ${ACTIVITY_GRADIENT_COLORS.teal} 40%, ${ACTIVITY_GRADIENT_COLORS.lightBlue} 60%, ${ACTIVITY_GRADIENT_COLORS.skyBlue} 80%, ${ACTIVITY_GRADIENT_COLORS.end} 100%)`;
 </script>
 

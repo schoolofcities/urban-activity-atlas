@@ -12,8 +12,8 @@
 	  "source": "protomaps",
 	  "source-layer": "earth",
 	  "paint": {
-		"fill-color": "#0D534D",
-		"fill-opacity": 0.05
+		"fill-color": "#000",
+		"fill-opacity": 1
 	  }
 	},
 	{
@@ -23,7 +23,7 @@
 	  "source-layer": "landcover",
 	  "paint": {
 		"fill-color": "#0D534D",
-		"fill-opacity": 0.05
+		"fill-opacity": 0.15
 	  }
 	},
 	{
@@ -39,8 +39,8 @@
 	  "source": "protomaps",
 	  "source-layer": "water",
 	  "paint": {
-		"line-opacity": 0.15,
-		"line-color": "#94928a",
+		"line-opacity": 0.18,
+		"line-color": "#fff",
 		"line-width": 0.3
 	  }
 	},
@@ -57,8 +57,8 @@
 	  "source": "protomaps",
 	  "source-layer": "water",
 	  "paint": {
-		"fill-color": "#040d1c",
-		"fill-opacity": 0.2
+		"fill-color": "#fff",
+		"fill-opacity": 0.1
 	  }
 	},
 	{
