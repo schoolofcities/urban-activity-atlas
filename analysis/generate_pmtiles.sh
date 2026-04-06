@@ -1,11 +1,7 @@
 #!/bin/bash
 
-# metro_region_geohash_stops_change_2019_2020_to_2024_2025
-# metro_region_geohash_stops_change_2019_2020_to_2023_2024
-# metro_region_geohash_stops_change_2023_2024_to_2024_2025
-
 in_dir="data/metro_region_geohash_stops_merged_6cols"
-out_dir="static/metro_region_geohash_stops_merged_pm/"
+out_dir="static/metro_region_geohash_stops_merged_pm_v4/"
 
 # Ensure output folder exists
 mkdir -p "$out_dir"
@@ -15,10 +11,18 @@ for file in "$in_dir"/*; do
     f_base=$(basename "${file%.*}")
     echo "Converting $f_base..."
 
-    # Original version
-    tippecanoe -zg -o "$out_dir"/"$f_base".pmtiles --force --coalesce-densest-as-needed --extend-zooms-if-still-dropping "$in_dir"/"$f_base".geojson
-    
-    # Attempt at fixing the clumping    
+    # This one works
+    #tippecanoe -Z8 -z14 -o "$out_dir"/"$f_base".pmtiles --force --detect-shared-borders --no-simplification-of-shared-nodes --drop-fraction-as-needed --no-feature-limit --no-tile-size-limit "$in_dir"/"$f_base".geojson
+
+    #tippecanoe -Z8 -z14 -o "$out_dir"/"$f_base".pmtiles --force --detect-shared-borders --drop-fraction-as-needed --drop-densest-as-needed --coalesce-densest-as-needed --extend-zooms-if-still-dropping "$in_dir"/"$f_base".geojson
+    #tippecanoe -Z8 -z14 -o "$out_dir"/"$f_base".pmtiles --force --detect-shared-borders --no-simplification-of-shared-nodes --drop-fraction-as-needed --drop-densest-as-needed --extend-zooms-if-still-dropping "$in_dir"/"$f_base".geojson
+    tippecanoe -Z8 -z13 -o "$out_dir"/"$f_base".pmtiles --force --detect-shared-borders --no-simplification-of-shared-nodes --drop-fraction-as-needed --drop-densest-as-needed --extend-zooms-if-still-dropping "$in_dir"/"$f_base".geojson
+
+    # Attempts at fixing the clumping    
     #tippecanoe -zg -o "$out_dir"/"$f_base".pmtiles --force "$in_dir"/"$f_base".geojson
+    # Original version
+    #tippecanoe -zg -o "$out_dir"/"$f_base".pmtiles --force --coalesce-densest-as-needed --extend-zooms-if-still-dropping "$in_dir"/"$f_base".geojson
+    #tippecanoe -Z8 -z14 -o "$out_dir"/"$f_base".pmtiles --force --drop-densest-as-needed --extend-zooms-if-still-dropping --no-simplification-of-shared-nodes "$in_dir"/"$f_base".geojson
+
   fi
 done
