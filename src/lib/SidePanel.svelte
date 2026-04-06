@@ -19,67 +19,80 @@
         a.properties.name.localeCompare(b.properties.name)
     );
 
+    // Pending states
+    let pendingSingleTimePeriod = timePeriod !== "change" ? timePeriod : "2023-2024";
+    let pendingChangePeriodFrom = changePeriodFrom;
+    let pendingChangePeriodTo = changePeriodTo;
+
     function setMapDimensionView(dimension) {
         mapDimensionView = dimension;
     }
 
-    function setTimePeriod(period) {
-        timePeriod = period;
+    function setPendingSingleTimePeriod(period) {
+        pendingSingleTimePeriod = period;
     }
 
-    function updateChangeModeIfReady() {
-        const hasValidSelection = Boolean(changePeriodFrom) && Boolean(changePeriodTo);
-        if (hasValidSelection) {
-            timePeriod = "change";
-        }
-    }
-
-    function setChangePeriodFrom(period) {
-        changePeriodFrom = period;
+    function setPendingChangePeriodFrom(period) {
+        pendingChangePeriodFrom = period;
         if (!period) {
-            changePeriodTo = "";
+            pendingChangePeriodTo = "";
             return;
         }
 
-        if (period === "2023-2024" && changePeriodTo !== "2024-2025") {
-            changePeriodTo = "";
+        if (period === "2023-2024" && pendingChangePeriodTo !== "2024-2025") {
+            pendingChangePeriodTo = "";
         }
-
-        updateChangeModeIfReady();
     }
 
-    function setChangePeriodTo(period) {
-        changePeriodTo = period;
-        updateChangeModeIfReady();
+    function setPendingChangePeriodTo(period) {
+        pendingChangePeriodTo = period;
     }
 
-    const timePeriodRanges = {
-        "2019-2020": "April 1, 2019 and March 31, 2020",
-        "2023-2024": "April 1, 2023 and March 31, 2024",
-        "2024-2025": "April 1, 2024 and March 31, 2025",
-        "change": "the difference between selected windows"
+    function applySingleTimePeriod() {
+        timePeriod = pendingSingleTimePeriod;
+        // Optionally clear change logic so they don't leak state unexpectedly
+        // changePeriodFrom = ""; 
+        // changePeriodTo = "";
+    }
+
+    function applyChangeTimePeriod() {
+        if (pendingChangePeriodFrom && pendingChangePeriodTo) {
+            timePeriod = "change";
+            changePeriodFrom = pendingChangePeriodFrom;
+            changePeriodTo = pendingChangePeriodTo;
+        }
+    }
+
+    const timePeriodDateRanges = {
+        "2019-2020": "April 1, 2019 – March 31, 2020",
+        "2023-2024": "April 1, 2023 – March 31, 2024",
+        "2024-2025": "April 1, 2024 – March 31, 2025"
     };
 
     $: hasSelectedChangePeriods = Boolean(changePeriodFrom) && Boolean(changePeriodTo);
     $: changeRangeLabel = hasSelectedChangePeriods
-        ? `the difference between ${changePeriodFrom} and ${changePeriodTo}`
-        : "the difference between selected windows";
-    $: timePeriodRanges.change = changeRangeLabel;
+        ? `${timePeriodDateRanges[changePeriodFrom]} and ${timePeriodDateRanges[changePeriodTo]}`
+        : "selected windows";
 
-    $: timePeriodRange = timePeriodRanges[timePeriod] ?? timePeriodRanges["2023-2024"];
-    $: isChangeMode = timePeriod === "change";
-    $: legendTitle = isChangeMode
+    // Use applied timePeriod for text
+    $: timePeriodRange = timePeriod === "change"
+        ? changeRangeLabel
+        : (timePeriodDateRanges[timePeriod] ?? timePeriodDateRanges["2023-2024"]);
+
+    // The legend reflects the applied state
+    $: isAppliedChangeMode = timePeriod === "change";
+    $: legendTitle = isAppliedChangeMode
         ? `Change in activity`
         : "Activity level (per region):";
-    $: legendLowLabel = isChangeMode ? `Decrease` : "Low";
-    $: legendHighLabel = isChangeMode ? `Increase` : "High";
+    $: legendLowLabel = isAppliedChangeMode ? `Decrease` : "Low";
+    $: legendHighLabel = isAppliedChangeMode ? `Increase` : "High";
 
     const CHANGE_GRADIENT_COLORS = {
-        start: "#ff472f",
-        midDarkRed: "#ff472fae",
-        midpoint: "#00000089",
-        midDarkBlue: "#78d9ffae",
-        end: "#78d9ff"
+        start: "#ff9aa0",
+        midDarkRed: "#8f232c",
+        midpoint: "#000000",
+        midDarkBlue: "#245e86",
+        end: "#6fc7ea"
     };
 
     const ACTIVITY_GRADIENT_COLORS = {
@@ -91,8 +104,8 @@
         end: "#ffffff"
     };
 
-    $: legendGradient = isChangeMode
-        ? `linear-gradient(90deg, ${CHANGE_GRADIENT_COLORS.start} 0%, ${CHANGE_GRADIENT_COLORS.midDarkRed} 25%, ${CHANGE_GRADIENT_COLORS.midpoint} 50%, ${CHANGE_GRADIENT_COLORS.midDarkBlue} 75%, ${CHANGE_GRADIENT_COLORS.end} 100%)`
+    $: legendGradient = isAppliedChangeMode
+        ? `linear-gradient(90deg, ${CHANGE_GRADIENT_COLORS.start} 0%, ${CHANGE_GRADIENT_COLORS.midDarkRed} 45%, ${CHANGE_GRADIENT_COLORS.midpoint} 50%, ${CHANGE_GRADIENT_COLORS.midDarkBlue} 55%, ${CHANGE_GRADIENT_COLORS.end} 100%)`
         : `linear-gradient(90deg, ${ACTIVITY_GRADIENT_COLORS.start} 0%, ${ACTIVITY_GRADIENT_COLORS.navy} 20%, ${ACTIVITY_GRADIENT_COLORS.teal} 40%, ${ACTIVITY_GRADIENT_COLORS.lightBlue} 60%, ${ACTIVITY_GRADIENT_COLORS.skyBlue} 80%, ${ACTIVITY_GRADIENT_COLORS.end} 100%)`;
 </script>
 
@@ -126,10 +139,10 @@
     <p class="description">
         The area with the
         {mapDimensionView === "2D" 
-            ? "brightest white color" 
-            : "brightest white color and tallest bar"
+            ? "brightest white colour" 
+            : "brightest white colour and tallest bar"
         }
-        had the most visits of anywhere in the selected metro region in the period between {timePeriodRange}.
+        had the most visits in the selected metro region for the period between {timePeriodRange}.
     </p> 
     <p class="description">
         Activity level data shown is standardized by the total activity in each metropolitan region. Values are thus not comparable between regions since regions vary in size and population.
@@ -139,33 +152,38 @@
 
     <div class="section">
         <p class="section-title">Time Period</p>
-        <div class={`button-container ${isChangeMode ? "mode-inactive" : ""}`}>
-            <button type="button" class={`button period-button ${timePeriod === "2019-2020" ? "selected" : "not-selected"}`} on:click={() => setTimePeriod("2019-2020")}>04/2019-03/2020</button>
-            <button type="button" class={`button period-button ${timePeriod === "2023-2024" ? "selected" : "not-selected"}`} on:click={() => setTimePeriod("2023-2024")}>04/2023-03/2024</button>
-            <button type="button" class={`button period-button ${timePeriod === "2024-2025" ? "selected" : "not-selected"}`} on:click={() => setTimePeriod("2024-2025")}>04/2024-03/2025</button>
+        <div class="button-container">
+            <button type="button" class={`button period-button ${pendingSingleTimePeriod === "2019-2020" ? "selected" : "not-selected"}`} on:click={() => setPendingSingleTimePeriod("2019-2020")}>04/2019-03/2020</button>
+            <button type="button" class={`button period-button ${pendingSingleTimePeriod === "2023-2024" ? "selected" : "not-selected"}`} on:click={() => setPendingSingleTimePeriod("2023-2024")}>04/2023-03/2024</button>
+            <button type="button" class={`button period-button ${pendingSingleTimePeriod === "2024-2025" ? "selected" : "not-selected"}`} on:click={() => setPendingSingleTimePeriod("2024-2025")}>04/2024-03/2025</button>
         </div>
-        <!-- <p class="description" style="margin-top: -0px;">Time period is from {timePeriodRange}</p> -->
+        <div class="apply-container" style="margin-top: 0px;">
+            <button type="button" class="button apply-button" on:click={applySingleTimePeriod}>Apply</button>
+        </div>
     </div>
 
-    <div class = {`section ${!isChangeMode ? "mode-inactive" : ""}`}>
-        <p class = "section-title">Change between time periods</p>
-        <div class = "change-row">
-            <select class = "period-select" value = {changePeriodFrom} 
-            on:change={(e) => setChangePeriodFrom(e.currentTarget.value)}>
-                <option value = "">Select start year</option>
-                <option value = "2019-2020">04/2019-03/2020</option>
-                <option value = "2023-2024">04/2023-03/2024</option>
+    <div class="section">
+        <p class="section-title">Change between time periods</p>
+        <div class="change-row">
+            <select class="period-select" value={pendingChangePeriodFrom} 
+            on:change={(e) => setPendingChangePeriodFrom(e.currentTarget.value)}>
+                <option value="">Select start year</option>
+                <option value="2019-2020">04/2019-03/2020</option>
+                <option value="2023-2024">04/2023-03/2024</option>
             </select>
-            <span class = "vs-label">vs.</span>
-            <select class = "period-select" value = {changePeriodTo} 
-            disabled={!changePeriodFrom}
-            on:change={(e) => setChangePeriodTo(e.currentTarget.value)}>
-                <option value = "">Select end year</option>
-                {#if changePeriodFrom === "2019-2020"}
+            <span class="vs-label">vs.</span>
+            <select class="period-select" value={pendingChangePeriodTo} 
+            disabled={!pendingChangePeriodFrom}
+            on:change={(e) => setPendingChangePeriodTo(e.currentTarget.value)}>
+                <option value="">Select end year</option>
+                {#if pendingChangePeriodFrom === "2019-2020"}
                     <option value="2023-2024">04/2023-03/2024</option>
                 {/if}
                 <option value="2024-2025">04/2024-03/2025</option>
             </select>
+        </div>
+        <div class="apply-container">
+            <button type="button" class="button apply-button" on:click={applyChangeTimePeriod}>Apply</button>
         </div>
     </div>
 
@@ -282,7 +300,7 @@
     .legend {
         list-style: none;
         padding: 0;
-        margin: 0 15px 15px 15px;
+        margin: 0 20px 15px 15px;
         font-family: RobotoRegular;
         font-size: .8rem;
         display: flex;
@@ -330,7 +348,6 @@
         color: white;
     }
 
-
     .button-container {
         display: flex; 
         width: calc(100% - 20px);
@@ -369,9 +386,9 @@
 
     .period-button {
         font-size: 14px;          
-        padding: 4px 8px; /* smaller spacing */
-        margin: 3px; /* smaller gap */
-        margin-left: 5px;
+        padding: 4px 5px; /* smaller spacing */
+        margin-right: 5px;
+        margin-left: 10px;
     }
 
     .mode-inactive {
@@ -382,7 +399,7 @@
         display: flex;
         align-items: center;
         gap: 8px;
-        margin: 8px 15px 0 15px;
+        margin: 8px 20px 0 15px;
     }
 
     .period-select {
@@ -396,7 +413,12 @@
         cursor: pointer; 
         font-size: 12px;
         font-weight: bold;
-        padding: 0 10px;
+        padding: 0 30px 0 10px;
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        background-size: 12px;
         transition: background-color 0.2s ease; 
     }
 
@@ -405,13 +427,30 @@
         opacity: 1;
     }
 
+    .period-select option {
+        background-color: var(--brandDarkBlue);
+        color: var(--brandWhite);
+    }
+
     .vs-label {
         color: var(--brandWhite);
         font-family: RobotoBold;
-        font-size: 0.95rem;
+        font-size: 16px;
         white-space: nowrap;
     }
 
+    .apply-container {
+        display: flex;
+        justify-content: flex-end;
+        margin-right: 20px;
+        margin-top: 10px;
+    }
 
+    .apply-button {
+        font-size: 13px;
+        padding: 5px 20px;
+        margin: 0;
+        flex: none;
+    }
 
 </style>

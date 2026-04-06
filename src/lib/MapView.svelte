@@ -65,6 +65,17 @@
         });
     }
 
+    // Adjust camera view when dimension view changes
+    $: {
+        if (map && isMapLoaded) {
+            if (mapDimensionView === "3D") {
+                map.easeTo({ pitch: 65, bearing: 45, duration: 1000 }); // Pitch up and point slightly left
+            } else {
+                map.easeTo({ pitch: 0, bearing: 0, duration: 1000 }); // Reset strictly to top-down north-up
+            }
+        }
+    }
+
     // Reactive statement for map updates
 	$: {
         if (map && isMapLoaded && metroName) {  // Note when metroName == '', it's boolean is false.
@@ -160,7 +171,7 @@
 
             const applyDynamicChangeScale = () => {
                 if (!isChangeMode || !map.getSource(metroName) || !map.getLayer(layerId)) {
-                    return;
+                    return false;
                 }
 
                 const sourceLayer = metroName.replace(/[^\w]/g, "");
@@ -170,7 +181,7 @@
                     .filter((value) => Number.isFinite(value));
 
                 if (!values.length) {
-                    return;
+                    return false;
                 }
 
                 const minValue = Math.min(...values);
@@ -182,11 +193,11 @@
                     'interpolate',
                     ['linear'],
                     metricRawExpr,
-                    -rangeAbs, '#ff472f',
-                    -rangeAbs * 0.2, '#ff472fae',
-                    0, '#00000089',
-                    rangeAbs * 0.2, '#78d9ffae',
-                    rangeAbs, '#78d9ff'
+                    -rangeAbs, '#ff9aa0',
+                    -rangeAbs * 0.15, '#8f232c',
+                    0, '#000000',
+                    rangeAbs * 0.15, '#245e86',
+                    rangeAbs, '#6fc7ea'
                 ];
 
                 const colorPaintProperty = mapDimensionView === "3D"
@@ -201,6 +212,8 @@
                     map.setPaintProperty(layerId, 'fill-extrusion-height', dynamicHeightAbsExpr);
                     map.setPaintProperty(layerId, 'fill-extrusion-base', 0);
                 }
+                
+                return true;
             };
 
             // toggle layer style depending if 2D or 3D view
@@ -220,17 +233,6 @@
                     },
                     "minzoom": 5  // Add this line to match metro-areas visibility
                 }, "water");
-
-
-                map.once('idle', () => {
-                    map.easeTo({
-                        pitch: 35,
-                        bearing: 35,
-                        duration: 500
-                    });
-                });
-
-                
             
 
             } else {
@@ -245,21 +247,26 @@
                     },
                     "minzoom": 5  // Add this line to match metro-areas visibility
                 }, "water");
-
-                map.once('idle', () => {
-                    map.easeTo({
-                        pitch: 0,
-                        bearing: 0,
-                        duration: 500
-                    });
-                });
             }            
 
             if (isChangeMode) {
+                const tryApplyScale = (e) => {
+                    if (e && e.sourceId && e.sourceId !== metroName) return;
+                    if (map.isSourceLoaded(metroName)) {
+                        const success = applyDynamicChangeScale();
+                        if (success) {
+                            map.off('sourcedata', tryApplyScale);
+                        }
+                    }
+                };
+
                 if (map.isSourceLoaded(metroName)) {
-                    applyDynamicChangeScale();
+                    const success = applyDynamicChangeScale();
+                    if (!success) {
+                        map.on('sourcedata', tryApplyScale);
+                    }
                 } else {
-                    map.once('idle', applyDynamicChangeScale);
+                    map.on('sourcedata', tryApplyScale);
                 }
             }
             
@@ -401,8 +408,8 @@
                 source: 'metro-regions',
                 'source-layer': 'metro_region_full',  // Updated layer name
                 paint: {
-                    'line-color': '#fff',//'#fff',
-                    'line-opacity': 0.36,
+                    'line-color': '#6FC7EA',//'#fff',
+                    'line-opacity': 0.6,
                     'line-width': 2,
                     // 'line-dasharray': [4, 2] 
                 },
@@ -417,14 +424,14 @@
                 source: 'metro-regions',
                 'source-layer': 'metro_region_full',  // Updated layer name
                 paint: {
-                    'line-color': '#fff',//'#94928a',
-                    'line-opacity': 0.49,
+                    'line-color': '#6FC7EA',//'#94928a',
+                    'line-opacity': 0.9,
                     'line-width': 4,
-                    'line-dasharray': [1, 1, 1, 1] 
+                    // 'line-dasharray': [6, 3, 3, 3] 
                 },
                 filter: ['==', ['get', 'name'], ''],  // Start with empty filter
                 minzoom: 5,
-                maxzoom: 14
+                maxzoom: 11
             });
 
             // Update metro region across the whole application using selectLocation
