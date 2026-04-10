@@ -48,6 +48,57 @@
         pendingChangePeriodTo = period;
     }
 
+    function getPeriodLabel(period) {
+        if (period === "2019-2020") return "04/2019-03/2020";
+        if (period === "2023-2024") return "04/2023-03/2024";
+        if (period === "2024-2025") return "04/2024-03/2025";
+        return "";
+    }
+
+    const changeFromOptions = [
+        { value: "2019-2020", label: "04/2019-03/2020" },
+        { value: "2023-2024", label: "04/2023-03/2024" }
+    ];
+
+    $: changeToOptions = pendingChangePeriodFrom === "2019-2020"
+        ? [
+            { value: "2023-2024", label: "04/2023-03/2024" },
+            { value: "2024-2025", label: "04/2024-03/2025" }
+        ]
+        : pendingChangePeriodFrom === "2023-2024"
+            ? [{ value: "2024-2025", label: "04/2024-03/2025" }]
+            : [];
+
+    let fromDropdownOpen = false;
+    let toDropdownOpen = false;
+
+    function toggleFromDropdown() {
+        fromDropdownOpen = !fromDropdownOpen;
+        if (fromDropdownOpen) toDropdownOpen = false;
+    }
+
+    function toggleToDropdown() {
+        if (!pendingChangePeriodFrom) return;
+        toDropdownOpen = !toDropdownOpen;
+        if (toDropdownOpen) fromDropdownOpen = false;
+    }
+
+    function selectFromPeriod(period) {
+        setPendingChangePeriodFrom(period);
+        fromDropdownOpen = false;
+        toDropdownOpen = false;
+    }
+
+    function selectToPeriod(period) {
+        setPendingChangePeriodTo(period);
+        toDropdownOpen = false;
+    }
+
+    function closePeriodDropdowns() {
+        fromDropdownOpen = false;
+        toDropdownOpen = false;
+    }
+
     function applySingleTimePeriod() {
         timePeriod = pendingSingleTimePeriod;
         // Optionally clear change logic so they don't leak state unexpectedly
@@ -109,7 +160,10 @@
         : `linear-gradient(90deg, ${ACTIVITY_GRADIENT_COLORS.start} 0%, ${ACTIVITY_GRADIENT_COLORS.navy} 20%, ${ACTIVITY_GRADIENT_COLORS.teal} 40%, ${ACTIVITY_GRADIENT_COLORS.lightBlue} 60%, ${ACTIVITY_GRADIENT_COLORS.skyBlue} 80%, ${ACTIVITY_GRADIENT_COLORS.end} 100%)`;
 </script>
 
+<svelte:window on:click={closePeriodDropdowns} />
+
 <div>
+
     <h1>Urban Activity Atlas</h1>
     <p id="authors">
         <a href='https://www.urbandisplacement.org/team/julia-greenberg/'>Julia Greenberg</a>, 
@@ -165,22 +219,104 @@
     <div class="section">
         <p class="section-title">Change between time periods</p>
         <div class="change-row">
-            <select class="period-select" value={pendingChangePeriodFrom} 
-            on:change={(e) => setPendingChangePeriodFrom(e.currentTarget.value)}>
-                <option value="">Select start year</option>
-                <option value="2019-2020">04/2019-03/2020</option>
-                <option value="2023-2024">04/2023-03/2024</option>
-            </select>
-            <span class="vs-label">vs.</span>
-            <select class="period-select" value={pendingChangePeriodTo} 
-            disabled={!pendingChangePeriodFrom}
-            on:change={(e) => setPendingChangePeriodTo(e.currentTarget.value)}>
-                <option value="">Select end year</option>
-                {#if pendingChangePeriodFrom === "2019-2020"}
-                    <option value="2023-2024">04/2023-03/2024</option>
+            <!-- svelte-ignore a11y_no_static_element_interactions -->
+            <!-- svelte-ignore a11y_click_events_have_key_events -->
+            <div class="period-dropdown-container" on:click|stopPropagation>
+                <!-- svelte-ignore a11y_click_events_have_key_events -->
+                <div
+                    class="period-dropdown-toggle"
+                    role="button"
+                    tabindex="0"
+                    aria-haspopup="listbox"
+                    aria-expanded={fromDropdownOpen}
+                    on:click={toggleFromDropdown}
+                >
+                    <div class="period-display {pendingChangePeriodFrom ? '' : 'placeholder'}">
+                        {pendingChangePeriodFrom ? getPeriodLabel(pendingChangePeriodFrom) : 'Select start year'}
+                    </div>
+                    <svg
+                        class="period-chevron {fromDropdownOpen ? 'open' : ''}"
+                        width="12"
+                        height="12"
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                    >
+                        <path
+                            fill="currentColor"
+                            d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
+                        />
+                    </svg>
+                </div>
+
+                {#if fromDropdownOpen}
+                    <div class="period-dropdown-list" role="listbox">
+                        {#each changeFromOptions as option}
+                            <!-- svelte-ignore a11y_click_events_have_key_events -->
+                            <div
+                                class="period-dropdown-item"
+                                class:selected={option.value === pendingChangePeriodFrom}
+                                role="option"
+                                aria-selected={option.value === pendingChangePeriodFrom}
+                                tabindex="0"
+                                on:click={() => selectFromPeriod(option.value)}
+                            >
+                                {option.label}
+                            </div>
+                        {/each}
+                    </div>
                 {/if}
-                <option value="2024-2025">04/2024-03/2025</option>
-            </select>
+            </div>
+
+            <span class="vs-label">vs.</span>
+
+            <!-- svelte-ignore a11y_no_static_element_interactions -->
+            <!-- svelte-ignore a11y_click_events_have_key_events -->
+            <div class="period-dropdown-container" on:click|stopPropagation>
+                <!-- svelte-ignore a11y_click_events_have_key_events -->
+                <div
+                    class="period-dropdown-toggle {pendingChangePeriodFrom ? '' : 'disabled'}"
+                    role="button"
+                    tabindex="0"
+                    aria-haspopup="listbox"
+                    aria-expanded={toDropdownOpen}
+                    aria-disabled={!pendingChangePeriodFrom}
+                    on:click={toggleToDropdown}
+                >
+                    <div class="period-display {pendingChangePeriodTo ? '' : 'placeholder'}">
+                        {pendingChangePeriodTo ? getPeriodLabel(pendingChangePeriodTo) : 'Select end year'}
+                    </div>
+                    <svg
+                        class="period-chevron {toDropdownOpen ? 'open' : ''}"
+                        width="12"
+                        height="12"
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                    >
+                        <path
+                            fill="currentColor"
+                            d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
+                        />
+                    </svg>
+                </div>
+
+                {#if toDropdownOpen}
+                    <div class="period-dropdown-list" role="listbox">
+                        {#each changeToOptions as option}
+                            <!-- svelte-ignore a11y_click_events_have_key_events -->
+                            <div
+                                class="period-dropdown-item"
+                                class:selected={option.value === pendingChangePeriodTo}
+                                role="option"
+                                aria-selected={option.value === pendingChangePeriodTo}
+                                tabindex="0"
+                                on:click={() => selectToPeriod(option.value)}
+                            >
+                                {option.label}
+                            </div>
+                        {/each}
+                    </div>
+                {/if}
+            </div>
         </div>
         <div class="apply-container">
             <button type="button" class="button apply-button" on:click={applyChangeTimePeriod}>Apply</button>
@@ -402,34 +538,91 @@
         margin: 8px 20px 0 15px;
     }
 
-    .period-select {
+    .period-dropdown-container {
+        position: relative;
         flex: 1;
-        min-width: 0;
-        height: 38px;
+        min-width: 120px;
+    }
+
+    .period-dropdown-toggle {
+        position: relative;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        min-height: 38px;
+        border: solid 1px var(--brandGray);
         border-radius: 5px;
-        border: 1px solid var(--brandGray);
         background-color: var(--brandDarkBlue);
-        color: var(--brandWhite);
-        cursor: pointer; 
-        font-size: 12px;
-        font-weight: bold;
-        padding: 0 30px 0 10px;
-        appearance: none;
-        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-        background-repeat: no-repeat;
-        background-position: right 10px center;
-        background-size: 12px;
-        transition: background-color 0.2s ease; 
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
     }
 
-    .period-select:hover {
+    .period-dropdown-toggle:hover {
         background-color: var(--brandLightBlue);
-        opacity: 1;
     }
 
-    .period-select option {
+    .period-dropdown-toggle.disabled,
+    .period-dropdown-toggle.disabled:hover {
+        opacity: 0.5;
+        cursor: not-allowed;
         background-color: var(--brandDarkBlue);
-        color: var(--brandWhite);
+    }
+
+    .period-display {
+        width: 100%;
+        font-family: inherit;
+        font-size: 14px;
+        font-weight: bold;
+        color: white;
+        padding: 6px 30px 6px 8px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .period-display.placeholder {
+        color: rgba(255, 255, 255, 0.85);
+    }
+
+    .period-chevron {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--brandGray);
+        transition: transform 0.2s ease;
+        pointer-events: none;
+    }
+
+    .period-chevron.open {
+        transform: translateY(-50%) rotate(180deg);
+    }
+
+    .period-dropdown-list {
+        position: absolute;
+        top: calc(100% + 2px);
+        left: 0;
+        right: 0;
+        background-color: var(--brandDarkBlue);
+        border: solid 1px var(--brandGray);
+        border-radius: 5px;
+        max-height: 200px;
+        overflow-y: auto;
+        z-index: 20;
+    }
+
+    .period-dropdown-item {
+        padding: 6px 8px;
+        font-family: RobotoBold;
+        font-size: .95rem;
+        cursor: pointer;
+        color: white;
+    }
+
+    .period-dropdown-item:hover,
+    .period-dropdown-item.selected {
+        background-color: var(--brandMedBlue);
     }
 
     .vs-label {
