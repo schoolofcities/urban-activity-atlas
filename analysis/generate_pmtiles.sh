@@ -1,7 +1,7 @@
 #!/bin/bash
 
 in_dir="data/metro_region_geohash_stops_merged_6cols"
-out_dir="static/metro_region_geohash_stops_merged_pm_v4/"
+out_dir="static/metro_region_geohash_stops_merged_pm_v8/"
 
 # Ensure output folder exists
 mkdir -p "$out_dir"
@@ -16,7 +16,13 @@ for file in "$in_dir"/*; do
 
     #tippecanoe -Z8 -z14 -o "$out_dir"/"$f_base".pmtiles --force --detect-shared-borders --drop-fraction-as-needed --drop-densest-as-needed --coalesce-densest-as-needed --extend-zooms-if-still-dropping "$in_dir"/"$f_base".geojson
     #tippecanoe -Z8 -z14 -o "$out_dir"/"$f_base".pmtiles --force --detect-shared-borders --no-simplification-of-shared-nodes --drop-fraction-as-needed --drop-densest-as-needed --extend-zooms-if-still-dropping "$in_dir"/"$f_base".geojson
-    tippecanoe -Z8 -z13 -o "$out_dir"/"$f_base".pmtiles --force --detect-shared-borders --no-simplification-of-shared-nodes --drop-fraction-as-needed --drop-densest-as-needed --extend-zooms-if-still-dropping "$in_dir"/"$f_base".geojson
+    
+    # 4/10
+    #tippecanoe -Z8 -z13 -o "$out_dir"/"$f_base".pmtiles --force --detect-shared-borders --no-simplification-of-shared-nodes --drop-fraction-as-needed --drop-densest-as-needed --extend-zooms-if-still-dropping "$in_dir"/"$f_base".geojson
+
+    # attempt 4/13
+    #tippecanoe -Z10 -z13 -o "$out_dir"/"$f_base".pmtiles --force --detect-shared-borders --no-simplification-of-shared-nodes --no-feature-limit --no-tile-size-limit "$in_dir"/"$f_base".geojson
+    tippecanoe -Z8 -z13 -o "$out_dir"/"$f_base".pmtiles --force --detect-shared-borders --no-simplification-of-shared-nodes --no-feature-limit --no-tile-size-limit "$in_dir"/"$f_base".geojson
 
     # Attempts at fixing the clumping    
     #tippecanoe -zg -o "$out_dir"/"$f_base".pmtiles --force "$in_dir"/"$f_base".geojson
