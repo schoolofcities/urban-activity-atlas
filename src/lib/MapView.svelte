@@ -397,7 +397,7 @@
                 'source-layer': 'metro_region_full',  // Updated layer name
                 paint: {
                     'fill-color': '#000000',
-                    'fill-opacity': 0.9
+                    'fill-opacity': 0.97
                 },
                 filter: ['has', 'name'],  // Show all by default
                 minzoom: 5
@@ -408,9 +408,9 @@
                 source: 'metro-regions',
                 'source-layer': 'metro_region_full',  // Updated layer name
                 paint: {
-                    'line-color': '#6FC7EA',//'#fff',
+                    'line-color': '#fff',//'#fff',
                     'line-opacity': 0.6,
-                    'line-width': 2,
+                    'line-width': 1,
                     // 'line-dasharray': [4, 2] 
                 },
                 filter: ['has', 'name'],  // Show all by default
@@ -424,14 +424,14 @@
                 source: 'metro-regions',
                 'source-layer': 'metro_region_full',  // Updated layer name
                 paint: {
-                    'line-color': '#6FC7EA',//'#94928a',
-                    'line-opacity': 0.9,
-                    'line-width': 4,
-                    // 'line-dasharray': [6, 3, 3, 3] 
+                    'line-color': '#fff',//'#94928a',
+                    'line-opacity': 0.79,
+                    'line-width': 2,
+                    'line-dasharray': [1,1,2,1] 
                 },
                 filter: ['==', ['get', 'name'], ''],  // Start with empty filter
                 minzoom: 5,
-                maxzoom: 11
+                maxzoom: 14
             });
 
             // Update metro region across the whole application using selectLocation

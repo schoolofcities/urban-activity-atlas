@@ -156,7 +156,7 @@
     };
 
     $: legendGradient = isAppliedChangeMode
-        ? `linear-gradient(90deg, ${CHANGE_GRADIENT_COLORS.start} 0%, ${CHANGE_GRADIENT_COLORS.midDarkRed} 45%, ${CHANGE_GRADIENT_COLORS.midpoint} 50%, ${CHANGE_GRADIENT_COLORS.midDarkBlue} 55%, ${CHANGE_GRADIENT_COLORS.end} 100%)`
+        ? `linear-gradient(90deg, ${CHANGE_GRADIENT_COLORS.start} 0%, ${CHANGE_GRADIENT_COLORS.midDarkRed} 30%, ${CHANGE_GRADIENT_COLORS.midpoint} 50%, ${CHANGE_GRADIENT_COLORS.midDarkBlue} 70%, ${CHANGE_GRADIENT_COLORS.end} 100%)`
         : `linear-gradient(90deg, ${ACTIVITY_GRADIENT_COLORS.start} 0%, ${ACTIVITY_GRADIENT_COLORS.navy} 20%, ${ACTIVITY_GRADIENT_COLORS.teal} 40%, ${ACTIVITY_GRADIENT_COLORS.lightBlue} 60%, ${ACTIVITY_GRADIENT_COLORS.skyBlue} 80%, ${ACTIVITY_GRADIENT_COLORS.end} 100%)`;
 </script>
 
