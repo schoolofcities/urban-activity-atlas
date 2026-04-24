@@ -1,39 +1,34 @@
 """
-Generate activity CSVs for fiscal windows expected by join_metro_geohash.
+Generate activity CSVs expected by join_metro_geohash.
 
-Input schema (urbanactivityatlas_3_13_fy.csv):
-- FISCAL_YEAR (int): fiscal year start year (e.g., 2019 => 2019-04-01 to 2020-03-31)
-- GEOHASH_ID
-- TOTALSTOPS
-- UNIQUESTOPS
+Current input schema (urbanactivityatlas_2025_2026.csv):
+- GEOHASH6
+- UNIQUE_STOPS
+- TOTAL_STOPS
 
-Output schema (activity_YYYY-04-01_YYYY+1-03-31.csv):
+Current output schema (activity_2025_04_01_2026_03_31.csv):
 - geohash6
 - total_stops
+
+Legacy FY input/output logic is kept below as commented references.
 """
 import pandas as pd
 
-window1 = 2019
-window2 = 2024
+# Current source file and output for FY 2025-2026.
+INPUT_CSV = "data/urbanactivityatlas_2025_2026.csv"
+OUTPUT_CSV = "activity_2025_04_01_2026_03_31.csv"
 
-data_2019 = []
-data_2024 = []
+# Legacy source and windows (kept for reference):
+# LEGACY_INPUT_CSV = "data/urbanactivityatlas_3_13_fy.csv"
+# LEGACY_WINDOW_1 = 2019
+# LEGACY_WINDOW_2 = 2024
 
-def separate_years(data):
-    data_2019 = data[data["FISCAL_YEAR"] == window1].copy()
-    data_2024 = data[data["FISCAL_YEAR"] == window2].copy()
-    
-    data_2019 = data_2019[["GEOHASH_ID", "TOTALSTOPS"]].rename(
-        columns={"GEOHASH_ID": "geohash6", "TOTALSTOPS": "total_stops"}
+
+def build_activity_csv(data):
+    activity = data[["GEOHASH6", "TOTAL_STOPS"]].rename(
+        columns={"GEOHASH6": "geohash6", "TOTAL_STOPS": "total_stops"}
     )
-    data_2024 = data_2024[["GEOHASH_ID", "TOTALSTOPS"]].rename(
-        columns={"GEOHASH_ID": "geohash6", "TOTALSTOPS": "total_stops"}
-    )
-    
-    data_2019.to_csv("activity_2019_04_01_2020_03_31.csv", index=False)
-    data_2024.to_csv("activity_2024_04_01_2025_03_31.csv", index=False)
-    
-    return
+    activity.to_csv(OUTPUT_CSV, index=False)
 
 ## Adding metro region to each geohash -> done in join_metro_geohash.ipynb
 # def add_metro_col(data, metro_geohash):
@@ -45,8 +40,8 @@ def separate_years(data):
 
 
 def __main__():
-    data = pd.read_csv("data/urbanactivityatlas_3_13_fy.csv")
-    separate_years(data)
+    data = pd.read_csv(INPUT_CSV)
+    build_activity_csv(data)
 
 if __name__ == "__main__":
     __main__()
