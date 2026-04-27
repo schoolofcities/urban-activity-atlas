@@ -18,7 +18,7 @@
     let dropdownOpen = false; // Initially set the dropdown as closed
     let mapInitialized = false;
     let mapDimensionView = "2D" // "2D" or "3D"
-    let timePeriod = '2024-2025';
+    let timePeriod = '2025-2026';
     let changePeriodFrom = '';
     let changePeriodTo = '';
     let showTransitOverlay = true;
@@ -238,7 +238,7 @@
                 </div>
                 <div class="transit-legend__item">
                     <span class="transit-legend__swatch transit-legend__swatch--tram"></span>
-                    <span>Tram</span>
+                    <span>Tram/Streetcar</span>
                 </div>
             </div>
         {/if}
