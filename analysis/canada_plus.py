@@ -13,18 +13,18 @@ CONCORDANCE_FILE = DATA_DIR / "metro_region_geohashes_no_military.csv"
 
 # New SIERRA extracts (adjust names if needed)
 SIERRA_2019_2020 = DATA_DIR / "urbanactivityatlas_sierra_19_20.csv"
-SIERRA_2024_2025 = DATA_DIR / "urbanactivityatlas_sierra_24_25.csv"
+#SIERRA_2024_2025 = DATA_DIR / "urbanactivityatlas_sierra_24_25.csv"
 
 # Filtered activity outputs (feed these into join_metro_geohash.ipynb activity_file)
 FILTERED_2019_2020 = DATA_DIR / "activity_sierra_patch_2019-04-01_2020-03-31.csv"
-FILTERED_2024_2025 = DATA_DIR / "activity_sierra_patch_2024-04-01_2025-03-31.csv"
+#FILTERED_2024_2025 = DATA_DIR / "activity_sierra_patch_2024-04-01_2025-03-31.csv"
 
 # If you run notebook into these "patch" dirs, this script can append/copy to final dirs
 PATCH_DIR_2019_2020 = DATA_DIR / "metro_region_geohash_stops_2019_2020_patch"
-PATCH_DIR_2024_2025 = DATA_DIR / "metro_region_geohash_stops_2024_2025_patch"
+#PATCH_DIR_2024_2025 = DATA_DIR / "metro_region_geohash_stops_2024_2025_patch"
 
 FINAL_DIR_2019_2020 = DATA_DIR / "metro_region_geohash_stops_2019_2020"
-FINAL_DIR_2024_2025 = DATA_DIR / "metro_region_geohash_stops_2024_2025"
+#FINAL_DIR_2024_2025 = DATA_DIR / "metro_region_geohash_stops_2024_2025"
 
 CANADA_PROV_CODES = {
     "ON", "QC", "BC", "AB", "MB", "SK", "NS", "NB", "NL", "PE", "YT", "NT", "NU"
@@ -162,21 +162,21 @@ def main() -> None:
     concordance = pd.read_csv(CONCORDANCE_FILE)
 
     # 2019-2020: Canada + Oregon
-    # allow_2019 = build_geohash_allowlist(concordance, include_oregon=True, include_canada=True)
-    # filter_activity_by_geohash(SIERRA_2019_2020, allow_2019, FILTERED_2019_2020)
+    allow_2019 = build_geohash_allowlist(concordance, include_oregon=False, include_canada=True)
+    filter_activity_by_geohash(SIERRA_2019_2020, allow_2019, FILTERED_2019_2020)
 
     # # 2024-2025: Oregon only
     # allow_2024 = build_geohash_allowlist(concordance, include_oregon=True, include_canada=False)
     # filter_activity_by_geohash(SIERRA_2024_2025, allow_2024, FILTERED_2024_2025)
 
     # Optional post-notebook append/copy step:
-    # append_geojson_files(PATCH_DIR_2019_2020, FINAL_DIR_2019_2020, overwrite=False)
+    # append_geojson_files(PATCH_DIR_2019_2020, FINAL_DIR_2019_2020, overwrite=True)
     # append_geojson_files(PATCH_DIR_2024_2025, FINAL_DIR_2024_2025, overwrite=False)
 
     # Verification: ensure final folders contain all expected metro files
     expected_metros = get_expected_metro_names(concordance)
     verify_metro_geojson_coverage(FINAL_DIR_2019_2020, expected_metros, "2019_2020")
-    verify_metro_geojson_coverage(FINAL_DIR_2024_2025, expected_metros, "2024_2025")
+    #verify_metro_geojson_coverage(FINAL_DIR_2024_2025, expected_metros, "2024_2025")
 
 
 if __name__ == "__main__":

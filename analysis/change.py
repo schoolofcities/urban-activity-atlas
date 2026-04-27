@@ -16,16 +16,22 @@ from pathlib import Path
 # window2 = 2023
 
 window1 = 2019
-window2 = 2024
+window2 = 2025
 
 # window1 = 2023
+# window2 = 2024
+
+# window1 = 2019
 # window2 = 2024
 
 # folder1 = "data/metro_region_geohash_stops_2019_2020"
 # folder2 = "data/metro_region_geohash_stops"
 
+# folder1 = "data/metro_region_geohash_stops_2024_2025"
+# folder2 = "data/metro_region_geohash_stops_2025_2026"
+
 folder1 = "data/metro_region_geohash_stops_2019_2020"
-folder2 = "data/metro_region_geohash_stops_2024_2025"
+folder2 = "data/metro_region_geohash_stops_2025_2026"
 
 # folder1 = "data/metro_region_geohash_stops"
 # folder2 = "data/metro_region_geohash_stops_2024_2025"

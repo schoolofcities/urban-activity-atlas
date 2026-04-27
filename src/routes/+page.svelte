@@ -266,7 +266,7 @@
         <div class="modal" role="dialog" aria-modal="true" aria-labelledby="oregon-privacy-title">
             <h2 id="oregon-privacy-title">Oregon Data Notice</h2>
             <p>
-                Oregon's Consumer Privacy Act enacted in 2025 prevents the collection of Cuebiq data. Only 2023-2024 data is shown as it was collected prior to the change.
+                Oregon's Consumer Privacy Act enacted in 2025 prevents the collection of Cuebiq data. Only 2025-2026 data is shown as it was collected after the policy change.
             </p>
             <p>
                 <a href={OREGON_PRIVACY_URL} target="_blank" rel="noopener noreferrer">View HB2008 on the Oregon Legislature site.</a>
@@ -363,21 +363,21 @@
 
     .transit-legend__swatch {
         width: 18px;
-        height: 3px;
-        border-radius: 3px;
+        height: 4px;
+        border-radius: 4px;
         display: inline-block;
     }
 
     .transit-legend__swatch--subway {
-        background: #9f7ce6;
+        background: #DC4633;
     }
 
     .transit-legend__swatch--light {
-        background: #65c9d7;
+        background: #8DBF2E;
     }
 
     .transit-legend__swatch--tram {
-        background: #f3a86c;
+        background: #F1C500;
     }
 
     @media screen and (max-width: 820px) {

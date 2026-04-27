@@ -15,13 +15,20 @@
     export let map;
     export let selectLocation; 
     export let mapDimensionView;
-    export let timePeriod = "2023-2024";
-    export let changePeriodFrom = "2023-2024";
-    export let changePeriodTo = "2024-2025";
+    export let timePeriod = "2025-2026";
+    export let changePeriodFrom = "2024-2025";
+    export let changePeriodTo = "2025-2026";
     export let getZoomLevel;
     export let showTransitOverlay = true;
     // export let transitDataMode = "protomaps";
     export let transitMinZoom = 7;
+
+    // Transit layer colors from global brand palette
+    const TRANSIT_COLORS = {
+        subway: '#DC4633',       // --brandRed
+        lightRail: '#8DBF2E',    // --brandLightGreen
+        tram: '#F1C500'          // --brandYellow
+    };
 
     // Internal state
     let isMapLoaded = false;
@@ -36,7 +43,7 @@ const CHANGE_CAP = 3;
 const CHANGE_MAX_HEIGHT = 5000;
 
 // All periods currently use merged PMTiles from one folder.
-const PMTILES_FOLDER = "metro_region_geohash_stops_merged_pm";
+const PMTILES_FOLDER = "metro_region_geohash_stops_merged_pm_v9_2";
 
 function getPmtilesFolder(_) {
     return PMTILES_FOLDER;
@@ -119,25 +126,25 @@ function ensureTransitLayers(map) {
         {
             id: "transit-subway",
             filter: ["==", ["get", "railway"], "subway"],
-            lineColor: "#9f7ce6",
+            lineColor: TRANSIT_COLORS.subway,
             minZoom: transitMinZoom,
-            width: [1.6, 2.4, 3.2],
+            width: [1.8, 2.6, 3.4],
             opacity: [0.6, 0.72, 0.8]
         },
         {
             id: "transit-light-rail",
             filter: ["in", ["get", "railway"], ["literal", ["light_rail", "monorail", "funicular"]]],
-            lineColor: "#65c9d7",
+            lineColor: TRANSIT_COLORS.lightRail,
             minZoom: Math.max(transitMinZoom, 7),
-            width: [0.8, 1.3, 1.9],
+            width: [1.6, 2.4, 3.2],
             opacity: [0.4, 0.5, 0.62]
         },
         {
             id: "transit-tram",
             filter: ["==", ["get", "railway"], "tram"],
-            lineColor: "#f3a86c",
+            lineColor: TRANSIT_COLORS.tram,
             minZoom: Math.max(transitMinZoom, 8),
-            width: [0.7, 1.1, 1.6],
+            width: [1.0, 1.5, 2.1],
             opacity: [0.36, 0.48, 0.6]
         }
     ];
@@ -216,8 +223,8 @@ function syncTransitOverlay(map) {
             const isChangeMode = timePeriod === 'change';
             const periodMetricMap = {
                 '2019-2020': 'prop_subset_stops_2019_2020',
-                '2023-2024': 'prop_subset_stops_2023_2024',
                 '2024-2025': 'prop_subset_stops_2024_2025',
+                '2025-2026': 'prop_subset_stops_2025_2026',
             };
 
             let metricKey;
