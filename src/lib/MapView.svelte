@@ -43,7 +43,7 @@ const CHANGE_CAP = 3;
 const CHANGE_MAX_HEIGHT = 5000;
 
 // All periods currently use merged PMTiles from one folder.
-const PMTILES_FOLDER = "metro_region_geohash_stops_merged_pm_v9_2";
+const PMTILES_FOLDER = "metro_region_geohash_stops_merged_pm";
 
 function getPmtilesFolder(_) {
     return PMTILES_FOLDER;
