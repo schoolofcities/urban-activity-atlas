@@ -1,7 +1,7 @@
 #!/bin/bash
 
-in_dir="data/metro_region_geohash_stops_merged_6cols"
-out_dir="static/metro_region_geohash_stops_merged_pm_v8/"
+in_dir="data/metro_region_geohash_stops_merged_9cols_v2"
+out_dir="static/metro_region_geohash_stops_merged_pm/"
 
 # Ensure output folder exists
 mkdir -p "$out_dir"

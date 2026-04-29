@@ -1,5 +1,6 @@
 <script>
     import { onMount, onDestroy, createEventDispatcher } from "svelte";
+    import { base } from '$app/paths';
     import * as maplibregl from "maplibre-gl";
     import "maplibre-gl/dist/maplibre-gl.css";
     import * as pmtiles from "pmtiles";
@@ -14,56 +15,180 @@
     export let map;
     export let selectLocation; 
     export let mapDimensionView;
-    export let timePeriod = "2023-2024";
-    export let changePeriodFrom = "2023-2024";
-    export let changePeriodTo = "2024-2025";
+    export let timePeriod = "2025-2026";
+    export let changePeriodFrom = "2024-2025";
+    export let changePeriodTo = "2025-2026";
     export let getZoomLevel;
+    export let showTransitOverlay = true;
+    // export let transitDataMode = "protomaps";
+    export let transitMinZoom = 7;
+
+    // Transit layer colors from global brand palette
+    const TRANSIT_COLORS = {
+        subway: '#DC4633',       // --brandRed
+        lightRail: '#8DBF2E',    // --brandLightGreen
+        tram: '#F1C500'          // --brandYellow
+    };
 
     // Internal state
-    let pmtilesURL = "";
     let isMapLoaded = false;
-    const CHANGE_CAP = 3; // 300%
-    const CHANGE_MAX_HEIGHT = 5000;
-
-    // All periods now use merged PMTiles from one folder
-    const PMTILES_FOLDER = "metro_region_geohash_stops_merged_pm";
-
-    function getPmtilesFolder(_) {
-        return PMTILES_FOLDER;
-    }
-
-    function getChangePmtilesFolder(_, __) {
-        return PMTILES_FOLDER;
-    }
-
+    let isTransitReady = false;
+    let transitFetchController;
+    let transitRequestId = 0;
     const dispatch = createEventDispatcher();
 
-    // Clear metro layers and extraneous sources on the map 
-    function cleanMap(map) {
-        const style = map?.getStyle?.();
-        if (!style || !style.layers) {
-            return;
+const TRANSIT_SOURCE_ID = "transit-geojson";
+const TRANSIT_LAYER_IDS = ["transit-fill", "transit-points", "transit-subway", "transit-light-rail", "transit-tram"];
+const CHANGE_CAP = 3;
+const CHANGE_MAX_HEIGHT = 5000;
+
+// All periods currently use merged PMTiles from one folder.
+const PMTILES_FOLDER = "metro_region_geohash_stops_merged_pm";
+
+function getPmtilesFolder(_) {
+    return PMTILES_FOLDER;
+}
+
+function getChangePmtilesFolder(_, __) {
+    return PMTILES_FOLDER;
+}
+
+function cleanMap(map) {
+    const style = map?.getStyle?.();
+    if (!style) {
+        return;
+    }
+
+    const reservedSources = new Set(['protomaps', 'centroids', 'metro-regions', TRANSIT_SOURCE_ID]);
+
+    for (const layer of style.layers ?? []) {
+        if (layer.id.endsWith('-layer') && map.getLayer(layer.id)) {
+            map.removeLayer(layer.id);
         }
+    }
 
-        // First remove all metro layers
-        style.layers.forEach((layer) => {
-            // Remove metro-specific layers
-            if (layer.id.endsWith('-layer') && map.getLayer(layer.id)) {
-                map.removeLayer(layer.id);
-            }
-        });
+    for (const sourceId of Object.keys(style.sources ?? {})) {
+        if (!reservedSources.has(sourceId) && map.getSource(sourceId)) {
+            map.removeSource(sourceId);
+        }
+    }
+}
 
-        // Then remove corresponding sources, excluding essential ones
-        Object.keys(style.sources ?? {}).forEach((sourceId) => {
-            if (sourceId !== 'protomaps' && 
-                sourceId !== 'centroids' && 
-                sourceId !== 'metro-regions' && 
-                sourceId !== 'esri-hillshade' && 
-                map.getSource(sourceId)) {
-                map.removeSource(sourceId);
-            }
+function removeTransitLayers(map) {
+    TRANSIT_LAYER_IDS.forEach((layerId) => {
+        if (map.getLayer(layerId)) map.removeLayer(layerId);
+    });
+    if (map.getSource(TRANSIT_SOURCE_ID)) map.removeSource(TRANSIT_SOURCE_ID);
+}
+
+function ensureTransitLayers(map) {
+    if (!map.getSource(TRANSIT_SOURCE_ID)) {
+        map.addSource(TRANSIT_SOURCE_ID, {
+            type: "geojson",
+            data: `${base}/export.geojson`
         });
     }
+
+    if (!map.getLayer('transit-fill')) {
+        map.addLayer({
+            id: 'transit-fill',
+            type: 'fill',
+            source: TRANSIT_SOURCE_ID,
+            filter: [
+                'any',
+                ['==', ['geometry-type'], 'Polygon'],
+                ['==', ['geometry-type'], 'MultiPolygon']
+            ],
+            paint: {
+                'fill-color': '#65c9d7',
+                'fill-opacity': 0.18
+            }
+        }, 'selected-metro-outline');
+    }
+
+    if (!map.getLayer('transit-points')) {
+        map.addLayer({
+            id: 'transit-points',
+            type: 'circle',
+            source: TRANSIT_SOURCE_ID,
+            filter: ['==', ['geometry-type'], 'Point'],
+            paint: {
+                'circle-radius': 5,
+                'circle-color': '#65c9d7',
+                'circle-stroke-color': '#ffffff',
+                'circle-stroke-width': 1,
+                'circle-opacity': 0.9
+            }
+        }, 'selected-metro-outline');
+    }
+
+    const layerConfigs = [
+        {
+            id: "transit-subway",
+            filter: ["==", ["get", "railway"], "subway"],
+            lineColor: TRANSIT_COLORS.subway,
+            minZoom: transitMinZoom,
+            width: [1.8, 2.6, 3.4],
+            opacity: [0.6, 0.72, 0.8]
+        },
+        {
+            id: "transit-light-rail",
+            filter: ["in", ["get", "railway"], ["literal", ["light_rail", "monorail", "funicular"]]],
+            lineColor: TRANSIT_COLORS.lightRail,
+            minZoom: Math.max(transitMinZoom, 7),
+            width: [1.6, 2.4, 3.2],
+            opacity: [0.4, 0.5, 0.62]
+        },
+        {
+            id: "transit-tram",
+            filter: ["==", ["get", "railway"], "tram"],
+            lineColor: TRANSIT_COLORS.tram,
+            minZoom: Math.max(transitMinZoom, 8),
+            width: [1.0, 1.5, 2.1],
+            opacity: [0.36, 0.48, 0.6]
+        }
+    ];
+
+    layerConfigs.forEach(({ id, filter, lineColor, minZoom, width, opacity }) => {
+        if (map.getLayer(id)) return;
+
+        map.addLayer({
+            id,
+            type: "line",
+            source: TRANSIT_SOURCE_ID,
+            filter,
+            paint: {
+                "line-color": lineColor,
+                "line-opacity": [
+                    "interpolate", ["linear"], ["zoom"],
+                    minZoom, opacity[0],
+                    minZoom + 3, opacity[1],
+                    minZoom + 6, opacity[2]
+                ],
+                "line-width": [
+                    "interpolate", ["linear"], ["zoom"],
+                    minZoom, width[0],
+                    minZoom + 3, width[1],
+                    minZoom + 6, width[2]
+                ]
+            },
+            minzoom: minZoom
+        }, "selected-metro-outline");
+    });
+}
+
+function syncTransitOverlay(map) {
+    if (!isMapLoaded) return;
+
+    ensureTransitLayers(map);
+
+    const showTransit = showTransitOverlay;
+    TRANSIT_LAYER_IDS.forEach((layerId) => {
+        if (map.getLayer(layerId)) {
+            map.setLayoutProperty(layerId, "visibility", showTransit ? "visible" : "none");
+        }
+    });
+}
 
     // Adjust camera view when dimension view changes
     $: {
@@ -88,19 +213,18 @@
                     ? getChangePmtilesFolder(changePeriodFrom, changePeriodTo)
                     : getPmtilesFolder(timePeriod);
             const safeMetroName = encodeURI(metroName);
-            pmtilesURL = `/urban-activity-atlas/${folder}/${safeMetroName}.pmtiles`;
 
 			// Add the PMTiles source
 			map.addSource(metroName, {
                 type: "vector",
-                url: `pmtiles://${pmtilesURL}`,
+                url: `pmtiles://${base ? `${base}/` : ''}${folder}/${safeMetroName}.pmtiles`,
             });
 
             const isChangeMode = timePeriod === 'change';
             const periodMetricMap = {
                 '2019-2020': 'prop_subset_stops_2019_2020',
-                '2023-2024': 'prop_subset_stops_2023_2024',
                 '2024-2025': 'prop_subset_stops_2024_2025',
+                '2025-2026': 'prop_subset_stops_2025_2026',
             };
 
             let metricKey;
@@ -273,8 +397,12 @@
             // Update the filters to show/hide appropriate regions
             map.setFilter('metro-areas', ['!=', ['get', 'name'], metroName]);  // Show all except selected
             map.setFilter('selected-metro-outline', ['==', ['get', 'name'], metroName]);  // Show only selected outline
+
+            syncTransitOverlay(map);
         } else if (map && isMapLoaded) {
             cleanMap(map);
+
+            syncTransitOverlay(map);
 
             // When no region selected, show all regions and no outline
             map.setFilter('metro-areas', ['has', 'name']);  // Show all regions
@@ -434,17 +562,51 @@
                 maxzoom: 14
             });
 
+            ensureTransitLayers(map);
+            syncTransitOverlay(map);
+
             // Update metro region across the whole application using selectLocation
             map.on('click', 'metro-points-click-target', (e) => { 
-                if (e.features.length > 0) {
-                    selectLocation(e.features[0].properties.name);
+                const feature = e.features?.[0];
+                if (feature?.properties?.name) {
+                    selectLocation(feature.properties.name);
                 }
             });
 
             map.on('click', 'metro-areas', (e) => {
-                if (e.features.length > 0) {
-                    selectLocation(e.features[0].properties.name);
+                const feature = e.features?.[0];
+                if (feature?.properties?.name) {
+                    selectLocation(feature.properties.name);
                 }
+            });
+
+            let activePopup;
+            const transitLayers = ['transit-points', 'transit-fill', 'transit-subway', 'transit-light-rail', 'transit-tram'];
+            const showFeaturePopup = (e) => {
+                if (!e.features?.length) return;
+
+                const feature = e.features[0];
+                const properties = feature.properties || {};
+                const title = properties.name || properties.railway || 'Feature';
+                const details = Object.entries(properties)
+                    .map(([key, value]) => `<strong>${key}</strong>: ${value}`)
+                    .join('<br/>');
+
+                activePopup?.remove();
+                activePopup = new maplibregl.Popup({ closeOnClick: true, closeButton: false })
+                    .setLngLat(e.lngLat)
+                    .setHTML(`<div style="font-size:12px; line-height:1.3;">${title}<br/>${details}</div>`)
+                    .addTo(map);
+            };
+
+            transitLayers.forEach((layer) => {
+                map.on('click', layer, showFeaturePopup);
+                map.on('mouseenter', layer, () => {
+                    map.getCanvas().style.cursor = 'pointer';
+                });
+                map.on('mouseleave', layer, () => {
+                    map.getCanvas().style.cursor = '';
+                });
             });
 
             // Add hover effects
@@ -464,6 +626,8 @@
 
     onDestroy(() => {
         isMapLoaded = false;
+        isTransitReady = false;
+        transitFetchController?.abort();
         if (map) {
             map.remove();
         }

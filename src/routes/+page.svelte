@@ -18,9 +18,10 @@
     let dropdownOpen = false; // Initially set the dropdown as closed
     let mapInitialized = false;
     let mapDimensionView = "2D" // "2D" or "3D"
-    let timePeriod = '2024-2025';
+    let timePeriod = '2025-2026';
     let changePeriodFrom = '';
     let changePeriodTo = '';
+    let showTransitOverlay = true;
 
     // Load min/max data from the JSON file
     import minmax from '../data/min_max.json';
@@ -224,6 +225,24 @@
     </div>
 
     <div class="map-view">
+        {#if showTransitOverlay && metroName}
+            <div class="transit-legend" aria-label="Transit line legend">
+                <div class="transit-legend__title">Transit lines</div>
+                <div class="transit-legend__item">
+                    <span class="transit-legend__swatch transit-legend__swatch--subway"></span>
+                    <span>Subway</span>
+                </div>
+                <div class="transit-legend__item">
+                    <span class="transit-legend__swatch transit-legend__swatch--light"></span>
+                    <span>Light rail</span>
+                </div>
+                <div class="transit-legend__item">
+                    <span class="transit-legend__swatch transit-legend__swatch--tram"></span>
+                    <span>Tram/Streetcar</span>
+                </div>
+            </div>
+        {/if}
+
         <MapView 
             bind:map={map} 
             handleClickOutside={handleClickOutside} 
@@ -236,6 +255,8 @@
             changePeriodFrom={changePeriodFrom}
             changePeriodTo={changePeriodTo}
             getZoomLevel={getZoomLevel}
+            showTransitOverlay={showTransitOverlay}
+            transitDataMode="local"
         />
     </div>
 </div>
@@ -245,7 +266,7 @@
         <div class="modal" role="dialog" aria-modal="true" aria-labelledby="oregon-privacy-title">
             <h2 id="oregon-privacy-title">Oregon Data Notice</h2>
             <p>
-                Oregon's Consumer Privacy Act enacted in 2025 prevents the collection of Cuebiq data. Only 2023-2024 data is shown as it was collected prior to the change.
+                Oregon's Consumer Privacy Act enacted in 2025 prevents the collection of Cuebiq data. Only 2025-2026 data is shown as it was collected after the policy change.
             </p>
             <p>
                 <a href={OREGON_PRIVACY_URL} target="_blank" rel="noopener noreferrer">View HB2008 on the Oregon Legislature site.</a>
@@ -295,10 +316,68 @@
     }
 
     .map-view {
+        position: relative;
         height: 100vh;
         width: calc(100vw - 399px);
         min-width: 280px;
         background-color: var(--brandLightBlue); 
+    }
+
+    .transit-legend {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        z-index: 1200;
+        min-width: 148px;
+        padding: 8px 10px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
+        background: rgba(5, 10, 17, 0.86);
+        color: #dfe7f1;
+        font-family: RobotoRegular;
+        font-size: 0.76rem;
+        line-height: 1.2;
+        backdrop-filter: blur(2px);
+        pointer-events: none;
+    }
+
+    .transit-legend__title {
+        margin-bottom: 6px;
+        color: #ffffff;
+        font-family: RobotoBold;
+        font-size: 0.75rem;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+    }
+
+    .transit-legend__item {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin-bottom: 4px;
+    }
+
+    .transit-legend__item:last-child {
+        margin-bottom: 0;
+    }
+
+    .transit-legend__swatch {
+        width: 18px;
+        height: 4px;
+        border-radius: 4px;
+        display: inline-block;
+    }
+
+    .transit-legend__swatch--subway {
+        background: #DC4633;
+    }
+
+    .transit-legend__swatch--light {
+        background: #8DBF2E;
+    }
+
+    .transit-legend__swatch--tram {
+        background: #F1C500;
     }
 
     @media screen and (max-width: 820px) {

@@ -20,7 +20,7 @@
     );
 
     // Pending states
-    let pendingSingleTimePeriod = timePeriod !== "change" ? timePeriod : "2023-2024";
+    let pendingSingleTimePeriod = timePeriod !== "change" ? timePeriod : "2025-2026";
     let pendingChangePeriodFrom = changePeriodFrom;
     let pendingChangePeriodTo = changePeriodTo;
 
@@ -39,7 +39,12 @@
             return;
         }
 
-        if (period === "2023-2024" && pendingChangePeriodTo !== "2024-2025") {
+        if (period === "2019-2020" && !["2024-2025", "2025-2026"].includes(pendingChangePeriodTo)) {
+            pendingChangePeriodTo = "2024-2025";
+            return;
+        }
+
+        if (period === "2024-2025" && pendingChangePeriodTo !== "2025-2026") {
             pendingChangePeriodTo = "";
         }
     }
@@ -50,23 +55,23 @@
 
     function getPeriodLabel(period) {
         if (period === "2019-2020") return "04/2019-03/2020";
-        if (period === "2023-2024") return "04/2023-03/2024";
         if (period === "2024-2025") return "04/2024-03/2025";
+        if (period === "2025-2026") return "04/2025-03/2026";
         return "";
     }
 
     const changeFromOptions = [
         { value: "2019-2020", label: "04/2019-03/2020" },
-        { value: "2023-2024", label: "04/2023-03/2024" }
+        { value: "2024-2025", label: "04/2024-03/2025" }
     ];
 
     $: changeToOptions = pendingChangePeriodFrom === "2019-2020"
         ? [
-            { value: "2023-2024", label: "04/2023-03/2024" },
-            { value: "2024-2025", label: "04/2024-03/2025" }
+            { value: "2024-2025", label: "04/2024-03/2025" },
+            { value: "2025-2026", label: "04/2025-03/2026" }
         ]
-        : pendingChangePeriodFrom === "2023-2024"
-            ? [{ value: "2024-2025", label: "04/2024-03/2025" }]
+        : pendingChangePeriodFrom === "2024-2025"
+            ? [{ value: "2025-2026", label: "04/2025-03/2026" }]
             : [];
 
     let fromDropdownOpen = false;
@@ -116,8 +121,8 @@
 
     const timePeriodDateRanges = {
         "2019-2020": "April 1, 2019 – March 31, 2020",
-        "2023-2024": "April 1, 2023 – March 31, 2024",
-        "2024-2025": "April 1, 2024 – March 31, 2025"
+        "2024-2025": "April 1, 2024 – March 31, 2025",
+        "2025-2026": "April 1, 2025 – March 31, 2026"
     };
 
     $: hasSelectedChangePeriods = Boolean(changePeriodFrom) && Boolean(changePeriodTo);
@@ -128,7 +133,7 @@
     // Use applied timePeriod for text
     $: timePeriodRange = timePeriod === "change"
         ? changeRangeLabel
-        : (timePeriodDateRanges[timePeriod] ?? timePeriodDateRanges["2023-2024"]);
+        : (timePeriodDateRanges[timePeriod] ?? timePeriodDateRanges["2025-2026"]);
 
     // The legend reflects the applied state
     $: isAppliedChangeMode = timePeriod === "change";
@@ -208,8 +213,8 @@
         <p class="section-title">Time Period</p>
         <div class="button-container">
             <button type="button" class={`button period-button ${pendingSingleTimePeriod === "2019-2020" ? "selected" : "not-selected"}`} on:click={() => setPendingSingleTimePeriod("2019-2020")}>04/2019-03/2020</button>
-            <button type="button" class={`button period-button ${pendingSingleTimePeriod === "2023-2024" ? "selected" : "not-selected"}`} on:click={() => setPendingSingleTimePeriod("2023-2024")}>04/2023-03/2024</button>
             <button type="button" class={`button period-button ${pendingSingleTimePeriod === "2024-2025" ? "selected" : "not-selected"}`} on:click={() => setPendingSingleTimePeriod("2024-2025")}>04/2024-03/2025</button>
+            <button type="button" class={`button period-button ${pendingSingleTimePeriod === "2025-2026" ? "selected" : "not-selected"}`} on:click={() => setPendingSingleTimePeriod("2025-2026")}>04/2025-03/2026</button>
         </div>
         <div class="apply-container" style="margin-top: 0px;">
             <button type="button" class="button apply-button" on:click={applySingleTimePeriod}>Apply</button>
